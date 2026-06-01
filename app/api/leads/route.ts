@@ -6,6 +6,9 @@ import { calculateLeadScore, getScorePriority } from "@/lib/leadScoring";
 import { rateLimit, getClientIP } from "@/lib/rateLimit";
 import { sendAdminNotification, sendClientAutoReply } from "@/lib/email";
 
+export const dynamic = 'force-dynamic';
+
+
 // POST /api/leads — Create new lead (public)
 export async function POST(req: NextRequest) {
   // Rate limiting

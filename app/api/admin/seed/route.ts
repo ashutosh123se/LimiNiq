@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET() {
   // Only allow in development or if explicitly enabled
   if (process.env.NODE_ENV !== "development" && process.env.ENABLE_SEED !== "true") {

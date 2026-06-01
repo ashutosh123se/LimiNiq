@@ -5,6 +5,9 @@ import { rateLimit, getClientIP } from "@/lib/rateLimit";
 import { sendAdminNotification } from "@/lib/email";
 import { calculateLeadScore, getScorePriority } from "@/lib/leadScoring";
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(req: NextRequest) {
   const ip = getClientIP(req);
   const rl = rateLimit(`audit:${ip}`, { maxRequests: 5 });

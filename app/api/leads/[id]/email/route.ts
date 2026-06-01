@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { sendCustomEmail, sendFollowUp } from "@/lib/email";
 import { z } from "zod";
 
+export const dynamic = 'force-dynamic';
+
+
 const sendEmailSchema = z.object({
   subject: z.string().min(1),
   body: z.string().min(1),

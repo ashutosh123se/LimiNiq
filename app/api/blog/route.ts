@@ -5,6 +5,9 @@ import { blogPostSchema } from "@/lib/validations";
 import slugify from "slugify";
 import { auth } from "@/auth";
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get("category");

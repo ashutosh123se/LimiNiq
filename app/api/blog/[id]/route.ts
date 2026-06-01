@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { blogPostSchema } from "@/lib/validations";
 import { auth } from "@/auth";
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOverviewStats, getLeadsByStatus, getLeadsOverTime } from "@/lib/analytics";
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET(_req: NextRequest) {
   try {
     const [overview, byStatus, overTime] = await Promise.all([
