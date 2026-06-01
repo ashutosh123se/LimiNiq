@@ -79,7 +79,7 @@ export function ContactPage() {
   };
 
   const CONTACT_INFO = [
-    { icon: <Mail size={20} />, label: "Email", value: "hello@liminq.com", href: "mailto:hello@liminq.com" },
+    { icon: <Mail size={20} />, label: "Email", value: "hello@liminiq.com", href: "mailto:hello@liminiq.com" },
     { icon: <Phone size={20} />, label: "Phone", value: "9431471654", href: "tel:9431471654" },
     { icon: <MapPin size={20} />, label: "Location", value: "Shivangi KunjB38A, Madipur JJ Colony, Block A, Janta Colony, Paschim Vihar, Delhi, 110063", href: "https://maps.google.com/?q=Shivangi+KunjB38A,+Madipur+JJ+Colony,+Block+A,+Janta+Colony,+Paschim+Vihar,+Delhi,+110063" },
     { icon: <Clock size={20} />, label: "Hours", value: "Mon–Sat, 9am–7pm", href: "#" },
