@@ -8,7 +8,6 @@ import { TestimonialsSection } from "@/components/sections/home/TestimonialsSect
 import { PricingSection } from "@/components/sections/home/PricingSection";
 import { BlogPreviewSection } from "@/components/sections/home/BlogPreviewSection";
 import { AboutTeaser } from "@/components/sections/home/AboutTeaser";
-import { TeamSection } from "@/components/sections/home/TeamSection";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { AuditTool } from "@/components/sections/home/AuditTool";
 
@@ -32,7 +31,6 @@ export default function HomePage() {
       <PricingSection />
       <BlogPreviewSection />
       <AboutTeaser />
-      <TeamSection />
       <LeadCTASection />
     </>
   );

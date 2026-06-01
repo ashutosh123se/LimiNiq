@@ -10,13 +10,11 @@ const VALUES = [
   { icon: "🤝", label: "Transparent", desc: "Full visibility into our work." },
 ];
 
-const TEAM_AVATARS = [
-  { name: "Aryan S.", color: "#3B5BFF" },
-  { name: "Priya N.", color: "#00C8A0" },
-  { name: "Rohan M.", color: "#7B61FF" },
-  { name: "Sneha K.", color: "#3B5BFF" },
-  { name: "Vikram T.", color: "#00C8A0" },
-  { name: "Anika J.", color: "#7B61FF" },
+const TEAM = [
+  { name: "Ashutosh Shekhar", role: "CEO", color: "#3B5BFF", initials: "AS", bio: "Leads with a vision for innovation & growth." },
+  { name: "Ayush Shekhar", role: "Technical Head", color: "#00C8A0", initials: "AS", bio: "Architects scalable & secure digital solutions." },
+  { name: "Akanksha Singh", role: "Marketing Head", color: "#7B61FF", initials: "AK", bio: "Maximizes online visibility & growth strategies." },
+  { name: "Aman Kumar", role: "Animation Head", color: "#FF4A7A", initials: "AM", bio: "Brings ideas to life through stunning visuals." },
 ];
 
 export function AboutTeaser() {
@@ -34,21 +32,47 @@ export function AboutTeaser() {
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7 }}
-            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}
+            style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}
             className="about-avatars"
           >
-            {TEAM_AVATARS.map((member, i) => (
+            {TEAM.map((member, i) => (
               <motion.div
                 key={member.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: i * 0.08 }}
-                className="glass-card"
-                style={{ padding: "1.5rem", textAlign: "center", cursor: "default" }}
-                whileHover={{ y: -4 }}
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+                transition={{ delay: i * 0.15, type: "spring", stiffness: 100 }}
+                className="glass-card group"
+                style={{ 
+                  padding: "1.5rem", 
+                  textAlign: "center", 
+                  cursor: "default",
+                  position: "relative",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  minHeight: 220
+                }}
+                whileHover={{ y: -6, scale: 1.02 }}
               >
-                {/* Glow ring avatar */}
-                <div style={{ position: "relative", width: 56, height: 56, margin: "0 auto 0.75rem" }}>
+                {/* Background glow on hover */}
+                <div 
+                  className="group-hover-glow" 
+                  style={{ 
+                    position: "absolute", 
+                    inset: 0, 
+                    background: `radial-gradient(circle at top center, ${member.color}25 0%, transparent 70%)`,
+                    opacity: 0,
+                    transition: "opacity 0.4s ease"
+                  }} 
+                />
+
+                {/* Avatar */}
+                <motion.div 
+                  style={{ position: "relative", width: 64, height: 64, margin: "0 auto 1rem", zIndex: 1, transition: "transform 0.4s ease" }}
+                  className="member-avatar"
+                >
                   <div
                     style={{
                       position: "absolute",
@@ -60,24 +84,53 @@ export function AboutTeaser() {
                   />
                   <div
                     style={{
-                      width: 56,
-                      height: 56,
+                      width: 64,
+                      height: 64,
                       borderRadius: "50%",
                       background: `linear-gradient(135deg, ${member.color}, ${member.color}88)`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      boxShadow: `0 4px 16px ${member.color}40`,
+                      boxShadow: `0 4px 16px ${member.color}50`,
                     }}
                   >
-                    <span style={{ color: "white", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1rem" }}>
-                      {member.name.split(" ").map(n => n[0]).join("")}
+                    <span style={{ color: "white", fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.2rem" }}>
+                      {member.initials}
                     </span>
                   </div>
+                </motion.div>
+
+                {/* Name & Role */}
+                <div style={{ position: "relative", zIndex: 1, transition: "transform 0.4s ease" }} className="member-info">
+                  <div style={{ fontFamily: "var(--font-heading)", fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.25rem" }}>
+                    {member.name}
+                  </div>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", fontWeight: 600, color: member.color }}>
+                    {member.role}
+                  </div>
                 </div>
-                <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.82rem", fontWeight: 600, color: "var(--text-primary)" }}>
-                  {member.name}
+
+                {/* Bio on hover */}
+                <div 
+                  className="member-bio"
+                  style={{ 
+                    position: "absolute",
+                    bottom: "1.5rem",
+                    left: "1rem",
+                    right: "1rem",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.8rem",
+                    color: "var(--text-secondary)",
+                    lineHeight: 1.5,
+                    opacity: 0,
+                    transform: "translateY(20px)",
+                    transition: "all 0.4s ease",
+                    zIndex: 1
+                  }}
+                >
+                  {member.bio}
                 </div>
+
               </motion.div>
             ))}
           </motion.div>
@@ -134,6 +187,22 @@ export function AboutTeaser() {
         }
         @media (max-width: 899px) {
           .about-avatars { display: none !important; }
+        }
+        
+        /* Interactive Hover Animations */
+        .group:hover .group-hover-glow {
+          opacity: 1 !important;
+        }
+        .group:hover .member-avatar {
+          transform: translateY(-8px) scale(1.05) rotate(5deg) !important;
+        }
+        .group:hover .member-info {
+          transform: translateY(-80px) !important;
+          opacity: 0 !important;
+        }
+        .group:hover .member-bio {
+          opacity: 1 !important;
+          transform: translateY(0) !important;
         }
       `}</style>
     </section>
