@@ -1,224 +1,173 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 
-const VALUES = [
-  { icon: "⚡", label: "Speed-First", desc: "We move fast, ship quality." },
-  { icon: "🔬", label: "Data-Driven", desc: "Every decision is evidence-backed." },
-  { icon: "🤝", label: "Transparent", desc: "Full visibility into our work." },
-];
-
-const TEAM = [
-  { name: "Ashutosh Shekhar", role: "CEO", color: "#3B5BFF", initials: "AS", bio: "Leads with a vision for innovation & growth.", image: "/images/team/ashutosh.png" },
-  { name: "Ayush Shekhar", role: "Technical Head", color: "#00C8A0", initials: "AS", bio: "Architects scalable & secure digital solutions.", image: "/images/team/ayush.png" },
-  { name: "Akanksha Singh", role: "Marketing Head", color: "#7B61FF", initials: "AK", bio: "Maximizes online visibility & growth strategies." },
-  { name: "Aman Kumar", role: "Animation Head", color: "#FF4A7A", initials: "AM", bio: "Brings ideas to life through stunning visuals.", image: "/images/team/aman.png" },
-];
-
 export function AboutTeaser() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const containerRef = useRef(null);
+  
+  // Create parallax scroll effects tied to the section's position
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [150, -150]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [-150, 150]);
+  
+  // Marquee scroll speeds
+  const xMarquee1 = useTransform(scrollYProgress, [0, 1], [0, -800]);
+  const xMarquee2 = useTransform(scrollYProgress, [0, 1], [-800, 0]);
 
   return (
-    <section ref={ref} className="section-padding" style={{ background: "var(--bg-primary)", position: "relative", overflow: "hidden" }}>
-
-      <div className="section-container" style={{ position: "relative" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "4rem", alignItems: "center" }} className="about-grid">
-
-          {/* Left — Avatar grid */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+    <section ref={containerRef} style={{ background: "var(--bg-primary)", position: "relative", overflow: "hidden", padding: "8rem 0" }}>
+      
+      {/* Text Content Block */}
+      <div className="section-container" style={{ position: "relative", zIndex: 10, marginBottom: "2rem" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7 }}
-            style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}
-            className="about-avatars"
           >
-            {TEAM.map((member, i) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-                transition={{ delay: i * 0.15, type: "spring", stiffness: 100 }}
-                className="glass-card group"
-                style={{ 
-                  padding: "1.5rem", 
-                  textAlign: "center", 
-                  cursor: "default",
-                  position: "relative",
-                  overflow: "hidden",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  minHeight: 220
-                }}
-                whileHover={{ y: -6, scale: 1.02 }}
-              >
-                {/* Background glow on hover */}
-                <div 
-                  className="group-hover-glow" 
-                  style={{ 
-                    position: "absolute", 
-                    inset: 0, 
-                    background: `radial-gradient(circle at top center, ${member.color}25 0%, transparent 70%)`,
-                    opacity: 0,
-                    transition: "opacity 0.4s ease"
-                  }} 
-                />
-
-                {/* Avatar */}
-                <motion.div 
-                  style={{ position: "relative", width: 64, height: 64, margin: "0 auto 1rem", zIndex: 1, transition: "transform 0.4s ease" }}
-                  className="member-avatar"
-                >
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: -4,
-                      borderRadius: "50%",
-                      background: `${member.color}30`,
-                      animation: `pulseRing ${2 + i * 0.3}s ease-out infinite`,
-                    }}
-                  />
-                  {member.image ? (
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      style={{ objectFit: "cover", borderRadius: "50%" }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: 64,
-                        height: 64,
-                        borderRadius: "50%",
-                        background: `linear-gradient(135deg, ${member.color}, ${member.color}88)`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: `0 4px 16px ${member.color}50`,
-                      }}
-                    >
-                      <span style={{ color: "white", fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.2rem" }}>
-                        {member.initials}
-                      </span>
-                    </div>
-                  )}
-                </motion.div>
-
-                {/* Name & Role */}
-                <div style={{ position: "relative", zIndex: 1, transition: "transform 0.4s ease" }} className="member-info">
-                  <div style={{ fontFamily: "var(--font-heading)", fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.25rem" }}>
-                    {member.name}
-                  </div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", fontWeight: 600, color: member.color }}>
-                    {member.role}
-                  </div>
-                </div>
-
-                {/* Bio on hover */}
-                <div 
-                  className="member-bio"
-                  style={{ 
-                    position: "absolute",
-                    bottom: "1.5rem",
-                    left: "1rem",
-                    right: "1rem",
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.8rem",
-                    color: "var(--text-secondary)",
-                    lineHeight: 1.5,
-                    opacity: 0,
-                    transform: "translateY(20px)",
-                    transition: "all 0.4s ease",
-                    zIndex: 1
-                  }}
-                >
-                  {member.bio}
-                </div>
-
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Right — Text */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.1 }}
-          >
-            <div className="pill-badge shimmer" style={{ marginBottom: "1rem", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }}>
-              <span style={{ color: "var(--accent-teal)" }}>✦</span> Who We Are
+            <div className="pill-badge shimmer" style={{ marginBottom: "1.5rem", display: "inline-flex", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }}>
+              <span style={{ color: "var(--accent-teal)" }}>✦</span> The LimiNiq Standard
             </div>
-            <h2 className="text-section" style={{ color: "var(--text-primary)", marginBottom: "1.25rem" }}>
-              Built by <span style={{ color: "var(--text-primary)" }}>Builders</span>
+            <h2 className="section-h2" style={{ color: "var(--text-primary)", marginBottom: "1.5rem", fontSize: "clamp(2.5rem, 5vw, 4rem)" }}>
+              Driven By Data.<br/>
+              <span style={{ color: "var(--text-secondary)" }}>Built By Builders.</span>
             </h2>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--text-secondary)", lineHeight: 1.75, marginBottom: "1rem" }}>
-              LIMINIQ was founded by engineers and marketers who were tired of agencies that over-promise and under-deliver. We believe great digital work comes from obsessing over the details — code quality, data integrity, creative excellence.
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "2.5rem", maxWidth: "600px", margin: "0 auto 2.5rem auto" }}>
+              We are an elite collective of engineers, SEO strategists, and performance marketers. We abandoned the traditional agency model to build a boutique powerhouse obsessed with code quality and measurable ROI.
             </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--text-secondary)", lineHeight: 1.75, marginBottom: "1rem" }}>
-              Our team of 18 specialists spans full-stack development, SEO strategy, paid media, and creative direction — all under one roof, all rowing in the same direction.
-            </p>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--text-secondary)", lineHeight: 1.75, marginBottom: "2rem" }}>
-              We&apos;ve helped 150+ brands across India and beyond grow their digital presence into genuine business assets.
-            </p>
-
-            {/* Core values */}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "2.5rem" }}>
-              {VALUES.map((v, i) => (
-                <motion.div
-                  key={v.label}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.4 + i * 0.15, type: "spring" }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  className="glass-card"
-                  style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem 1.25rem", borderRadius: 14, cursor: "default" }}
-                >
-                  <span style={{ fontSize: "1.2rem" }}>{v.icon}</span>
-                  <div>
-                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)" }}>{v.label}</div>
-                    <div style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--text-tertiary)" }}>{v.desc}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <Link href="/about" className="btn-primary">
-              Meet the Team →
+            <Link href="/about" className="btn-primary" style={{ display: "inline-flex", padding: "1rem 2rem", fontSize: "1rem" }}>
+              Meet The Team →
             </Link>
           </motion.div>
         </div>
       </div>
 
-      <style>{`
-        @media (min-width: 900px) {
-          .about-grid { grid-template-columns: 1fr 1fr !important; }
-        }
-        @media (max-width: 899px) {
-          .about-avatars { display: none !important; }
-        }
+      {/* Marquee Gallery Area */}
+      <div style={{ position: "relative", height: "70vh", minHeight: "500px", maxHeight: "800px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "4rem" }}>
         
-        /* Interactive Hover Animations */
-        .group:hover .group-hover-glow {
-          opacity: 1 !important;
-        }
-        .group:hover .member-avatar {
-          transform: translateY(-8px) scale(1.05) rotate(5deg) !important;
-        }
-        .group:hover .member-info {
-          transform: translateY(-80px) !important;
-          opacity: 0 !important;
-        }
-        .group:hover .member-bio {
-          opacity: 1 !important;
-          transform: translateY(0) !important;
-        }
-      `}</style>
+        {/* Massive Background Marquees */}
+        <div style={{ position: "absolute", width: "100%", display: "flex", flexDirection: "column", gap: "2rem", opacity: 0.04, transform: "rotate(-3deg) scale(1.1)", pointerEvents: "none" }}>
+           <motion.div style={{ x: xMarquee1, whiteSpace: "nowrap", fontSize: "clamp(6rem, 12vw, 15rem)", fontFamily: "var(--font-heading)", fontWeight: 900, textTransform: "uppercase", lineHeight: 1 }}>
+              WEB DEVELOPMENT • SEO STRATEGY • PERFORMANCE MARKETING • BRAND IDENTITY • WEB DEVELOPMENT • SEO STRATEGY • PERFORMANCE MARKETING • BRAND IDENTITY
+           </motion.div>
+           <motion.div style={{ x: xMarquee2, whiteSpace: "nowrap", fontSize: "clamp(6rem, 12vw, 15rem)", fontFamily: "var(--font-heading)", fontWeight: 900, textTransform: "uppercase", color: "transparent", WebkitTextStroke: "2px var(--text-primary)", lineHeight: 1 }}>
+              DIGITAL INNOVATION • DATA DRIVEN • ROI FOCUSED • CREATIVE EXCELLENCE • DIGITAL INNOVATION • DATA DRIVEN • ROI FOCUSED • CREATIVE EXCELLENCE
+           </motion.div>
+        </div>
+
+        {/* Floating Parallax Images */}
+        <div className="section-container" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+           {/* Image 1 - Left Portrait */}
+           <motion.div 
+             style={{ 
+               y: y1, 
+               position: "absolute", 
+               top: "10%", 
+               left: "0%", 
+               width: "25vw", 
+               height: "35vw", 
+               maxWidth: "320px", 
+               maxHeight: "450px", 
+               minWidth: "200px",
+               minHeight: "280px",
+               borderRadius: "24px", 
+               overflow: "hidden", 
+               boxShadow: "0 30px 60px rgba(0,0,0,0.6)",
+               border: "1px solid rgba(255,255,255,0.05)"
+             }}
+           >
+              <Image 
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800" 
+                fill 
+                style={{ objectFit: "cover" }} 
+                alt="LimiNiq Team Collaborating" 
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(4,5,8,0.8), transparent)" }} />
+           </motion.div>
+
+           {/* Image 2 - Right Landscape */}
+           <motion.div 
+             style={{ 
+               y: y2, 
+               position: "absolute", 
+               top: "35%", 
+               right: "0%", 
+               width: "35vw", 
+               height: "22vw", 
+               maxWidth: "480px", 
+               maxHeight: "300px", 
+               minWidth: "280px",
+               minHeight: "180px",
+               borderRadius: "24px", 
+               overflow: "hidden", 
+               boxShadow: "0 30px 60px rgba(0,0,0,0.6)",
+               border: "1px solid rgba(255,255,255,0.05)"
+             }}
+           >
+              <Image 
+                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=1000" 
+                fill 
+                style={{ objectFit: "cover" }} 
+                alt="Digital Strategy Planning" 
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(4,5,8,0.8), transparent)" }} />
+           </motion.div>
+
+           {/* Image 3 - Center Bottom Square */}
+           <motion.div 
+             style={{ 
+               y: y1, 
+               position: "absolute", 
+               bottom: "0%", 
+               left: "50%", 
+               x: "-50%",
+               width: "22vw", 
+               height: "22vw", 
+               maxWidth: "300px", 
+               maxHeight: "300px", 
+               minWidth: "180px",
+               minHeight: "180px",
+               borderRadius: "24px", 
+               overflow: "hidden", 
+               boxShadow: "0 30px 60px rgba(0,0,0,0.6)",
+               border: "1px solid rgba(255,255,255,0.05)",
+               zIndex: 2
+             }}
+           >
+              <Image 
+                src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&q=80&w=800" 
+                fill 
+                style={{ objectFit: "cover" }} 
+                alt="Development Code" 
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(4,5,8,0.8), transparent)" }} />
+           </motion.div>
+        </div>
+      </div>
+      
+      {/* Decorative gradient blur */}
+      <div 
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "800px",
+          height: "800px",
+          background: "radial-gradient(circle, rgba(59,91,255,0.05) 0%, transparent 70%)",
+          filter: "blur(100px)",
+          pointerEvents: "none",
+          zIndex: 0
+        }}
+      />
     </section>
   );
 }
