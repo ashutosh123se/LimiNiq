@@ -13,9 +13,9 @@ const VALUES = [
 
 const TEAM = [
   { name: "Ashutosh Shekhar", role: "CEO", color: "#3B5BFF", initials: "AS", bio: "Leads with a vision for innovation & growth.", image: "/images/team/ashutosh.jpg" },
-  { name: "Ayush Shekhar", role: "Technical Head", color: "#00C8A0", initials: "AS", bio: "Architects scalable & secure digital solutions." },
+  { name: "Ayush Shekhar", role: "Technical Head", color: "#00C8A0", initials: "AS", bio: "Architects scalable & secure digital solutions.", image: "/images/team/ayush.jpg" },
   { name: "Akanksha Singh", role: "Marketing Head", color: "#7B61FF", initials: "AK", bio: "Maximizes online visibility & growth strategies." },
-  { name: "Aman Kumar", role: "Animation Head", color: "#FF4A7A", initials: "AM", bio: "Brings ideas to life through stunning visuals." },
+  { name: "Aman Kumar", role: "Animation Head", color: "#FF4A7A", initials: "AM", bio: "Brings ideas to life through stunning visuals.", image: "/images/team/aman.jpg" },
 ];
 
 export function AboutTeaser() {
