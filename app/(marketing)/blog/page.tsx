@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { BlogPreviewSection } from "@/components/sections/home/BlogPreviewSection";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -57,10 +58,16 @@ export default function BlogPage() {
             <div className="glass-card group" style={{ padding: "1.5rem", borderRadius: 32, display: "grid", gridTemplateColumns: "1fr", gap: "3rem", position: "relative", overflow: "hidden" }} id="featured-post">
               
               {/* Image Area */}
-              <div style={{ width: "100%", height: "100%", minHeight: 350, background: "rgba(255,255,255,0.02)", borderRadius: 24, border: "1px dashed rgba(255,255,255,0.1)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                {/* Abstract visualization */}
-                <div style={{ width: 150, height: 150, borderRadius: "50%", background: "var(--accent-primary)", filter: "blur(60px)", opacity: 0.2, position: "absolute" }} />
-                <div style={{ fontFamily: "var(--font-mono)", color: "var(--text-tertiary)", letterSpacing: "0.2em", textTransform: "uppercase" }}>Visual Placeholder</div>
+              <div style={{ width: "100%", height: "100%", minHeight: 350, background: "rgba(255,255,255,0.02)", borderRadius: 24, border: "1px solid rgba(255,255,255,0.05)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }} className="featured-image-container">
+                <Image 
+                  src="https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&q=80&w=1200" 
+                  alt="The Future of Headless Commerce" 
+                  fill 
+                  style={{ objectFit: "cover" }} 
+                  className="featured-image"
+                  priority
+                />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(4,5,8,0.4), transparent)" }} />
               </div>
 
               {/* Content Area */}
@@ -100,6 +107,8 @@ export default function BlogPage() {
         }
         .group:hover .group-hover-translate { transform: translateX(6px); }
         .hover-brighten:hover { background: rgba(255,255,255,0.08) !important; color: white !important; }
+        .featured-image { transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1); }
+        .group:hover .featured-image { transform: scale(1.05); }
       `}</style>
     </div>
   );
