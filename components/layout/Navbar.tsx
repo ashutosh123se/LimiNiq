@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 
 const NAV_LINKS = [
-  { label: 'Services', href: '/services/website-development' },
+  { label: 'Services', href: '/services' },
   { label: 'Work', href: '/portfolio' },
   { label: 'About', href: '/about' },
   { label: 'Blog', href: '/blog' },

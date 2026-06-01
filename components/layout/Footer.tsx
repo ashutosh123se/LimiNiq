@@ -6,11 +6,12 @@ import { motion } from "framer-motion";
 
 const FOOTER_LINKS = {
   services: [
-    { label: "Website Development", href: "/services/website-development" },
-    { label: "SEO Services", href: "/services/seo" },
+    { label: "Website & E-commerce", href: "/services/website-ecommerce" },
+    { label: "Mobile App Development", href: "/services/mobile-app-development" },
+    { label: "SaaS Development", href: "/services/custom-software-saas" },
     { label: "Digital Marketing", href: "/services/digital-marketing" },
-    { label: "Full-Stack Suite", href: "/pricing" },
-    { label: "Free Audit", href: "/contact" },
+    { label: "SEO Services", href: "/services/seo-search-engine-marketing" },
+    { label: "View All Services", href: "/services" },
   ],
   company: [
     { label: "About", href: "/about" },
