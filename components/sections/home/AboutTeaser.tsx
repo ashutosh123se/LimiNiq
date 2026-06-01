@@ -5,6 +5,13 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 
+const TEAM = [
+  { name: "Ashutosh Shekhar", role: "CEO", color: "#3B5BFF", initials: "AS", bio: "Leads with a vision for innovation & growth.", image: "/images/team/ashutosh.png" },
+  { name: "Ayush Shekhar", role: "Technical Head", color: "#00C8A0", initials: "AS", bio: "Architects scalable & secure digital solutions.", image: "/images/team/ayush.png" },
+  { name: "Akanksha Singh", role: "Marketing Head", color: "#7B61FF", initials: "AK", bio: "Maximizes online visibility & growth strategies." },
+  { name: "Aman Kumar", role: "Animation Head", color: "#FF4A7A", initials: "AM", bio: "Brings ideas to life through stunning visuals.", image: "/images/team/aman.png" },
+];
+
 export function AboutTeaser() {
   const containerRef = useRef(null);
   
@@ -48,10 +55,47 @@ export function AboutTeaser() {
             </Link>
           </motion.div>
         </div>
+        
+        {/* Team Avatars Floating Over Marquee */}
+        <div style={{ marginTop: "4rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem", maxWidth: "1000px", margin: "4rem auto 0" }}>
+          {TEAM.map((member, i) => (
+            <motion.div
+              key={member.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              whileHover={{ y: -5, scale: 1.02 }}
+              className="glass-card group"
+              style={{ padding: "1.5rem", textAlign: "center", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", minHeight: 220, border: "1px solid rgba(255,255,255,0.05)", background: "rgba(10,12,16,0.5)" }}
+            >
+              {/* Background glow on hover */}
+              <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at top center, ${member.color}20 0%, transparent 70%)`, opacity: 0, transition: "opacity 0.4s ease" }} className="group-hover-glow" />
+
+              {/* Avatar */}
+              <div style={{ position: "relative", width: 72, height: 72, margin: "0 auto 1rem", zIndex: 1, transition: "transform 0.4s ease" }} className="member-avatar">
+                <div style={{ position: "absolute", inset: -4, borderRadius: "50%", background: `${member.color}30`, animation: `pulseRing ${2 + i * 0.3}s ease-out infinite` }} />
+                {member.image ? (
+                  <Image src={member.image} alt={member.name} fill style={{ objectFit: "cover", borderRadius: "50%" }} />
+                ) : (
+                  <div style={{ width: 72, height: 72, borderRadius: "50%", background: `linear-gradient(135deg, ${member.color}, ${member.color}88)`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 4px 16px ${member.color}50` }}>
+                    <span style={{ color: "white", fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.2rem" }}>{member.initials}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Name & Role */}
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <div style={{ fontFamily: "var(--font-heading)", fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.25rem" }}>{member.name}</div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", fontWeight: 600, color: member.color, marginBottom: "1rem" }}>{member.role}</div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* Marquee Gallery Area */}
-      <div style={{ position: "relative", height: "70vh", minHeight: "500px", maxHeight: "800px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "4rem" }}>
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
         
         {/* Massive Background Marquees */}
         <div style={{ position: "absolute", width: "100%", display: "flex", flexDirection: "column", gap: "2rem", opacity: 0.1, transform: "rotate(-3deg) scale(1.1)", pointerEvents: "none" }}>
@@ -79,6 +123,12 @@ export function AboutTeaser() {
           zIndex: 0
         }}
       />
+
+      <style>{`
+        .group:hover .group-hover-glow { opacity: 1 !important; }
+        .group:hover .member-avatar { transform: scale(1.1) translateY(-4px); }
+        @keyframes pulseRing { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.3); opacity: 0; } }
+      `}</style>
     </section>
   );
 }
