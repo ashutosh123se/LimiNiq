@@ -46,24 +46,37 @@ export function Navbar() {
           width: '100%',
           zIndex: 50,
           padding: scrolled ? '1rem 0' : '1.5rem 0',
-          background: scrolled ? 'rgba(4, 5, 8, 0.85)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(24px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 4px 40px rgba(0,0,0,0.40)' : 'none',
-          transition: 'padding 0.4s ease, background 0.4s ease, border-bottom 0.4s ease, backdrop-filter 0.4s ease',
+          transition: 'padding 0.4s ease',
+          pointerEvents: 'none', // Allow clicking through the empty space
         }}
       >
         <div className="section-container">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', width: '100%' }}>
             
-            <Link href="/" data-cursor="link" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Link 
+              href="/" 
+              data-cursor="link" 
+              style={{ 
+                textDecoration: 'none', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.75rem',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '0.5rem 1rem',
+                borderRadius: '100px',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                pointerEvents: 'auto',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+              }}
+            >
               <LogoMark />
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 800,
-                  fontSize: '1.4rem',
+                  fontSize: '1.25rem',
                   letterSpacing: '-0.02em',
                   color: 'var(--text-primary)',
                 }}
@@ -72,7 +85,22 @@ export function Navbar() {
               </span>
             </Link>
 
-            <div style={{ display: 'none', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
+            <div 
+              style={{ 
+                display: 'none', 
+                alignItems: 'center', 
+                gap: '2rem',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '0.5rem 2rem',
+                borderRadius: '100px',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                pointerEvents: 'auto',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+              }} 
+              className="desktop-nav"
+            >
               {NAV_LINKS.map((link) => {
                 const isActive = pathname === link.href || pathname.startsWith(link.href + '/')
                 return (
@@ -95,8 +123,22 @@ export function Navbar() {
               })}
             </div>
 
-            <div style={{ display: 'none', alignItems: 'center', gap: '1rem' }} className="desktop-cta">
-              <MagneticButton className="btn-primary" style={{ padding: '10px 20px', fontSize: '14px' }} onClick={() => router.push('/contact')}>
+            <div 
+              style={{ 
+                display: 'none', 
+                alignItems: 'center',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '0.35rem',
+                borderRadius: '100px',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                pointerEvents: 'auto',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+              }} 
+              className="desktop-cta"
+            >
+              <MagneticButton className="btn-primary" style={{ padding: '8px 24px', fontSize: '14px', borderRadius: '100px', margin: 0 }} onClick={() => router.push('/contact')}>
                 Get Free Audit
               </MagneticButton>
             </div>
@@ -113,6 +155,12 @@ export function Navbar() {
                 width: 48,
                 height: 48,
                 display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--text-primary)',
+                pointerEvents: 'auto'
+              }}
+            >
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
