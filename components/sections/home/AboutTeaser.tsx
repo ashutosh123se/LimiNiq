@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const VALUES = [
   { icon: "⚡", label: "Speed-First", desc: "We move fast, ship quality." },
@@ -11,7 +12,7 @@ const VALUES = [
 ];
 
 const TEAM = [
-  { name: "Ashutosh Shekhar", role: "CEO", color: "#3B5BFF", initials: "AS", bio: "Leads with a vision for innovation & growth." },
+  { name: "Ashutosh Shekhar", role: "CEO", color: "#3B5BFF", initials: "AS", bio: "Leads with a vision for innovation & growth.", image: "/images/team/ashutosh.jpg" },
   { name: "Ayush Shekhar", role: "Technical Head", color: "#00C8A0", initials: "AS", bio: "Architects scalable & secure digital solutions." },
   { name: "Akanksha Singh", role: "Marketing Head", color: "#7B61FF", initials: "AK", bio: "Maximizes online visibility & growth strategies." },
   { name: "Aman Kumar", role: "Animation Head", color: "#FF4A7A", initials: "AM", bio: "Brings ideas to life through stunning visuals." },
@@ -82,22 +83,31 @@ export function AboutTeaser() {
                       animation: `pulseRing ${2 + i * 0.3}s ease-out infinite`,
                     }}
                   />
-                  <div
-                    style={{
-                      width: 64,
-                      height: 64,
-                      borderRadius: "50%",
-                      background: `linear-gradient(135deg, ${member.color}, ${member.color}88)`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: `0 4px 16px ${member.color}50`,
-                    }}
-                  >
-                    <span style={{ color: "white", fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.2rem" }}>
-                      {member.initials}
-                    </span>
-                  </div>
+                  {member.image ? (
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      style={{ objectFit: "cover", borderRadius: "50%" }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: 64,
+                        height: 64,
+                        borderRadius: "50%",
+                        background: `linear-gradient(135deg, ${member.color}, ${member.color}88)`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: `0 4px 16px ${member.color}50`,
+                      }}
+                    >
+                      <span style={{ color: "white", fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.2rem" }}>
+                        {member.initials}
+                      </span>
+                    </div>
+                  )}
                 </motion.div>
 
                 {/* Name & Role */}
