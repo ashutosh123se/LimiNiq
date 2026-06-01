@@ -1,0 +1,1 @@
+export { newsletterWelcomeTemplate } from "./clientAutoReply";

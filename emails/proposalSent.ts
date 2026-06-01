@@ -1,0 +1,1 @@
+export { proposalSentTemplate } from "./clientAutoReply";
