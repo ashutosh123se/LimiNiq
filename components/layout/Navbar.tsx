@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 
 const NAV_LINKS = [
@@ -60,10 +61,9 @@ export function Navbar() {
                 textDecoration: 'none', 
                 display: 'flex', 
                 alignItems: 'center', 
-                gap: '0.75rem',
                 background: 'rgba(255, 255, 255, 0.03)',
                 border: '1px solid rgba(255, 255, 255, 0.08)',
-                padding: '0.5rem 1rem',
+                padding: '0.4rem 1.25rem',
                 borderRadius: '100px',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
@@ -71,18 +71,15 @@ export function Navbar() {
                 boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
               }}
             >
-              <LogoMark />
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 800,
-                  fontSize: '1.25rem',
-                  letterSpacing: '-0.02em',
-                  color: 'var(--text-primary)',
-                }}
-              >
-                LIMI<span style={{ color: 'var(--accent-primary)' }}>NI</span>Q
-              </span>
+              <div style={{ position: 'relative', width: '130px', height: '36px' }}>
+                <Image 
+                  src="/images/logo.png" 
+                  alt="LimiNiq Logo" 
+                  fill 
+                  style={{ objectFit: 'contain', objectPosition: 'left center' }} 
+                  priority 
+                />
+              </div>
             </Link>
 
             <div 

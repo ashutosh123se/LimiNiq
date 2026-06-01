@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const FOOTER_LINKS = {
   services: [
@@ -123,25 +124,15 @@ export function Footer() {
         >
           {/* Column 1 — Brand */}
           <div style={{ gridColumn: "span 1" }}>
-            <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  background: "linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary))",
-                  borderRadius: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <text x="2" y="15" fontFamily="Syne, sans-serif" fontWeight="800" fontSize="13" fill="white">LN</text>
-                </svg>
+            <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }}>
+              <div style={{ position: 'relative', width: '130px', height: '36px' }}>
+                <Image 
+                  src="/images/logo.png" 
+                  alt="LimiNiq Logo" 
+                  fill 
+                  style={{ objectFit: 'contain', objectPosition: 'left center' }} 
+                />
               </div>
-              <span style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.4rem", color: "white", letterSpacing: "-0.02em" }}>
-                LIMI<span style={{ color: "var(--text-primary)" }}>NIQ</span>
-              </span>
             </Link>
             <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", lineHeight: 1.7, marginBottom: "1.5rem", maxWidth: 240 }}>
               Building the digital future, one ambitious brand at a time.
