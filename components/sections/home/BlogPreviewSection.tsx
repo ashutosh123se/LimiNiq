@@ -53,16 +53,26 @@ export function BlogPreviewSection() {
       .then(res => res.json())
       .then(data => {
         if (data.posts && data.posts.length > 0) {
-          // Add gradients dynamically based on category
-          const enhancedPosts = data.posts.map((p: any) => ({
-            ...p,
-            readTime: `${Math.max(3, Math.ceil((p.content?.length || 2000) / 1000))} min`,
-            gradient: p.category.toLowerCase().includes("seo") 
-              ? "linear-gradient(135deg, #00C8A0, #3B5BFF)"
-              : p.category.toLowerCase().includes("marketing")
-              ? "linear-gradient(135deg, #7B61FF, #00C8A0)"
-              : "linear-gradient(135deg, #3B5BFF, #7B61FF)"
-          }));
+          // Add gradients and fallback images dynamically based on category if they lack a coverImage
+          const enhancedPosts = data.posts.map((p: any) => {
+            const isSEO = p.category.toLowerCase().includes("seo");
+            const isMarketing = p.category.toLowerCase().includes("marketing");
+            
+            let fallbackImage = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800"; // Web Dev
+            if (isSEO) fallbackImage = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800";
+            else if (isMarketing) fallbackImage = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800";
+
+            return {
+              ...p,
+              readTime: `${Math.max(3, Math.ceil((p.content?.length || 2000) / 1000))} min`,
+              coverImage: p.coverImage || fallbackImage,
+              gradient: isSEO 
+                ? "linear-gradient(135deg, #00C8A0, #3B5BFF)"
+                : isMarketing
+                ? "linear-gradient(135deg, #7B61FF, #00C8A0)"
+                : "linear-gradient(135deg, #3B5BFF, #7B61FF)"
+            };
+          });
           setPosts(enhancedPosts);
         }
       })
