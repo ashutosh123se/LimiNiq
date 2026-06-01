@@ -14,6 +14,7 @@ const FALLBACK_POSTS = [
     readTime: "8 min",
     author: "Aryan Shah",
     createdAt: new Date("2026-05-28").toISOString(),
+    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800",
     gradient: "linear-gradient(135deg, #3B5BFF, #7B61FF)",
   },
   {
@@ -25,6 +26,7 @@ const FALLBACK_POSTS = [
     readTime: "12 min",
     author: "Priya Nair",
     createdAt: new Date("2026-05-22").toISOString(),
+    coverImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
     gradient: "linear-gradient(135deg, #00C8A0, #3B5BFF)",
   },
   {
@@ -36,6 +38,7 @@ const FALLBACK_POSTS = [
     readTime: "10 min",
     author: "Rohan Mehta",
     createdAt: new Date("2026-05-15").toISOString(),
+    coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
     gradient: "linear-gradient(135deg, #7B61FF, #00C8A0)",
   },
 ];
