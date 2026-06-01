@@ -153,22 +153,36 @@ export function PortfolioSection() {
                     src={item.image}
                     alt={item.title}
                     fill
-                    style={{ objectFit: "cover", transition: "transform 0.5s ease" }}
+                    style={{ objectFit: "cover", transition: "transform 0.8s cubic-bezier(0.2, 1, 0.2, 1)" }}
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="portfolio-img"
                   />
                 )}
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(4,5,8,0.9) 0%, rgba(4,5,8,0.2) 100%)" }} />
+                <div 
+                  className="portfolio-overlay"
+                  style={{ 
+                    position: "absolute", 
+                    inset: 0, 
+                    background: "linear-gradient(0deg, rgba(4,5,8,0.95) 0%, rgba(4,5,8,0.1) 100%)",
+                    transition: "background 0.5s ease" 
+                  }} 
+                />
                 
-                <div style={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "1rem",
-                  right: "1rem",
-                  display: "flex",
-                  gap: "0.5rem",
-                  flexWrap: "wrap",
-                }}>
+                <div 
+                  className="metrics-block"
+                  style={{
+                    position: "absolute",
+                    bottom: "1.5rem",
+                    left: "1.5rem",
+                    right: "1.5rem",
+                    display: "flex",
+                    gap: "0.5rem",
+                    flexWrap: "wrap",
+                    transform: "translateY(15px)",
+                    opacity: 0,
+                    transition: "all 0.5s cubic-bezier(0.23, 1, 0.32, 1)"
+                  }}
+                >
                   {item.metrics?.map((m: any, idx: number) => (
                     <span key={idx} style={{
                       fontFamily: "var(--font-mono)",
@@ -219,7 +233,14 @@ export function PortfolioSection() {
 
       <style>{`
         .group:hover .portfolio-img {
-          transform: scale(1.08);
+          transform: scale(1.08) !important;
+        }
+        .group:hover .metrics-block {
+          transform: translateY(0) !important;
+          opacity: 1 !important;
+        }
+        .group:hover .portfolio-overlay {
+          background: linear-gradient(0deg, rgba(4,5,8,0.85) 0%, rgba(4,5,8,0.4) 100%) !important;
         }
       `}</style>
     </section>

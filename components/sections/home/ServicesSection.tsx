@@ -107,7 +107,7 @@ export function ServicesSection() {
             key={service.id}
             onMouseEnter={() => setHoveredCard(service.id)}
             onMouseLeave={() => setHoveredCard(null)}
-            className="glass-card-premium service-card"
+            className="glass-card-premium service-card group"
             style={{
               width: 420,
               height: 520,
@@ -115,33 +115,53 @@ export function ServicesSection() {
               display: 'flex',
               flexDirection: 'column',
               opacity: hoveredCard && hoveredCard !== service.id ? 0.4 : 1,
-              transform: hoveredCard === service.id ? 'translateY(-10px)' : 'translateY(0)',
-              transition: 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
-              cursor: 'pointer'
+              transform: hoveredCard === service.id ? 'translateY(-15px) scale(1.02)' : 'translateY(0) scale(1)',
+              transition: 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
+              cursor: 'pointer',
+              position: 'relative',
+              overflow: 'hidden'
             }}
             data-cursor="view"
           >
+            {/* Hover Glow */}
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `radial-gradient(800px circle at 50% 100%, ${service.color}15, transparent)`,
+                opacity: hoveredCard === service.id ? 1 : 0,
+                transition: 'opacity 0.5s ease',
+                pointerEvents: 'none'
+              }}
+            />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2.5rem' }}>
-              <div style={{
-                width: 64, height: 64, 
-                background: `linear-gradient(135deg, ${service.color}20, transparent)`, 
-                borderRadius: 16, 
-                display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                color: service.color,
-                border: `1px solid ${service.color}30`,
-                boxShadow: `0 8px 24px ${service.color}20`
-              }}>
+              <div 
+                className="service-icon"
+                style={{
+                  width: 64, height: 64, 
+                  background: `linear-gradient(135deg, ${service.color}20, transparent)`, 
+                  borderRadius: 16, 
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                  color: service.color,
+                  border: `1px solid ${service.color}30`,
+                  boxShadow: `0 8px 24px ${service.color}20`,
+                  transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  transform: hoveredCard === service.id ? 'scale(1.1) rotate(5deg)' : 'scale(1) rotate(0deg)'
+                }}>
                 {service.icon}
               </div>
               <Link
                 href={service.href}
+                className="service-link-btn"
                 style={{
                   width: 44, height: 44,
                   borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.05)',
+                  background: hoveredCard === service.id ? service.color : 'rgba(255,255,255,0.05)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'var(--text-primary)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'white',
+                  border: hoveredCard === service.id ? `1px solid ${service.color}` : '1px solid rgba(255,255,255,0.1)',
+                  transition: 'all 0.3s ease',
+                  transform: hoveredCard === service.id ? 'rotate(45deg)' : 'rotate(0deg)'
                 }}
               >
                 <ArrowUpRight size={20} strokeWidth={1.5} />
@@ -157,10 +177,20 @@ export function ServicesSection() {
             </p>
 
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-              {service.features.map((feat) => (
-                <li key={feat} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: service.color }} />
-                  <span style={{ fontSize: '0.9rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>{feat}</span>
+              {service.features.map((feat, i) => (
+                <li key={feat} style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.75rem',
+                  transform: hoveredCard === service.id ? 'translateX(10px)' : 'translateX(0)',
+                  transition: `transform 0.4s cubic-bezier(0.23, 1, 0.32, 1) ${i * 0.05}s`
+                }}>
+                  <div style={{ 
+                    width: 6, height: 6, borderRadius: '50%', background: service.color,
+                    boxShadow: hoveredCard === service.id ? `0 0 10px ${service.color}` : 'none',
+                    transition: 'box-shadow 0.3s ease'
+                  }} />
+                  <span style={{ fontSize: '0.95rem', color: hoveredCard === service.id ? 'var(--text-primary)' : 'var(--text-tertiary)', fontWeight: 500, transition: 'color 0.3s ease' }}>{feat}</span>
                 </li>
               ))}
             </ul>

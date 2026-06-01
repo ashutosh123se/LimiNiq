@@ -168,19 +168,23 @@ export function AboutTeaser() {
             </p>
 
             {/* Core values */}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginBottom: "2rem" }}>
-              {VALUES.map((v) => (
-                <div
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "2.5rem" }}>
+              {VALUES.map((v, i) => (
+                <motion.div
                   key={v.label}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.4 + i * 0.15, type: "spring" }}
+                  whileHover={{ scale: 1.05, y: -2 }}
                   className="glass-card"
-                  style={{ display: "flex", alignItems: "center", gap: "0.6rem", padding: "0.6rem 1rem", borderRadius: 12 }}
+                  style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem 1.25rem", borderRadius: 14, cursor: "default" }}
                 >
-                  <span style={{ fontSize: "1rem" }}>{v.icon}</span>
+                  <span style={{ fontSize: "1.2rem" }}>{v.icon}</span>
                   <div>
-                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.82rem", fontWeight: 700, color: "var(--text-primary)" }}>{v.label}</div>
+                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)" }}>{v.label}</div>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--text-tertiary)" }}>{v.desc}</div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 
