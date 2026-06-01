@@ -1,175 +1,183 @@
-"use client";
+'use client'
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import Link from "next/link";
-import { MonitorSmartphone, Search, Megaphone, ArrowUpRight } from "lucide-react";
+import { useRef, useEffect, useState } from 'react'
+import Link from 'next/link'
+import { MonitorSmartphone, Search, Megaphone, ArrowUpRight } from 'lucide-react'
+import { gsap } from '@/lib/gsap-config'
 
 const SERVICES = [
   {
-    id: "web",
-    icon: <MonitorSmartphone size={16} strokeWidth={1.5} />,
-    title: "Website Development",
-    description: "We craft blazing-fast, conversion-optimised web experiences that leave lasting impressions and drive real business results.",
-    features: [
-      "Custom Web Applications",
-      "E-Commerce (Shopify, Custom)",
-      "Landing Pages & Sales Funnels",
-    ],
-    href: "/services/website-development",
-    colSpan: "md:col-span-2",
+    id: 'web',
+    icon: <MonitorSmartphone size={24} strokeWidth={1.5} />,
+    title: 'Website Development',
+    description: 'We craft blazing-fast, conversion-optimised web experiences that leave lasting impressions and drive real business results.',
+    features: ['Custom Web Applications', 'E-Commerce (Shopify, Custom)', 'Landing Pages & Sales Funnels'],
+    href: '/services/website-development',
+    color: '#3B5BFF'
   },
   {
-    id: "seo",
-    icon: <Search size={16} strokeWidth={1.5} />,
-    title: "Search Engine Optimization",
-    description: "Data-driven SEO strategies that move the needle — from technical foundations to authority-building link campaigns.",
-    features: [
-      "Technical SEO Audits",
-      "On-Page Optimisation",
-      "Link Building & Authority",
-    ],
-    href: "/services/seo",
-    colSpan: "md:col-span-1",
+    id: 'seo',
+    icon: <Search size={24} strokeWidth={1.5} />,
+    title: 'Search Engine Optimization',
+    description: 'Data-driven SEO strategies that move the needle — from technical foundations to authority-building link campaigns.',
+    features: ['Technical SEO Audits', 'On-Page Optimisation', 'Link Building & Authority'],
+    href: '/services/seo',
+    color: '#00C8A0'
   },
   {
-    id: "marketing",
-    icon: <Megaphone size={16} strokeWidth={1.5} />,
-    title: "Digital Marketing",
-    description: "Full-spectrum digital marketing — from paid ads that scale profitably to organic content that builds brand authority.",
-    features: [
-      "Google & Meta Ads (PPC)",
-      "Email Marketing Automation",
-      "Conversion Tracking",
-    ],
-    href: "/services/digital-marketing",
-    colSpan: "md:col-span-3",
+    id: 'marketing',
+    icon: <Megaphone size={24} strokeWidth={1.5} />,
+    title: 'Digital Marketing',
+    description: 'Full-spectrum digital marketing — from paid ads that scale profitably to organic content that builds brand authority.',
+    features: ['Google & Meta Ads (PPC)', 'Email Marketing Automation', 'Conversion Tracking'],
+    href: '/services/digital-marketing',
+    color: '#7B61FF'
   },
-];
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  }),
-};
+  {
+    id: 'branding',
+    icon: <MonitorSmartphone size={24} strokeWidth={1.5} />,
+    title: 'Brand Identity',
+    description: 'Strategic branding that tells your story and connects with your audience on a deeper, emotional level.',
+    features: ['Logo Design & Identity', 'Brand Guidelines', 'Creative Direction'],
+    href: '/services/branding',
+    color: '#F59E0B'
+  }
+]
 
 export function ServicesSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef<HTMLElement>(null)
+  const pinRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Only apply horizontal scroll on desktop
+    if (window.innerWidth < 900) return
+    
+    const pinElement = pinRef.current
+    const wrapper = wrapperRef.current
+    if (!pinElement || !wrapper) return
+
+    let ctx = gsap.context(() => {
+      const getScrollAmount = () => {
+        let wrapperWidth = wrapper.scrollWidth
+        return -(wrapperWidth - window.innerWidth + 100)
+      }
+
+      gsap.to(wrapper, {
+        x: getScrollAmount,
+        ease: "none",
+        scrollTrigger: {
+          trigger: pinElement,
+          start: "top top",
+          end: () => `+=${Math.abs(getScrollAmount())}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        }
+      })
+    });
+
+    return () => ctx.revert();
+  }, [])
 
   return (
-    <section ref={ref} className="section-padding" style={{ position: "relative" }}>
-      <div className="section-container" style={{ position: "relative", zIndex: 1, maxWidth: 1100 }}>
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          style={{ marginBottom: "5rem", maxWidth: 640 }}
-        >
-          <div className="text-label" style={{ marginBottom: "1rem" }}>
-            Core Disciplines
-          </div>
-          <h2 className="text-section" style={{ marginBottom: "1rem" }}>
-            The Architecture of Growth
-          </h2>
-          <p style={{ fontSize: "1rem", color: "var(--text-secondary)", lineHeight: 1.7 }}>
-            Three interconnected services engineered to dominate your market.
-          </p>
-        </motion.div>
+    <section ref={sectionRef}>
+      <div ref={pinRef} className="pin-container" style={{ position: 'relative', height: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+      
+      <div className="services-header" style={{ position: 'absolute', top: '4rem', left: '4rem', zIndex: 10, maxWidth: '400px' }}>
+        <div className="eyebrow" style={{ marginBottom: '1rem' }}>Core Disciplines</div>
+        <h2 className="section-h2">The Architecture of Growth</h2>
+      </div>
 
-        {/* Bento Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "1.5rem",
-          }}
-          className="bento-grid"
-        >
-          {SERVICES.map((service, i) => (
-            <motion.div
-              key={service.id}
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
-              className={`glass-card ${service.colSpan} bento-card`}
-              style={{
-                padding: "2.5rem",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              {/* Top Row: Icon + Title */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "2rem" }}>
-                <div style={{
-                  width: 48, height: 48, 
-                  background: `var(--bg-primary)`, 
-                  border: `1px solid var(--border-subtle)`, 
-                  borderRadius: 8, 
-                  display: "flex", alignItems: "center", justifyContent: "center", 
-                  color: "var(--text-primary)",
-                }}>
-                  {service.icon}
-                </div>
-                <Link
-                  href={service.href}
-                  className="bento-link"
-                  style={{
-                    width: 36, height: 36,
-                    borderRadius: 6,
-                    background: "transparent",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "var(--text-tertiary)",
-                    transition: "all 0.2s ease",
-                    border: "1px solid var(--border-subtle)",
-                  }}
-                >
-                  <ArrowUpRight size={16} strokeWidth={1.5} />
-                </Link>
+      <div 
+        ref={wrapperRef}
+        style={{ 
+          display: 'flex', 
+          gap: '2.5rem', 
+          paddingLeft: 'calc(4rem + 450px)', 
+          paddingRight: '4rem',
+          paddingTop: '6rem',
+          width: 'max-content' 
+        }}
+        className="services-wrapper"
+      >
+        {SERVICES.map((service) => (
+          <div
+            key={service.id}
+            onMouseEnter={() => setHoveredCard(service.id)}
+            onMouseLeave={() => setHoveredCard(null)}
+            className="glass-card-premium service-card"
+            style={{
+              width: 420,
+              height: 520,
+              padding: '3rem 2.5rem',
+              display: 'flex',
+              flexDirection: 'column',
+              opacity: hoveredCard && hoveredCard !== service.id ? 0.4 : 1,
+              transform: hoveredCard === service.id ? 'translateY(-10px)' : 'translateY(0)',
+              transition: 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+              cursor: 'pointer'
+            }}
+            data-cursor="view"
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2.5rem' }}>
+              <div style={{
+                width: 64, height: 64, 
+                background: `linear-gradient(135deg, ${service.color}20, transparent)`, 
+                borderRadius: 16, 
+                display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                color: service.color,
+                border: `1px solid ${service.color}30`,
+                boxShadow: `0 8px 24px ${service.color}20`
+              }}>
+                {service.icon}
               </div>
+              <Link
+                href={service.href}
+                style={{
+                  width: 44, height: 44,
+                  borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.05)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--text-primary)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              >
+                <ArrowUpRight size={20} strokeWidth={1.5} />
+              </Link>
+            </div>
 
-              <h3 className="text-card-title" style={{ marginBottom: "1rem" }}>
-                {service.title}
-              </h3>
-              
-              <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "2.5rem", flex: 1 }}>
-                {service.description}
-              </p>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+              {service.title}
+            </h3>
+            
+            <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2.5rem', flex: 1 }}>
+              {service.description}
+            </p>
 
-              {/* Minimal Features List */}
-              <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {service.features.map((feat) => (
-                  <li key={feat} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                    <div style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--accent-primary)" }} />
-                    <span style={{ fontSize: "0.85rem", color: "var(--text-tertiary)" }}>{feat}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
+            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              {service.features.map((feat) => (
+                <li key={feat} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: service.color }} />
+                  <span style={{ fontSize: '0.9rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>{feat}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
       </div>
 
       <style>{`
-        .bento-link:hover {
-          background: var(--bg-primary) !important;
-          color: var(--text-primary) !important;
-          border-color: var(--border-hover) !important;
-        }
-        
-        @media (max-width: 991px) {
-          .bento-grid {
-            grid-template-columns: 1fr !important;
-          }
-          .md\\:col-span-2, .md\\:col-span-1, .md\\:col-span-3 {
-            grid-column: span 1 / span 1 !important;
-          }
+        @media (max-width: 899px) {
+          .pin-container { height: auto !important; display: block !important; padding: 6rem 1.5rem !important; }
+          .services-wrapper { display: flex; flex-direction: column; width: 100% !important; padding: 0 !important; }
+          .service-card { width: 100% !important; height: auto !important; }
+          .services-header { position: relative !important; top: 0 !important; left: 0 !important; max-width: 100% !important; margin-bottom: 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; }
         }
       `}</style>
     </section>
-  );
+  )
 }

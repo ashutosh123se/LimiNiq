@@ -79,9 +79,9 @@ export function ContactPage() {
   };
 
   const CONTACT_INFO = [
-    { icon: <Mail size={20} />, label: "Email", value: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@liminiq.com", href: `mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@liminiq.com"}` },
-    { icon: <Phone size={20} />, label: "Phone", value: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+91 XXXXX XXXXX", href: `tel:${process.env.NEXT_PUBLIC_CONTACT_PHONE}` },
-    { icon: <MapPin size={20} />, label: "Location", value: process.env.NEXT_PUBLIC_CONTACT_CITY || "India", href: "#" },
+    { icon: <Mail size={20} />, label: "Email", value: "hello@liminq.com", href: "mailto:hello@liminq.com" },
+    { icon: <Phone size={20} />, label: "Phone", value: "9431471654", href: "tel:9431471654" },
+    { icon: <MapPin size={20} />, label: "Location", value: "Shivangi KunjB38A, Madipur JJ Colony, Block A, Janta Colony, Paschim Vihar, Delhi, 110063", href: "https://maps.google.com/?q=Shivangi+KunjB38A,+Madipur+JJ+Colony,+Block+A,+Janta+Colony,+Paschim+Vihar,+Delhi,+110063" },
     { icon: <Clock size={20} />, label: "Hours", value: "Mon–Sat, 9am–7pm", href: "#" },
   ];
 
@@ -133,54 +133,54 @@ export function ContactPage() {
               <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "1.5rem" }}>Follow Our Journey</h3>
               <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                 {[
-                  { icon: "in", href: "https://linkedin.com/company/liminiq" },
-                  { icon: "ig", href: "https://instagram.com/liminiq" },
-                  { icon: "X", href: "https://twitter.com/liminiq" },
-                  { icon: "gh", href: "https://github.com/liminiq" },
+                  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>, href: "https://linkedin.com/company/liminiq", color: "#0077b5" },
+                  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>, href: "https://instagram.com/liminiq", color: "#e1306c" },
+                  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>, href: "https://twitter.com/liminiq", color: "#1da1f2" },
+                  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>, href: "https://github.com/liminiq", color: "#333333" },
                 ].map((s, i) => (
                   <a
                     key={i}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="social-btn"
-                    style={{ textDecoration: "none", width: 48, height: 48, borderRadius: "50%", background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-secondary)", transition: "all 0.2s", fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1rem" }}
+                    className="social-btn group"
+                    style={{ textDecoration: "none", width: 48, height: 48, borderRadius: "50%", background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-secondary)", transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", position: "relative", overflow: "hidden" }}
                   >
-                    {s.icon}
+                    <span style={{ position: "relative", zIndex: 1, display: "flex" }} className="social-icon-wrapper">{s.icon}</span>
+                    <div className="social-bg" style={{ position: "absolute", inset: 0, background: s.color, opacity: 0, transition: "opacity 0.3s" }} />
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* Minimalist Graphic Block */}
+            {/* Map Block */}
             <div
               className="glass-card"
               style={{
-                height: 180,
+                height: 250,
                 borderRadius: 16,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 position: "relative",
                 overflow: "hidden"
               }}
             >
-              {/* Globe grid pattern */}
-              <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "linear-gradient(var(--text-primary) 1px, transparent 1px), linear-gradient(90deg, var(--text-primary) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-              
-              <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
-                <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--accent-primary)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", boxShadow: "0 0 40px rgba(109, 40, 217, 0.4)" }}>
-                  <MapPin size={24} />
-                </div>
-                <div style={{ fontFamily: "var(--font-mono)", color: "var(--text-secondary)", fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                  Operating Worldwide
-                </div>
-              </div>
+              <iframe 
+                src="https://maps.google.com/maps?q=Shivangi%20KunjB38A,%20Madipur%20JJ%20Colony,%20Block%20A,%20Janta%20Colony,%20Paschim%20Vihar,%20Delhi,%20110063&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                width="100%" 
+                height="100%" 
+                style={{ border: 0, filter: "grayscale(100%) opacity(70%)" }}
+                allowFullScreen={false} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
             </div>
           </div>
 
           {/* Right column — form */}
-          <div>
+          <div style={{ position: "relative" }}>
+            {/* Background Ambient Glow */}
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "120%", height: "120%", background: "radial-gradient(circle, rgba(109,40,217,0.15) 0%, transparent 60%)", pointerEvents: "none", zIndex: 0, filter: "blur(60px)" }} />
+            
+            <div style={{ position: "relative", zIndex: 1, height: "100%" }}>
             {submitState === "success" ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -201,9 +201,10 @@ export function ContactPage() {
             ) : (
               <motion.form
                 onSubmit={handleSubmit(onSubmit)}
-                className="glass-card"
-                style={{ padding: "3rem", display: "flex", flexDirection: "column", gap: "1.5rem", borderRadius: 24 }}
+                className="glass-card form-container"
+                style={{ padding: "3rem", display: "flex", flexDirection: "column", gap: "1.5rem", borderRadius: 24, position: "relative" }}
               >
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "linear-gradient(90deg, var(--accent-primary), #3b82f6)", borderRadius: "24px 24px 0 0" }} />
                 <h2 style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1.5rem", color: "var(--text-primary)", marginBottom: "0.5rem" }}>
                   Project Brief
                 </h2>
@@ -307,8 +308,17 @@ export function ContactPage() {
                 <button
                   type="submit"
                   disabled={submitState === "loading"}
-                  className="btn-primary"
-                  style={{ justifyContent: "center", padding: "16px", fontSize: "1.05rem", marginTop: "1rem" }}
+                  className="btn-primary submit-btn"
+                  style={{ 
+                    justifyContent: "center", 
+                    padding: "16px", 
+                    fontSize: "1.05rem", 
+                    marginTop: "1rem",
+                    background: "linear-gradient(135deg, var(--accent-primary), #3b82f6)",
+                    border: "none",
+                    boxShadow: "0 10px 25px -5px rgba(109, 40, 217, 0.4)",
+                    transition: "all 0.3s ease"
+                  }}
                 >
                   {submitState === "loading" ? (
                     <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -327,6 +337,7 @@ export function ContactPage() {
                 )}
               </motion.form>
             )}
+            </div>
           </div>
         </div>
       </div>
@@ -340,28 +351,72 @@ export function ContactPage() {
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
+        .form-container {
+          box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5) !important;
+          background: var(--glass-1) !important;
+          backdrop-filter: blur(24px) saturate(160%) !important;
+          border: 1px solid var(--glass-border) !important;
+        }
         .premium-input {
-          background: rgba(255,255,255,0.02) !important;
-          border: 1px solid var(--border-subtle) !important;
-          transition: all 0.2s ease !important;
+          background: rgba(255,255,255,0.03) !important;
+          border: 1px solid rgba(255,255,255,0.1) !important;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          color: var(--text-primary) !important;
+        }
+        .premium-input option {
+          background-color: var(--bg-surface) !important;
+          color: var(--text-primary) !important;
         }
         .premium-input:focus {
-          background: rgba(109, 40, 217, 0.02) !important;
-          border-color: rgba(109, 40, 217, 0.5) !important;
-          box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1) !important;
+          background: rgba(255,255,255,0.08) !important;
+          border-color: var(--accent-primary) !important;
+          box-shadow: 0 0 0 4px rgba(59,91,255,0.15), inset 0 0 0 1px var(--accent-primary) !important;
+          transform: translateY(-1px);
+        }
+        .contact-tile {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .contact-tile:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(109, 40, 217, 0.1) !important;
+          border-color: rgba(109, 40, 217, 0.3) !important;
+          background: rgba(20,20,30,0.8) !important;
         }
         .contact-tile:hover .tile-icon {
-          color: var(--accent-primary) !important;
-          background: rgba(109, 40, 217, 0.1) !important;
-          border-color: rgba(109, 40, 217, 0.2) !important;
+          color: white !important;
+          background: var(--accent-primary) !important;
+          border-color: var(--accent-primary) !important;
+          transform: scale(1.1);
+          box-shadow: 0 0 15px rgba(109, 40, 217, 0.5);
+        }
+        .tile-icon {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
         .social-btn:hover {
-          background: rgba(255,255,255,0.05) !important;
-          color: var(--text-primary) !important;
-          border-color: rgba(255,255,255,0.2) !important;
+          border-color: transparent !important;
+          transform: translateY(-3px);
+          box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .social-btn:hover .social-bg {
+          opacity: 1 !important;
+        }
+        .social-btn:hover .social-icon-wrapper {
+          color: white !important;
+        }
+        .service-pill {
+          position: relative;
+          overflow: hidden;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
         .service-pill:hover {
-          border-color: rgba(109, 40, 217, 0.5) !important;
+          border-color: var(--accent-primary) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(109, 40, 217, 0.15);
+        }
+        .submit-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 15px 30px -5px rgba(109, 40, 217, 0.6) !important;
+          filter: brightness(1.1);
         }
         .select-wrapper {
           position: relative;

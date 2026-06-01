@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
 const FALLBACK_TESTIMONIALS = [
   { name: "Rohan Mehta", company: "TechScale SaaS", role: "CEO", quote: "LIMINIQ rebuilt our platform and organic traffic shot up 420% in 4 months. The team is insanely talented — they think like product builders, not just developers.", rating: 5, service: "Web Dev" },
@@ -16,44 +16,41 @@ const FALLBACK_TESTIMONIALS = [
 ];
 
 export function TestimonialsSection() {
-  const [testimonials, setTestimonials] = useState<any[]>(FALLBACK_TESTIMONIALS);
+  const [testimonials, setTestimonials] = useState<any[]>(FALLBACK_TESTIMONIALS)
 
   useEffect(() => {
     fetch("/api/testimonials?active=true")
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
-          // If fewer than 6 testimonials (needed for a nice scroll), duplicate them
           let items = data;
           if (items.length < 6) {
-            items = [...items, ...items, ...items];
+            items = [...items, ...items, ...items]
           }
-          setTestimonials(items);
+          setTestimonials(items)
         }
       })
-      .catch(() => console.error("Failed to load testimonials, using fallback"));
-  }, []);
+      .catch(() => console.error("Failed to load testimonials, using fallback"))
+  }, [])
 
-  const mid = Math.ceil(testimonials.length / 2);
-  const ROW1 = [...testimonials.slice(0, mid), ...testimonials.slice(0, mid)];
-  const ROW2 = [...testimonials.slice(mid), ...testimonials.slice(mid)];
+  const mid = Math.ceil(testimonials.length / 2)
+  const ROW1 = [...testimonials.slice(0, mid), ...testimonials.slice(0, mid)]
+  const ROW2 = [...testimonials.slice(mid), ...testimonials.slice(mid)]
 
   return (
-    <section className="section-padding" style={{ background: "var(--bg-primary)", overflow: "hidden", position: "relative" }}>
-
+    <section className="section-padding" style={{ overflow: "hidden", position: "relative" }}>
       <div style={{ position: "relative" }}>
-        {/* Header */}
-        <div className="section-container" style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-          <div className="pill-badge shimmer" style={{ marginBottom: "1rem", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }}>
-            <span style={{ color: "var(--accent-violet)" }}>✦</span> Client Voices
+        
+        <div className="section-container" style={{ textAlign: "center", marginBottom: "4rem" }}>
+          <div className="pill-badge shimmer" style={{ marginBottom: "1rem", background: "rgba(59,91,255,0.05)", border: "none" }}>
+            <span style={{ color: "var(--accent-tertiary)" }}>✦</span> Client Voices
           </div>
-          <h2 className="text-section" style={{ color: "var(--text-primary)" }}>
+          <h2 className="section-h2" style={{ color: "var(--text-primary)" }}>
             What Our Clients <span style={{ color: "var(--text-primary)" }}>Say</span>
           </h2>
         </div>
 
-        {/* Row 1 — left scroll */}
-        <div className="carousel-wrapper" style={{ marginBottom: "1.25rem", maskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)" }}>
+        <div className="carousel-wrapper" style={{ marginBottom: "2rem", maskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)" }}>
           <div className="carousel-track">
             {ROW1.map((t, i) => (
               <TestimonialCard key={`r1-${i}`} testimonial={t} />
@@ -61,8 +58,7 @@ export function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Row 2 — right scroll */}
-        <div className="carousel-wrapper" style={{ maskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)" }}>
+        <div className="carousel-wrapper" style={{ maskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)", WebkitMaskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)" }}>
           <div className="carousel-track carousel-track-reverse">
             {ROW2.map((t, i) => (
               <TestimonialCard key={`r2-${i}`} testimonial={t} />
@@ -70,8 +66,24 @@ export function TestimonialsSection() {
           </div>
         </div>
       </div>
+      <style>{`
+        .carousel-track {
+          display: flex;
+          width: max-content;
+          gap: 2rem;
+          animation: marquee 40s linear infinite;
+        }
+        .carousel-track-reverse {
+          animation: marquee-reverse 40s linear infinite;
+        }
+        .carousel-wrapper:hover .carousel-track {
+          animation-play-state: paused;
+        }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+      `}</style>
     </section>
-  );
+  )
 }
 
 function TestimonialCard({ testimonial }: { testimonial: any }) {
@@ -79,57 +91,43 @@ function TestimonialCard({ testimonial }: { testimonial: any }) {
     <div
       className="glass-card"
       style={{
-        width: 320,
+        width: 380,
         flexShrink: 0,
-        padding: "1.5rem",
+        padding: "2.5rem",
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
+        gap: "1.5rem",
+        border: "1px solid rgba(59,91,255,0.1)",
+        boxShadow: "0 10px 30px rgba(59,91,255,0.05)",
       }}
     >
-      {/* Stars */}
-      <div style={{ display: "flex", gap: "2px" }}>
-        {[...Array(testimonial.rating || 5)].map((_, i) => (
-          <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#FBB034">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-        ))}
-      </div>
-
-      {/* Quote */}
-      <p style={{ fontFamily: "var(--font-body)", fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.65, flex: 1, fontStyle: "italic" }}>
+      <p style={{ fontFamily: "var(--font-heading)", fontSize: "1.25rem", color: "var(--text-primary)", lineHeight: 1.5, flex: 1, fontWeight: 400, letterSpacing: "0.01em" }}>
         &ldquo;{testimonial.quote}&rdquo;
       </p>
 
-      {/* Author */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginTop: "1rem" }}>
         <div style={{
-          width: 36, height: 36, borderRadius: "50%",
-          background: testimonial.avatar ? `url(${testimonial.avatar}) center/cover` : "var(--gradient-hero)",
+          width: 48, height: 48, borderRadius: "50%",
+          background: testimonial.avatar ? `url(${testimonial.avatar}) center/cover` : "linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary))",
           display: "flex", alignItems: "center", justifyContent: "center",
           flexShrink: 0,
+          boxShadow: "0 4px 10px rgba(59,91,255,0.2)"
         }}>
           {!testimonial.avatar && (
-            <span style={{ color: "white", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.85rem" }}>
+            <span style={{ color: "white", fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.2rem" }}>
               {testimonial.name?.charAt(0)}
             </span>
           )}
         </div>
         <div>
-          <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.88rem", fontWeight: 600, color: "var(--text-primary)" }}>
+          <div style={{ fontFamily: "var(--font-heading)", fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)" }}>
             {testimonial.name}
           </div>
-          <div style={{ fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "var(--text-tertiary)" }}>
+          <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", color: "var(--text-tertiary)" }}>
             {testimonial.role}, {testimonial.company}
           </div>
         </div>
-        <span
-          className={`pill-badge pill-badge-${testimonial.service?.toLowerCase().includes("seo") ? "teal" : testimonial.service?.toLowerCase().includes("marketing") ? "violet" : "blue"}`}
-          style={{ marginLeft: "auto", fontSize: "0.65rem", padding: "3px 8px" }}
-        >
-          {testimonial.service}
-        </span>
       </div>
     </div>
-  );
+  )
 }

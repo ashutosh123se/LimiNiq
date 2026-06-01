@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono, Syne } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { CustomCursor } from "@/components/layout/CustomCursor";
 import { LoadingScreen } from "@/components/layout/LoadingScreen";
 import { SocialProofToast } from "@/components/layout/SocialProofToast";
+import { SmoothScrollProvider } from "@/app/providers/SmoothScrollProvider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
+const syne = Syne({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://liminiq.com"),
@@ -87,7 +89,7 @@ export default function RootLayout({
               logo: "https://liminiq.com/logo.png",
               contactPoint: {
                 "@type": "ContactPoint",
-                telephone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+91-XXXXXXXXXX",
+                telephone: "+91 9431471654",
                 contactType: "customer service",
                 availableLanguage: "English",
               },
@@ -100,13 +102,15 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
-        <Providers>
-          <LoadingScreen />
-          <CustomCursor />
-          <SocialProofToast />
-          {children}
-        </Providers>
+      <body suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} ${syne.variable}`}>
+        <SmoothScrollProvider>
+          <Providers>
+            <LoadingScreen />
+            <CustomCursor />
+            <SocialProofToast />
+            {children}
+          </Providers>
+        </SmoothScrollProvider>
         {/* Google Analytics */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>

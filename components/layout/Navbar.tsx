@@ -1,181 +1,173 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
+import { MagneticButton } from '@/components/ui/MagneticButton'
 
 const NAV_LINKS = [
-  { label: "Services", href: "/services/website-development" },
-  { label: "Work", href: "/portfolio" },
-  { label: "About", href: "/about" },
-  { label: "Blog", href: "/blog" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Contact", href: "/contact" },
-];
+  { label: 'Services', href: '/services/website-development' },
+  { label: 'Work', href: '/portfolio' },
+  { label: 'About', href: '/about' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Contact', href: '/contact' },
+]
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    const handleScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-  // Close mobile menu on route change
-  useEffect(() => setMenuOpen(false), [pathname]);
+  useEffect(() => setMenuOpen(false), [pathname])
 
-  // Lock body scroll when menu open
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [menuOpen]);
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
 
   return (
     <>
-      <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: 'fixed',
+          top: 0,
+          width: '100%',
+          zIndex: 50,
+          padding: scrolled ? '1rem 0' : '1.5rem 0',
+          background: scrolled ? 'rgba(4, 5, 8, 0.85)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(24px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
+          boxShadow: scrolled ? '0 4px 40px rgba(0,0,0,0.40)' : 'none',
+          transition: 'padding 0.4s ease, background 0.4s ease, border-bottom 0.4s ease, backdrop-filter 0.4s ease',
+        }}
+      >
         <div className="section-container">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2rem" }}>
-            {/* Logo */}
-            <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              {/* Animated LN Monogram */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '2rem' }}>
+            
+            <Link href="/" data-cursor="link" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <LogoMark />
               <span
                 style={{
-                  fontFamily: "var(--font-sans)",
+                  fontFamily: 'var(--font-heading)',
                   fontWeight: 800,
-                  fontSize: "1.5rem",
-                  letterSpacing: "-0.02em",
-                  color: "var(--text-primary)",
+                  fontSize: '1.4rem',
+                  letterSpacing: '-0.02em',
+                  color: 'var(--text-primary)',
                 }}
               >
-                LIMI
-                <span>NI</span>
-                <span style={{ color: "var(--accent-primary)" }}>Q</span>
+                LIMI<span style={{ color: 'var(--accent-primary)' }}>NI</span>Q
               </span>
             </Link>
 
-            {/* Desktop Nav Links */}
-            <div style={{ display: "none", alignItems: "center", gap: "0.25rem" }} className="desktop-nav">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`nav-link${pathname === link.href || pathname.startsWith(link.href + "/") ? " active" : ""}`}
-                  style={{ padding: "0.4rem 0.75rem" }}
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div style={{ display: 'none', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
+              {NAV_LINKS.map((link) => {
+                const isActive = pathname === link.href || pathname.startsWith(link.href + '/')
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    data-cursor="link"
+                    className={`nav-link animated-link`}
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: '0.95rem',
+                      fontWeight: isActive ? 600 : 500,
+                      color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
             </div>
 
-            {/* Desktop CTA */}
-            <div style={{ display: "none", alignItems: "center", gap: "1rem" }} className="desktop-cta">
-              <Link href="/contact" className="btn-primary btn-sm">
+            <div style={{ display: 'none', alignItems: 'center', gap: '1rem' }} className="desktop-cta">
+              <MagneticButton className="btn-primary" style={{ padding: '10px 20px', fontSize: '14px' }} onClick={() => router.push('/contact')}>
                 Get Free Audit
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </Link>
+              </MagneticButton>
             </div>
 
-            {/* Mobile hamburger */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="mobile-menu-btn"
               aria-label="Toggle menu"
               style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "0.5rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: "5px",
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                width: 48,
+                height: 48,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '6px',
+                zIndex: 100,
               }}
             >
-              <motion.span
-                animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-                style={{ display: "block", width: 24, height: 2, background: "var(--text-primary)", borderRadius: 2, transformOrigin: "center" }}
-                transition={{ duration: 0.25 }}
-              />
-              <motion.span
-                animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-                style={{ display: "block", width: 24, height: 2, background: "var(--text-primary)", borderRadius: 2 }}
-                transition={{ duration: 0.2 }}
-              />
-              <motion.span
-                animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-                style={{ display: "block", width: 24, height: 2, background: "var(--text-primary)", borderRadius: 2, transformOrigin: "center" }}
-                transition={{ duration: 0.25 }}
-              />
+              <motion.span animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }} style={{ display: 'block', width: 20, height: 2, background: 'var(--text-primary)', borderRadius: 2 }} transition={{ duration: 0.2 }} />
+              <motion.span animate={menuOpen ? { opacity: 0 } : { opacity: 1 }} style={{ display: 'block', width: 20, height: 2, background: 'var(--text-primary)', borderRadius: 2 }} transition={{ duration: 0.2 }} />
+              <motion.span animate={menuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }} style={{ display: 'block', width: 20, height: 2, background: 'var(--text-primary)', borderRadius: 2 }} transition={{ duration: 0.2 }} />
             </button>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
-      {/* Mobile full-screen overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              position: "fixed",
+              position: 'fixed',
               inset: 0,
-              background: "rgba(5, 5, 10, 0.95)",
-              backdropFilter: "blur(20px)",
+              background: 'rgba(4,5,8,0.97)',
+              backdropFilter: 'blur(32px)',
               zIndex: 99,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0.5rem",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1.5rem',
             }}
           >
-            {/* Close Button */}
-            <button
-              onClick={() => setMenuOpen(false)}
-              style={{
-                position: "absolute",
-                top: "1.5rem",
-                right: "1.5rem",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "var(--text-primary)",
-                fontSize: "1.5rem",
-              }}
-              aria-label="Close menu"
-            >
-              ✕
-            </button>
-
             {NAV_LINKS.map((link, i) => (
               <motion.div
                 key={link.href}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                transition={{ delay: i * 0.06, duration: 0.3 }}
+                transition={{ delay: i * 0.08, duration: 0.4, ease: 'easeOut' }}
               >
                 <Link
                   href={link.href}
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(2rem, 6vw, 2.5rem)",
-                    fontWeight: 700,
-                    color: pathname === link.href ? "var(--accent-blue)" : "var(--text-primary)",
-                    textDecoration: "none",
-                    display: "block",
-                    textAlign: "center",
-                    padding: "0.5rem 2rem",
-                    transition: "color 0.2s",
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'clamp(2.5rem, 8vw, 4rem)',
+                    fontWeight: 800,
+                    letterSpacing: '-0.02em',
+                    color: pathname === link.href ? 'var(--accent-primary)' : 'var(--text-primary)',
+                    textDecoration: 'none',
+                    display: 'block',
+                    textAlign: 'center',
+                    padding: '0.5rem 2rem',
                   }}
                 >
                   {link.label}
@@ -183,14 +175,9 @@ export function Navbar() {
               </motion.div>
             ))}
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: NAV_LINKS.length * 0.06 + 0.05 }}
-              style={{ marginTop: "1.5rem" }}
-            >
-              <Link href="/contact" className="btn-primary">
-                Get Free Audit →
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: NAV_LINKS.length * 0.08 + 0.1 }} style={{ marginTop: '2rem' }}>
+              <Link href="/contact" className="btn-primary" style={{ padding: '16px 32px', fontSize: '18px' }}>
+                Get Free Audit
               </Link>
             </motion.div>
           </motion.div>
@@ -208,28 +195,29 @@ export function Navbar() {
         }
       `}</style>
     </>
-  );
+  )
 }
 
 function LogoMark() {
   return (
     <motion.div
       style={{
-        width: 32,
-        height: 32,
-        background: "var(--accent-primary)",
-        borderRadius: 8,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        width: 38,
+        height: 38,
+        background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary))',
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         flexShrink: 0,
+        boxShadow: '0 4px 15px rgba(59,91,255,0.3)',
       }}
-      animate={{ boxShadow: ["0 0 0px rgba(109,40,217,0.3)", "0 0 16px rgba(109,40,217,0.5)", "0 0 0px rgba(109,40,217,0.3)"] }}
-      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+      whileHover={{ scale: 1.05, rotate: 5 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
     >
-      <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-        <text x="2" y="15" fontFamily="Syne, sans-serif" fontWeight="800" fontSize="13" fill="white">LN</text>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <text x="3" y="17" fontFamily="var(--font-heading)" fontWeight="800" fontSize="14" fill="white">LN</text>
       </svg>
     </motion.div>
-  );
+  )
 }

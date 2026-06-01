@@ -88,7 +88,7 @@ export function Footer() {
   return (
     <footer
       style={{
-        background: "var(--bg-dark)",
+        background: "var(--bg-base)",
         position: "relative",
         overflow: "hidden",
       }}
@@ -127,7 +127,7 @@ export function Footer() {
                 style={{
                   width: 32,
                   height: 32,
-                  background: "var(--gradient-hero)",
+                  background: "linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary))",
                   borderRadius: 8,
                   display: "flex",
                   alignItems: "center",
@@ -138,11 +138,11 @@ export function Footer() {
                   <text x="2" y="15" fontFamily="Syne, sans-serif" fontWeight="800" fontSize="13" fill="white">LN</text>
                 </svg>
               </div>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.4rem", color: "white", letterSpacing: "-0.02em" }}>
+              <span style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.4rem", color: "white", letterSpacing: "-0.02em" }}>
                 LIMI<span style={{ color: "var(--text-primary)" }}>NIQ</span>
               </span>
             </Link>
-            <p style={{ fontFamily: "var(--font-body)", color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", lineHeight: 1.7, marginBottom: "1.5rem", maxWidth: 240 }}>
+            <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", lineHeight: 1.7, marginBottom: "1.5rem", maxWidth: 240 }}>
               Building the digital future, one ambitious brand at a time.
             </p>
             <p style={{ fontFamily: "var(--font-heading)", color: "rgba(255,255,255,0.35)", fontSize: "0.8rem", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "1rem" }}>
@@ -198,7 +198,7 @@ export function Footer() {
             <h4 style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: "0.95rem", color: "white", marginBottom: "0.75rem" }}>
               Stay in the Loop
             </h4>
-            <p style={{ fontFamily: "var(--font-body)", color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", lineHeight: 1.6, marginBottom: "1rem" }}>
+            <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", lineHeight: 1.6, marginBottom: "1rem" }}>
               Get weekly insights on SEO, web dev, and digital growth.
             </p>
 
@@ -232,7 +232,7 @@ export function Footer() {
                     borderRadius: 10,
                     padding: "0.7rem 1rem",
                     color: "white",
-                    fontFamily: "var(--font-body)",
+                    fontFamily: "var(--font-sans)",
                     fontSize: "0.9rem",
                     outline: "none",
                     transition: "border-color 0.2s",
@@ -269,7 +269,7 @@ export function Footer() {
             paddingTop: "1.5rem",
           }}
         >
-          <p style={{ fontFamily: "var(--font-body)", color: "rgba(255,255,255,0.3)", fontSize: "0.82rem", margin: 0 }}>
+          <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.3)", fontSize: "0.82rem", margin: 0 }}>
             © {new Date().getFullYear()} LIMINIQ. All rights reserved.
           </p>
           <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
@@ -285,7 +285,7 @@ export function Footer() {
             >
               Terms
             </Link>
-            <span style={{ fontFamily: "var(--font-body)", color: "rgba(255,255,255,0.25)", fontSize: "0.82rem" }}>
+            <span style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.25)", fontSize: "0.82rem" }}>
               Made with ⚡ by LIMINIQ
             </span>
           </div>
@@ -307,7 +307,7 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
             <Link
               href={link.href}
               style={{
-                fontFamily: "var(--font-body)",
+                fontFamily: "var(--font-sans)",
                 color: "rgba(255,255,255,0.45)",
                 fontSize: "0.88rem",
                 textDecoration: "none",

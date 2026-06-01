@@ -1,116 +1,119 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 export function LoadingScreen() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [phase, setPhase] = useState<"reveal" | "glitch" | "exit" | "done">("reveal");
-
-  const letters = ["L", "I", "M", "I", "N", "I", "Q"];
+  const [isVisible, setIsVisible] = useState(true)
+  const [phase, setPhase] = useState<'loading' | 'glitch' | 'split'>('loading')
 
   useEffect(() => {
-    // Only show on first visit per session
-    const hasLoaded = sessionStorage.getItem("liminiq-loaded");
-    if (hasLoaded) return;
+    const hasLoaded = sessionStorage.getItem('liminiq-loaded')
+    if (hasLoaded) {
+      setIsVisible(false)
+      return
+    }
 
-    setIsVisible(true);
-
-    // Letter reveal → glitch → exit
-    const glitchTimer = setTimeout(() => setPhase("glitch"), 1400);
-    const exitTimer = setTimeout(() => setPhase("exit"), 2000);
-    const doneTimer = setTimeout(() => {
-      setIsVisible(false);
-      setPhase("done");
-      sessionStorage.setItem("liminiq-loaded", "1");
-    }, 2800);
+    const glitchTimer = setTimeout(() => setPhase('glitch'), 1500)
+    const splitTimer = setTimeout(() => setPhase('split'), 1900)
+    const exitTimer = setTimeout(() => {
+      setIsVisible(false)
+      sessionStorage.setItem('liminiq-loaded', '1')
+    }, 2800)
 
     return () => {
-      clearTimeout(glitchTimer);
-      clearTimeout(exitTimer);
-      clearTimeout(doneTimer);
-    };
-  }, []);
+      clearTimeout(glitchTimer)
+      clearTimeout(splitTimer)
+      clearTimeout(exitTimer)
+    }
+  }, [])
 
-  if (!isVisible) return null;
+  if (!isVisible) return null
 
   return (
-    <AnimatePresence>
-      {phase !== "done" && (
-        <motion.div
-          className="loading-screen"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: phase === "exit" ? 0 : 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
-          style={{ zIndex: 99999 }}
-        >
-          {/* Glow orb background */}
-          <div
-            className=""
-            style={{ width: 400, height: 400, top: "20%", left: "30%", opacity: 0.2 }}
-          />
+    <div style={{ position: 'fixed', inset: 0, zIndex: 99999, pointerEvents: 'none', display: 'flex', flexDirection: 'column' }}>
+      {/* Top half curtain */}
+      <motion.div
+        initial={{ y: 0 }}
+        animate={{ y: phase === 'split' ? '-100%' : 0 }}
+        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '50vh',
+          background: '#040508',
+          zIndex: 1,
+        }}
+      />
+      {/* Bottom half curtain */}
+      <motion.div
+        initial={{ y: 0 }}
+        animate={{ y: phase === 'split' ? '100%' : 0 }}
+        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '50vh',
+          background: '#040508',
+          zIndex: 1,
+        }}
+      />
 
-          {/* Logo letters */}
-          <div
-            className="flex items-center gap-1"
-            style={{
-              animation: phase === "glitch" ? "glitch 0.4s steps(1) 3" : "none",
-            }}
-          >
-            {letters.map((letter, i) => {
-              const isIQ = i >= 5;
-              return (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(2.5rem, 6vw, 4rem)",
-                    fontWeight: 800,
-                    letterSpacing: "-0.03em",
-                    color: isIQ ? "transparent" : "var(--text-primary)",
-                    background: isIQ ? "var(--gradient-hero)" : "none",
-                    WebkitBackgroundClip: isIQ ? "text" : "unset",
-                    backgroundClip: isIQ ? "text" : "unset",
-                    WebkitTextFillColor: isIQ ? "transparent" : "unset",
-                  }}
-                >
-                  {letter}
-                </motion.span>
-              );
-            })}
-          </div>
-
-          {/* Tagline */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.5 }}
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: "0.85rem",
-              color: "var(--text-tertiary)",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-            }}
-          >
-            Next-Gen Digital Solutions
-          </motion.p>
-
-          {/* Progress bar */}
+      {/* Content wrapper */}
+      <motion.div
+        initial={{ opacity: 1 }}
+        animate={{ opacity: phase === 'split' ? 0 : 1 }}
+        transition={{ duration: 0.2 }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2,
+        }}
+      >
+        <div style={{ position: 'relative' }}>
           <motion.div
-            className="loading-progress"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '4rem',
+              fontWeight: 800,
+              letterSpacing: '-0.03em',
+              color: 'var(--text-primary)',
+              position: 'relative'
+            }}
           >
-            <div className="loading-progress-bar" />
+            <span style={{ position: 'relative', zIndex: 2 }}>LIMINIQ</span>
+            
+            {/* Glitch layers */}
+            {phase === 'glitch' && (
+              <>
+                <span style={{ position: 'absolute', left: '-4px', top: '2px', color: '#00C8A0', mixBlendMode: 'screen', zIndex: 1 }}>LIMINIQ</span>
+                <span style={{ position: 'absolute', left: '4px', top: '-2px', color: '#3B5BFF', mixBlendMode: 'screen', zIndex: 1 }}>LIMINIQ</span>
+              </>
+            )}
           </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+        </div>
+
+        {/* Loading Bar */}
+        <div style={{ width: '200px', height: '2px', background: 'rgba(255,255,255,0.06)', marginTop: '2rem', borderRadius: '2px', overflow: 'hidden' }}>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: phase === 'loading' ? 0.8 : 1 }}
+            transition={{ duration: phase === 'loading' ? 1.5 : 0.2, ease: 'easeInOut' }}
+            style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, #3B5BFF, #00C8A0)', transformOrigin: 'left' }}
+          />
+        </div>
+      </motion.div>
+    </div>
+  )
 }

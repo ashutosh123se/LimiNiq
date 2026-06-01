@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { useRef, useState, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
+import { useRef, useState, useEffect } from 'react'
+import { motion, useInView } from 'framer-motion'
+import Link from 'next/link'
+import Image from 'next/image'
 
 const FALLBACK_ITEMS = [
   {
@@ -41,10 +41,10 @@ const FALLBACK_ITEMS = [
 const FILTERS = ["All", "Web Dev", "SEO", "Digital Marketing"];
 
 export function PortfolioSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [items, setItems] = useState<any[]>(FALLBACK_ITEMS);
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  const [activeFilter, setActiveFilter] = useState("All")
+  const [items, setItems] = useState<any[]>(FALLBACK_ITEMS)
 
   useEffect(() => {
     fetch("/api/portfolio?featured=true")
@@ -58,36 +58,34 @@ export function PortfolioSection() {
               : item.category.toLowerCase().includes("marketing")
               ? "linear-gradient(135deg, #7B61FF 0%, #00C8A0 100%)"
               : "linear-gradient(135deg, #3B5BFF 0%, #7B61FF 100%)"
-          }));
-          setItems(enhanced);
+          }))
+          setItems(enhanced)
         }
       })
-      .catch(() => console.error("Failed to load portfolio items, using fallback"));
-  }, []);
+      .catch(() => console.error("Failed to load portfolio items, using fallback"))
+  }, [])
 
   const filtered = activeFilter === "All"
     ? items
-    : items.filter((p) => p.category.toLowerCase().includes(activeFilter.toLowerCase()) || p.category === activeFilter);
+    : items.filter((p) => p.category.toLowerCase().includes(activeFilter.toLowerCase()) || p.category === activeFilter)
 
   return (
-    <section ref={ref} className="section-padding" style={{ background: "var(--bg-secondary)", position: "relative", overflow: "hidden" }}>
-
+    <section ref={ref} className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
       <div className="section-container" style={{ position: "relative" }}>
-        {/* Header */}
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           style={{ textAlign: "center", marginBottom: "3rem" }}
         >
-          <div className="pill-badge shimmer" style={{ marginBottom: "1rem", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }}>
-            <span style={{ color: "var(--accent-teal)" }}>✦</span> Case Studies
+          <div className="pill-badge shimmer" style={{ marginBottom: "1rem" }}>
+            <span style={{ color: "var(--accent-primary)" }}>✦</span> Case Studies
           </div>
-          <h2 className="text-section" style={{ color: "var(--text-primary)", marginBottom: "1rem" }}>
+          <h2 className="section-h2" style={{ color: "var(--text-primary)", marginBottom: "1rem" }}>
             Results We&apos;re <span style={{ color: "var(--text-primary)" }}>Proud Of</span>
           </h2>
         </motion.div>
 
-        {/* Filter tabs */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -99,17 +97,17 @@ export function PortfolioSection() {
               key={f}
               onClick={() => setActiveFilter(f)}
               style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: "0.88rem",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.9rem",
                 fontWeight: 600,
-                padding: "8px 20px",
+                padding: "10px 24px",
                 borderRadius: 100,
-                border: activeFilter === f ? "none" : "1.5px solid rgba(59,91,255,0.2)",
-                background: activeFilter === f ? "var(--gradient-hero)" : "transparent",
+                border: activeFilter === f ? "none" : "1px solid var(--border-subtle)",
+                background: activeFilter === f ? "var(--accent-primary)" : "rgba(255,255,255,0.05)",
                 color: activeFilter === f ? "white" : "var(--text-secondary)",
                 cursor: "pointer",
-                transition: "all 0.25s ease",
-                boxShadow: activeFilter === f ? "0 4px 16px rgba(59,91,255,0.3)" : "none",
+                transition: "all 0.3s ease",
+                boxShadow: activeFilter === f ? "0 4px 15px rgba(59,91,255,0.3)" : "none",
               }}
             >
               {f}
@@ -117,22 +115,22 @@ export function PortfolioSection() {
           ))}
         </motion.div>
 
-        {/* Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "2rem" }}>
           {filtered.map((item, i) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.1 }}
-              className="glass-card group"
-              style={{ overflow: "hidden", cursor: "pointer", position: "relative" }}
+              className="glass-card-premium group"
+              style={{ overflow: "hidden", cursor: "pointer", position: "relative", display: "flex", flexDirection: "column" }}
               whileHover={{ y: -6, scale: 1.01 }}
+              data-cursor="view"
             >
-              {/* Cover */}
               <div
+                className="portfolio-img-container"
                 style={{
-                  height: 160,
+                  height: 220,
                   background: item.coverImage ? `url(${item.coverImage}) center/cover` : item.bg,
                   display: "flex",
                   alignItems: "center",
@@ -146,31 +144,32 @@ export function PortfolioSection() {
                     src={item.image}
                     alt={item.title}
                     fill
-                    style={{ objectFit: "cover", opacity: 0.6, mixBlendMode: "luminosity" }}
+                    style={{ objectFit: "cover", opacity: 0.5, mixBlendMode: "overlay", transition: "transform 0.5s ease" }}
                     sizes="(max-width: 768px) 100vw, 33vw"
+                    className="portfolio-img"
                   />
                 )}
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(10,15,26,0.9) 0%, rgba(10,15,26,0.2) 100%)" }} />
-                {/* Metrics overlay */}
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(4,5,8,0.9) 0%, rgba(4,5,8,0.2) 100%)" }} />
+                
                 <div style={{
                   position: "absolute",
-                  bottom: "0.75rem",
-                  left: "0.75rem",
-                  right: "0.75rem",
+                  bottom: "1rem",
+                  left: "1rem",
+                  right: "1rem",
                   display: "flex",
-                  gap: "0.4rem",
+                  gap: "0.5rem",
                   flexWrap: "wrap",
                 }}>
                   {item.metrics?.map((m: any, idx: number) => (
                     <span key={idx} style={{
                       fontFamily: "var(--font-mono)",
-                      fontSize: "0.72rem",
+                      fontSize: "0.75rem",
                       fontWeight: 600,
-                      background: "rgba(255,255,255,0.2)",
-                      backdropFilter: "blur(8px)",
-                      color: "white",
-                      padding: "3px 8px",
+                      background: "rgba(4,5,8,0.8)",
+                      color: "#A0B4FF",
+                      padding: "4px 10px",
                       borderRadius: 6,
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.3)"
                     }}>
                       {typeof m === "string" ? m : m.value}
                     </span>
@@ -178,17 +177,16 @@ export function PortfolioSection() {
                 </div>
               </div>
 
-              {/* Content */}
-              <div style={{ padding: "1.25rem" }}>
-                <span className={`pill-badge pill-badge-${item.category.toLowerCase().includes("seo") ? "teal" : item.category.toLowerCase().includes("marketing") ? "violet" : "blue"}`} style={{ marginBottom: "0.75rem", display: "inline-flex", fontSize: "0.7rem" }}>
+              <div style={{ padding: "1.5rem", flex: 1 }}>
+                <span className="pill-badge" style={{ marginBottom: "1rem", display: "inline-flex", fontSize: "0.75rem", background: "rgba(59,91,255,0.05)", border: "none" }}>
                   {item.category}
                 </span>
-                <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", margin: "0 0 0.75rem", lineHeight: 1.4 }}>
+                <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", margin: "0 0 1rem", lineHeight: 1.4 }}>
                   {item.title}
                 </h3>
-                <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                   {item.tags?.map((t: string) => (
-                    <span key={t} style={{ fontFamily: "var(--font-heading)", fontSize: "0.72rem", color: "var(--text-tertiary)", background: "rgba(59,91,255,0.05)", padding: "2px 8px", borderRadius: 6 }}>
+                    <span key={t} style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--text-secondary)", background: "rgba(255,255,255,0.05)", border: "1px solid var(--border-subtle)", padding: "4px 10px", borderRadius: 8 }}>
                       {t}
                     </span>
                   ))}
@@ -198,18 +196,23 @@ export function PortfolioSection() {
           ))}
         </div>
 
-        {/* View all */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 0.6 }}
-          style={{ textAlign: "center", marginTop: "3rem" }}
+          style={{ textAlign: "center", marginTop: "4rem" }}
         >
           <Link href="/portfolio" className="btn-secondary">
             View All Case Studies →
           </Link>
         </motion.div>
       </div>
+
+      <style>{`
+        .group:hover .portfolio-img {
+          transform: scale(1.08);
+        }
+      `}</style>
     </section>
-  );
+  )
 }

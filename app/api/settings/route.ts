@@ -13,7 +13,7 @@ export async function GET() {
         data: {
           id: "1",
           companyEmail: "hello@liminiq.com",
-          companyPhone: "+91 XXXXX XXXXX",
+          companyPhone: "+91 9431471654",
           companyCity: "India",
           socialLinks: {},
           seoDefaults: {},
