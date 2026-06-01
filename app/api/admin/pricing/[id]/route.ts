@@ -2,7 +2,9 @@ import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 
-export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const dynamic = 'force-dynamic';
+
+export async function PUT(req: NextRequest, { params }: { params: any }) {
   try {
     const session = await auth();
     // if (!session) return new NextResponse("Unauthorized", { status: 401 });
@@ -33,7 +35,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: NextRequest, { params }: { params: any }) {
   try {
     const session = await auth();
     // if (!session) return new NextResponse("Unauthorized", { status: 401 });
