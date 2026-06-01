@@ -7,7 +7,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://liminiq.com';
 
   // Fetch dynamic blog posts
-  let blogPosts = [];
+  let blogPosts: { slug: string; updatedAt: Date }[] = [];
   try {
     blogPosts = await prisma.blogPost.findMany({
       where: { published: true },
