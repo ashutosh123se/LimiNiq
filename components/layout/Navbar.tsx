@@ -155,16 +155,12 @@ export function Navbar() {
                 width: 48,
                 height: 48,
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--text-primary)',
-                pointerEvents: 'auto'
-              }}
-            >
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
                 gap: '6px',
+                color: 'var(--text-primary)',
+                pointerEvents: 'auto',
                 zIndex: 100,
               }}
             >
