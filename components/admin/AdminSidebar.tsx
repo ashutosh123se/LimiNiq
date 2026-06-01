@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { label: "Portfolio", href: "/admin/portfolio", icon: "🎨" },
   { label: "Testimonials", href: "/admin/testimonials", icon: "⭐" },
   { label: "Newsletter", href: "/admin/newsletter", icon: "📧" },
+  { label: "AI Chat", href: "/admin/ai-chat", icon: "🤖" },
   { label: "Settings", href: "/admin/settings", icon: "⚙️" },
 ];
 

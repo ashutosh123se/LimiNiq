@@ -51,7 +51,7 @@ export function HeroSection() {
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
-        paddingTop: '6rem',
+        paddingTop: '7rem',
         paddingBottom: '6rem',
       }}
     >

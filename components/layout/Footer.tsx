@@ -125,12 +125,12 @@ export function Footer() {
           {/* Column 1 — Brand */}
           <div style={{ gridColumn: "span 1" }}>
             <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem" }}>
-              <div style={{ position: 'relative', width: '130px', height: '36px' }}>
+              <div style={{ position: 'relative', height: '220px', width: '220px', marginLeft: '-8px' }}>
                 <Image 
-                  src="/images/logo.png" 
+                  src="/images/logo-v2.png" 
                   alt="LimiNiq Logo" 
                   fill 
-                  style={{ objectFit: 'contain', objectPosition: 'left center' }} 
+                  style={{ objectFit: 'contain', objectPosition: 'left center', filter: 'brightness(0) invert(1)' }} 
                 />
               </div>
             </Link>

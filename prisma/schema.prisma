@@ -44,6 +44,7 @@ model Lead {
 
   emailsSent Email[]
   activities Activity[]
+  aiChatSessions AIChatSession[]
 }
 
 enum LeadStatus {
@@ -206,4 +207,14 @@ model PricingPlan {
 enum PlanType {
   WEB_DEV
   SEO_MARKETING
+}
+
+model AIChatSession {
+  id        String   @id @default(cuid())
+  sessionId String   @unique // To link messages to a specific browser session
+  messages  Json     // The full array of chat messages
+  leadId    String?  // Optional: If the user provides contact info
+  lead      Lead?    @relation(fields: [leadId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
