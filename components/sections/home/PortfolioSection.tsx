@@ -51,14 +51,23 @@ export function PortfolioSection() {
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
-          const enhanced = data.map((item: any) => ({
-            ...item,
-            bg: item.category.toLowerCase().includes("seo")
-              ? "linear-gradient(135deg, #00C8A0 0%, #3B5BFF 100%)"
-              : item.category.toLowerCase().includes("marketing")
-              ? "linear-gradient(135deg, #7B61FF 0%, #00C8A0 100%)"
-              : "linear-gradient(135deg, #3B5BFF 0%, #7B61FF 100%)"
-          }))
+          const enhanced = data.map((item: any, index: number) => {
+            const isSEO = item.category.toLowerCase().includes("seo");
+            const isMarketing = item.category.toLowerCase().includes("marketing");
+            
+            // Try to match with our default fallback items if possible
+            const fallbackItem = FALLBACK_ITEMS.find(f => f.title === item.title) || FALLBACK_ITEMS[index % FALLBACK_ITEMS.length];
+
+            return {
+              ...item,
+              bg: isSEO
+                ? "linear-gradient(135deg, #00C8A0 0%, #3B5BFF 100%)"
+                : isMarketing
+                ? "linear-gradient(135deg, #7B61FF 0%, #00C8A0 100%)"
+                : "linear-gradient(135deg, #3B5BFF 0%, #7B61FF 100%)",
+              image: item.coverImage ? undefined : fallbackItem.image
+            }
+          })
           setItems(enhanced)
         }
       })
@@ -144,7 +153,7 @@ export function PortfolioSection() {
                     src={item.image}
                     alt={item.title}
                     fill
-                    style={{ objectFit: "cover", opacity: 0.5, mixBlendMode: "overlay", transition: "transform 0.5s ease" }}
+                    style={{ objectFit: "cover", transition: "transform 0.5s ease" }}
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="portfolio-img"
                   />
