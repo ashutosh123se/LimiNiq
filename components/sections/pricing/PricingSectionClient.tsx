@@ -90,7 +90,7 @@ export function PricingSectionClient({ plans, showFAQ = false }: PricingSectionC
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0, transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1], staggerChildren: 0.07 } }}
               exit={{ opacity: 0, y: -16, transition: { duration: 0.2 } }}
-              style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem", alignItems: "center" }}
+              style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: "2rem", alignItems: "center" }}
             >
               {currentPlans.map((plan, i) => (
                 <motion.div
