@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
-import { SERVICES_DATA } from '@/lib/data/services';
+import { SERVICES } from '@/lib/data/services';
 
 export const revalidate = 86400; // Cache for 24 hours
 
@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const serviceSlugs = Object.keys(SERVICES_DATA);
+  const serviceSlugs = SERVICES.map(s => s.slug);
   const serviceUrls = serviceSlugs.map((slug) => ({
     url: `${baseUrl}/services/${slug}`,
     lastModified: new Date(),
