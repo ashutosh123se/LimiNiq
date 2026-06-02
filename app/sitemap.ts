@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
-import { SERVICES_DATA } from './(marketing)/services/[slug]/page';
+import { SERVICES_DATA } from '@/lib/data/services';
 
 export const revalidate = 86400; // Cache for 24 hours
 
