@@ -34,7 +34,7 @@ export default function PortfolioPage() {
 
       {/* Featured Case Study Bento Block */}
       <section className="section-container section-padding" style={{ paddingBottom: "2rem" }}>
-        <div className="glass-card p-8 md:p-16 gap-8 md:gap-16" style={{ borderRadius: 32, display: "grid", gridTemplateColumns: "1fr", position: "relative", overflow: "hidden" }} id="featured-work">
+        <div className="glass-card p-5 sm:p-8 md:p-12 lg:p-16 gap-8 md:gap-16" style={{ borderRadius: 32, display: "grid", gridTemplateColumns: "1fr", position: "relative", overflow: "hidden" }} id="featured-work">
           
           {/* Subtle noise and gradients */}
           <div className="bg-noise" />
@@ -47,7 +47,7 @@ export default function PortfolioPage() {
               <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "var(--accent-primary)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1rem" }}>
                 Featured Project
               </div>
-              <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "2.5rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "1.5rem", lineHeight: 1.1 }}>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6" style={{ fontFamily: "var(--font-heading)", color: "var(--text-primary)", lineHeight: 1.1, wordBreak: "break-word" }}>
                 Scaling TechScale's Organic Engine
               </h2>
               <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "2.5rem", maxWidth: 480 }}>
@@ -87,7 +87,7 @@ export default function PortfolioPage() {
                   <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.1)" }} />
                 </div>
                 {/* Visual Area */}
-                <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem", height: "calc(100% - 32px)", position: "relative" }}>
+                <div className="p-4 sm:p-6 md:p-8" style={{ display: "flex", flexDirection: "column", gap: "1.5rem", height: "calc(100% - 32px)", position: "relative" }}>
                   <div style={{ display: "flex", gap: "1rem" }}>
                     <div style={{ flex: 1, height: 120, background: "rgba(109, 40, 217, 0.1)", borderRadius: 12, border: "1px solid rgba(109, 40, 217, 0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <TrendingUp size={32} color="var(--accent-primary)" />
