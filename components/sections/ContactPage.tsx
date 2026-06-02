@@ -109,7 +109,7 @@ export function ContactPage() {
           {/* Left column — info tiles */}
           <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
             {/* Contact details Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {CONTACT_INFO.map((c) => (
                 <a
                   key={c.label}
@@ -122,7 +122,7 @@ export function ContactPage() {
                   </div>
                   <div>
                     <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.8rem", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.25rem" }}>{c.label}</div>
-                    <div style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--text-primary)", fontWeight: 500 }}>{c.value}</div>
+                    <div style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--text-primary)", fontWeight: 500, wordBreak: "break-word" }}>{c.value}</div>
                   </div>
                 </a>
               ))}
