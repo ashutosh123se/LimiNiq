@@ -206,7 +206,7 @@ export function Navbar() {
                                       boxShadow: `0 4px 12px ${service.color}15`,
                                       flexShrink: 0
                                     }}>
-                                      {React.cloneElement(service.icon as React.ReactElement, { size: 20 })}
+                                      {React.cloneElement(service.icon as React.ReactElement<any>, { size: 20 })}
                                     </div>
                                     <div>
                                       <div style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 600, marginBottom: '2px', whiteSpace: 'nowrap' }}>
@@ -412,7 +412,7 @@ export function Navbar() {
                                   gap: '0.75rem'
                                 }}
                               >
-                                <span style={{ color: service.color }}>{React.cloneElement(service.icon as React.ReactElement, { size: 16 })}</span>
+                                <span style={{ color: service.color }}>{React.cloneElement(service.icon as React.ReactElement<any>, { size: 16 })}</span>
                                 {service.shortTitle}
                               </Link>
                             ))}
