@@ -34,7 +34,7 @@ export default function PortfolioPage() {
 
       {/* Featured Case Study Bento Block */}
       <section className="section-container section-padding" style={{ paddingBottom: "2rem" }}>
-        <div className="glass-card" style={{ padding: "4rem", borderRadius: 32, display: "grid", gridTemplateColumns: "1fr", gap: "4rem", position: "relative", overflow: "hidden" }} id="featured-work">
+        <div className="glass-card p-8 md:p-16 gap-8 md:gap-16" style={{ borderRadius: 32, display: "grid", gridTemplateColumns: "1fr", position: "relative", overflow: "hidden" }} id="featured-work">
           
           {/* Subtle noise and gradients */}
           <div className="bg-noise" />
@@ -54,18 +54,18 @@ export default function PortfolioPage() {
                 A complete technical SEO overhaul and React rebuild that drove a massive influx of qualified B2B leads, fundamentally changing their customer acquisition model.
               </p>
               
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "3rem" }}>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
                 <div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 700, color: "var(--text-primary)" }}>420%</div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", color: "var(--text-tertiary)", textTransform: "uppercase" }}>Traffic Growth</div>
+                  <div className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>420%</div>
+                  <div className="text-xs md:text-sm uppercase tracking-wider text-gray-400" style={{ fontFamily: "var(--font-mono)" }}>Traffic Growth</div>
                 </div>
                 <div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 700, color: "var(--text-primary)" }}>0.8s</div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", color: "var(--text-tertiary)", textTransform: "uppercase" }}>Load Time</div>
+                  <div className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>0.8s</div>
+                  <div className="text-xs md:text-sm uppercase tracking-wider text-gray-400" style={{ fontFamily: "var(--font-mono)" }}>Load Time</div>
                 </div>
-                <div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 700, color: "var(--text-primary)" }}>#1</div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", color: "var(--text-tertiary)", textTransform: "uppercase" }}>Rankings</div>
+                <div className="col-span-2 md:col-span-1">
+                  <div className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>#1</div>
+                  <div className="text-xs md:text-sm uppercase tracking-wider text-gray-400" style={{ fontFamily: "var(--font-mono)" }}>Rankings</div>
                 </div>
               </div>
 
