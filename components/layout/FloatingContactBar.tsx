@@ -20,7 +20,7 @@ export function FloatingContactBar() {
     <>
       <AIChatModal isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
       
-      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[200] pointer-events-none flex items-end justify-end gap-2 sm:gap-4">
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:bottom-6 z-[200] pointer-events-none flex items-end justify-center gap-2 sm:gap-4 w-max max-w-[95vw]">
         
         {/* Action Pill */}
         <motion.div
