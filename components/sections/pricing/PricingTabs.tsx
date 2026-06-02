@@ -20,26 +20,29 @@ export function PricingTabs({ activeTab, onChange }: PricingTabsProps) {
           display: "inline-flex",
           gap: 4,
           position: "relative",
+          maxWidth: "100%",
+          overflow: "hidden"
         }}
       >
         <button
           onClick={() => onChange("WEB_DEV")}
+          className="px-3 py-2.5 sm:px-8 sm:py-3 text-xs sm:text-base"
           style={{
             position: "relative",
             background: "transparent",
             color: activeTab === "WEB_DEV" ? "#FFFFFF" : "#8A94B5",
-            padding: "12px 32px",
             borderRadius: 100,
             border: "none",
             fontFamily: "var(--font-heading)",
-            fontSize: "1rem",
             fontWeight: 600,
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             gap: "0.5rem",
             zIndex: 1,
             transition: "color 0.3s ease",
+            whiteSpace: "nowrap"
           }}
         >
           {activeTab === "WEB_DEV" && (
@@ -61,22 +64,23 @@ export function PricingTabs({ activeTab, onChange }: PricingTabsProps) {
 
         <button
           onClick={() => onChange("SEO_MARKETING")}
+          className="px-3 py-2.5 sm:px-8 sm:py-3 text-xs sm:text-base"
           style={{
             position: "relative",
             background: "transparent",
             color: activeTab === "SEO_MARKETING" ? "#FFFFFF" : "#8A94B5",
-            padding: "12px 32px",
             borderRadius: 100,
             border: "none",
             fontFamily: "var(--font-heading)",
-            fontSize: "1rem",
             fontWeight: 600,
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             gap: "0.5rem",
             zIndex: 1,
             transition: "color 0.3s ease",
+            whiteSpace: "nowrap"
           }}
         >
           {activeTab === "SEO_MARKETING" && (

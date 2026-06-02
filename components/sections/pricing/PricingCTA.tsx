@@ -3,14 +3,12 @@ import { HelpCircle, Star, ArrowRight } from "lucide-react";
 
 export function PricingCTA() {
   return (
-    <div style={{ padding: "6rem 0 2rem" }}>
-      <div className="section-container" style={{ display: "flex", justifyContent: "center" }}>
+    <div style={{ padding: "6rem 0 2rem", display: "flex", justifyContent: "center" }}>
         <div
-          className="glass-card"
+          className="glass-card px-6 py-8 sm:p-12"
           style={{
             maxWidth: 700,
             width: "100%",
-            padding: "3rem",
             borderRadius: 24,
             textAlign: "center",
             background: "linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))",
@@ -30,7 +28,7 @@ export function PricingCTA() {
               </div>
             </div>
             
-            <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.75rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "1rem" }}>
+            <h3 className="text-3xl sm:text-4xl" style={{ fontFamily: "var(--font-heading)", fontWeight: 800, color: "var(--text-primary)", marginBottom: "1rem", lineHeight: 1.2 }}>
               Not sure what you need?
             </h3>
             
@@ -57,7 +55,6 @@ export function PricingCTA() {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }

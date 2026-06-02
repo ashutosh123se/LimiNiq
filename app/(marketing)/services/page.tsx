@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { SERVICES_DATA } from "./[slug]/page";
+import { SERVICES } from "@/lib/data/services";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { ArrowRight } from "lucide-react";
 
@@ -12,16 +12,13 @@ export const metadata: Metadata = {
 };
 
 export default function ServicesPage() {
-  const services = Object.entries(SERVICES_DATA).map(([slug, data]) => ({
-    slug,
-    ...data
-  }));
+  const services = SERVICES;
 
   return (
     <div style={{ paddingTop: "5rem", background: "var(--bg-primary)", minHeight: "100vh" }}>
       
       {/* Hero */}
-      <section style={{ padding: "6rem 1.5rem", textAlign: "center" }}>
+      <section className="services-hero">
         <div className="section-container">
           <div className="pill-badge shimmer" style={{ marginBottom: "1.5rem", margin: "0 auto" }}>
             <span style={{ color: "var(--accent-primary)" }}>✦</span> Capabilities
@@ -38,7 +35,7 @@ export default function ServicesPage() {
 
       {/* Grid */}
       <section className="section-padding section-container">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", gap: "2rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
           {services.map((service) => (
             <Link 
               key={service.slug}
@@ -83,6 +80,10 @@ export default function ServicesPage() {
       <LeadCTASection />
 
       <style>{`
+        .services-hero { padding: 6rem 1.5rem; text-align: center; }
+        @media (max-width: 899px) {
+          .services-hero { padding: 4rem 1rem; }
+        }
         .group-hover-scale { transition: transform 0.5s ease; }
         .group:hover .group-hover-scale { transform: scale(1.05); }
       `}</style>

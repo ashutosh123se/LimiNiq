@@ -5,234 +5,13 @@ import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { ArrowRight, CheckCircle2, TrendingUp, BarChart3, Globe, Smartphone, Code2, PenTool, Palette, FileText, Video, Cpu } from "lucide-react";
 import Image from "next/image";
 
-export const SERVICES_DATA = {
-  "website-ecommerce": {
-    title: "Website & E-commerce Development",
-    subtitle: "Custom-built, high-performance web applications and e-commerce platforms that convert visitors into customers.",
-    icon: <Globe size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "We don't just build websites; we engineer digital experiences. Our development process prioritizes speed, security, and scalability, ensuring your platform performs flawlessly under pressure while delivering an intuitive user journey.",
-    features: [
-      "Custom React / Next.js Applications",
-      "Headless CMS Integration",
-      "E-commerce Platforms (Shopify, Custom)",
-      "Progressive Web Apps (PWAs)",
-      "API Development & Integration",
-      "Performance Optimization (Core Web Vitals)",
-    ],
-    process: [
-      { title: "Discovery", desc: "Understanding your business goals and technical requirements." },
-      { title: "Architecture", desc: "Planning the tech stack, database schema, and system flow." },
-      { title: "Development", desc: "Agile sprints with weekly deliverables and transparent progress." },
-      { title: "Testing", desc: "Rigorous QA across devices, browsers, and load conditions." },
-      { title: "Deployment", desc: "Seamless launch with zero downtime and continuous integration." },
-    ],
-    coverImage: "/images/services/ecommerce_dev.png"
-  },
-  "mobile-app-development": {
-    title: "Mobile Application Development",
-    subtitle: "Native and cross-platform mobile experiences that engage users and dominate the app stores.",
-    icon: <Smartphone size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "We build intuitive, high-performance mobile apps for iOS and Android. Using React Native and Flutter, we deliver seamless native-like experiences with rapid development cycles.",
-    features: [
-      "iOS & Android Development",
-      "Cross-Platform Solutions (React Native/Flutter)",
-      "Mobile UI/UX Design",
-      "App Store Optimization (ASO)",
-      "Push Notifications & Engagement",
-      "Backend API & Database Architecture",
-    ],
-    process: [
-      { title: "Ideation", desc: "Mapping user journeys and defining core app features." },
-      { title: "Prototyping", desc: "Creating interactive wireframes and UI designs." },
-      { title: "Engineering", desc: "Building the front-end and robust backend infrastructure." },
-      { title: "QA Testing", desc: "Testing across multiple devices and OS versions." },
-      { title: "Launch", desc: "App store submission and post-launch support." },
-    ],
-    coverImage: "/images/services/mobile_app_dev.png"
-  },
-  "custom-software-saas": {
-    title: "Custom Software & SaaS Development",
-    subtitle: "Scalable, secure, and robust cloud applications engineered to solve complex business problems.",
-    icon: <Code2 size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "Whether you're building a multi-tenant SaaS product from scratch or modernizing legacy software, our engineering team architects solutions that scale globally and securely.",
-    features: [
-      "Multi-Tenant SaaS Architecture",
-      "Enterprise Web Portals",
-      "Legacy System Modernization",
-      "Custom ERP & CRM Solutions",
-      "Secure API Infrastructure",
-      "Cloud Deployment & DevOps",
-    ],
-    process: [
-      { title: "Scoping", desc: "Detailed requirements gathering and feasibility analysis." },
-      { title: "System Design", desc: "Architecting the database, API, and cloud infrastructure." },
-      { title: "Development", desc: "Iterative development with CI/CD pipelines." },
-      { title: "Security Audit", desc: "Vulnerability testing and data compliance checks." },
-      { title: "Scaling", desc: "Monitoring performance and scaling server infrastructure." },
-    ],
-    coverImage: "/images/services/saas_dev.png"
-  },
-  "ui-ux-design-branding": {
-    title: "UI/UX Design & Branding",
-    subtitle: "Award-winning interfaces and brand identities that leave a lasting impression.",
-    icon: <PenTool size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "Great design isn't just about looking good—it's about how it works. We craft user-centric interfaces and compelling brand narratives that build trust and drive conversions.",
-    features: [
-      "User Experience (UX) Research",
-      "User Interface (UI) Design",
-      "Wireframing & Prototyping",
-      "Brand Identity & Guidelines",
-      "Logo Design & Typography",
-      "Design System Creation",
-    ],
-    process: [
-      { title: "Research", desc: "Analyzing competitors, user behavior, and market trends." },
-      { title: "Wireframing", desc: "Mapping out the structure and user flow." },
-      { title: "Visual Design", desc: "Applying color theory, typography, and brand elements." },
-      { title: "Prototyping", desc: "Creating interactive prototypes for user testing." },
-      { title: "Handoff", desc: "Delivering pixel-perfect assets to the engineering team." },
-    ],
-    coverImage: "/images/services/ui_ux_design.png"
-  },
-  "graphic-design-creative": {
-    title: "Graphic Design & Creative Services",
-    subtitle: "Visually striking creative assets that capture attention and communicate your message.",
-    icon: <Palette size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "From marketing collateral to social media graphics, our creative team produces high-quality visual content that aligns perfectly with your brand identity.",
-    features: [
-      "Social Media Graphics",
-      "Marketing Collateral & Brochures",
-      "Pitch Decks & Presentations",
-      "Custom Illustrations",
-      "Ad Creative & Banners",
-      "Packaging Design",
-    ],
-    process: [
-      { title: "Briefing", desc: "Understanding the creative goals and target audience." },
-      { title: "Concepts", desc: "Developing initial mood boards and design directions." },
-      { title: "Creation", desc: "Crafting the visual assets with precision." },
-      { title: "Refinement", desc: "Iterating based on feedback to ensure perfection." },
-      { title: "Delivery", desc: "Providing final files in all required formats." },
-    ],
-    coverImage: "/images/services/graphic_design.png"
-  },
-  "digital-marketing": {
-    title: "Digital Marketing & Lead Generation",
-    subtitle: "Precision-targeted campaigns that maximize ROI and scale your revenue.",
-    icon: <BarChart3 size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "Stop guessing with your ad spend. Our performance marketing strategies leverage advanced targeting, compelling creative, and rigorous A/B testing to lower acquisition costs and maximize lifetime value.",
-    features: [
-      "Google Ads (Search, Display, Shopping)",
-      "Meta Ads (Facebook, Instagram)",
-      "LinkedIn B2B Lead Gen",
-      "Conversion Rate Optimization (CRO)",
-      "Email Automation & Sequences",
-      "Advanced Analytics & Attribution",
-    ],
-    process: [
-      { title: "Analysis", desc: "Auditing past performance and identifying target personas." },
-      { title: "Creative", desc: "Developing ad copy, visuals, and landing pages." },
-      { title: "Launch", desc: "Structuring campaigns for optimal budget distribution." },
-      { title: "Optimization", desc: "Daily bid management and A/B testing to lower CAC." },
-      { title: "Scaling", desc: "Increasing spend profitably once winners are identified." },
-    ],
-    coverImage: "/images/services/digital_marketing.png"
-  },
-  "seo-search-engine-marketing": {
-    title: "SEO & Search Engine Marketing",
-    subtitle: "Data-driven SEO strategies that dominate search results and drive qualified traffic.",
-    icon: <TrendingUp size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "Visibility is everything. We combine technical SEO, content strategy, and authoritative link building to secure top rankings for high-intent keywords. No black-hat tricks, just sustainable organic growth.",
-    features: [
-      "Technical SEO Audits & Fixes",
-      "Keyword Research & Strategy",
-      "On-Page Optimization",
-      "Content Strategy & Creation",
-      "High-Authority Link Building",
-      "Local SEO & Google Business",
-    ],
-    process: [
-      { title: "Audit", desc: "Deep technical analysis to identify blockers and opportunities." },
-      { title: "Strategy", desc: "Mapping high-value keywords to search intent." },
-      { title: "Optimization", desc: "Fixing technical debt and optimizing existing content." },
-      { title: "Authority", desc: "Building high-quality backlinks from relevant domains." },
-      { title: "Reporting", desc: "Transparent tracking of rankings, traffic, and conversions." },
-    ],
-    coverImage: "/images/services/seo_marketing.png"
-  },
-  "content-creation": {
-    title: "Content Creation & Copywriting",
-    subtitle: "Compelling narratives and SEO-optimized content that engages and converts.",
-    icon: <FileText size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "Content is the voice of your brand. We produce high-quality blogs, website copy, whitepapers, and social content that resonates with your audience and establishes industry authority.",
-    features: [
-      "SEO Blog Writing",
-      "Website Copywriting",
-      "Email Newsletter Content",
-      "Whitepapers & E-books",
-      "Social Media Captions",
-      "Product Descriptions",
-    ],
-    process: [
-      { title: "Discovery", desc: "Learning your brand voice, tone, and industry nuances." },
-      { title: "Planning", desc: "Creating a comprehensive content calendar." },
-      { title: "Drafting", desc: "Writing engaging, value-driven, and optimized content." },
-      { title: "Editing", desc: "Rigorous proofreading and stylistic refinement." },
-      { title: "Publishing", desc: "Formatting and distributing content across channels." },
-    ],
-    coverImage: "/images/services/content_creation.png"
-  },
-  "video-production": {
-    title: "Video Production & Editing",
-    subtitle: "Cinematic videos and dynamic animations that bring your brand to life.",
-    icon: <Video size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "Video is the most engaging medium online. From corporate promos to social media reels and explainer animations, we handle the entire production pipeline to deliver scroll-stopping visuals.",
-    features: [
-      "Promotional & Brand Videos",
-      "Social Media Reels & Shorts",
-      "2D/3D Motion Graphics",
-      "Explainer Animations",
-      "Corporate Interviews",
-      "Video Editing & Color Grading",
-    ],
-    process: [
-      { title: "Pre-Production", desc: "Scriptwriting, storyboarding, and planning." },
-      { title: "Production", desc: "Filming with professional gear or generating animations." },
-      { title: "Editing", desc: "Cutting, pacing, and assembling the narrative." },
-      { title: "Post-Production", desc: "Adding VFX, motion graphics, color grading, and sound." },
-      { title: "Delivery", desc: "Exporting optimized formats for various platforms." },
-    ],
-    coverImage: "/images/services/video_production.png"
-  },
-  "ai-automation-cloud": {
-    title: "AI, Automation & Cloud Solutions",
-    subtitle: "Future-proof your business with cutting-edge artificial intelligence and cloud architecture.",
-    icon: <Cpu size={48} strokeWidth={1} color="var(--accent-primary)" />,
-    description: "We help businesses leverage AI to automate workflows, analyze vast datasets, and scale infrastructure securely on AWS, GCP, or Azure.",
-    features: [
-      "Custom AI Chatbots (LLM Integration)",
-      "Workflow Automation (Zapier/Make)",
-      "Machine Learning Models",
-      "Cloud Migration (AWS/Azure/GCP)",
-      "Serverless Architecture",
-      "Data Analytics & Pipelines",
-    ],
-    process: [
-      { title: "Assessment", desc: "Identifying bottlenecks ripe for automation or AI integration." },
-      { title: "Architecture", desc: "Designing secure cloud and data pipelines." },
-      { title: "Integration", desc: "Connecting APIs and training AI models on your data." },
-      { title: "Deployment", desc: "Rolling out solutions with minimal disruption." },
-      { title: "Maintenance", desc: "Monitoring AI accuracy and cloud resource utilization." },
-    ],
-    coverImage: "/images/services/ai_automation.png"
-  }
-};
+import { SERVICES } from "@/lib/data/services";
 
 type Params = Promise<{ slug: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const service = SERVICES_DATA[slug as keyof typeof SERVICES_DATA];
+  const service = SERVICES.find((s) => s.slug === slug);
 
   if (!service) return { title: "Service Not Found" };
 
@@ -245,7 +24,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ServicePage({ params }: { params: Params }) {
   const { slug } = await params;
-  const service = SERVICES_DATA[slug as keyof typeof SERVICES_DATA];
+  const service = SERVICES.find((s) => s.slug === slug);
 
   if (!service) notFound();
 
@@ -260,7 +39,7 @@ export default async function ServicePage({ params }: { params: Params }) {
             <div className="pill-badge" style={{ marginBottom: "1.5rem" }}>
               <span style={{ color: "var(--accent-primary)" }}>✦</span> Service Overview
             </div>
-            <h1 className="text-hero" style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)", marginBottom: "1.5rem", lineHeight: 1.1 }}>
+            <h1 className="text-hero service-hero-title" style={{ marginBottom: "1.5rem", lineHeight: 1.1 }}>
               {service.title}
             </h1>
             <p style={{ fontFamily: "var(--font-body)", fontSize: "1.15rem", color: "var(--text-secondary)", lineHeight: 1.6, maxWidth: 540, marginBottom: "2.5rem" }}>
@@ -339,17 +118,17 @@ export default async function ServicePage({ params }: { params: Params }) {
             <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "2rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "3rem", textAlign: "center" }}>
               Execution Strategy
             </h2>
-            <div style={{ position: "relative", paddingLeft: "1.5rem" }}>
+            <div className="timeline-container" style={{ position: "relative" }}>
               {/* Vertical connecting line */}
-              <div style={{ position: "absolute", top: 0, bottom: 0, left: "2.25rem", width: 2, background: "var(--border-subtle)", zIndex: 0 }} />
+              <div className="timeline-line" style={{ position: "absolute", top: 0, bottom: 0, width: 2, background: "var(--border-subtle)", zIndex: 0 }} />
               
               <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
                 {service.process.map((step, i) => (
-                  <div key={i} style={{ display: "flex", gap: "2.5rem", alignItems: "flex-start", position: "relative", zIndex: 1 }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", color: "var(--accent-primary)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-mono)", fontSize: "1.1rem", fontWeight: 600, flexShrink: 0 }}>
+                  <div key={i} className="timeline-item" style={{ display: "flex", alignItems: "flex-start", position: "relative", zIndex: 1 }}>
+                    <div className="timeline-circle" style={{ borderRadius: 12, background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", color: "var(--accent-primary)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-mono)", fontWeight: 600, flexShrink: 0 }}>
                       0{i + 1}
                     </div>
-                    <div className="glass-card" style={{ padding: "2rem", flex: 1, borderRadius: 16 }}>
+                    <div className="glass-card timeline-card" style={{ flex: 1, borderRadius: 16 }}>
                       <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.3rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.75rem" }}>
                         {step.title}
                       </h3>
@@ -372,8 +151,23 @@ export default async function ServicePage({ params }: { params: Params }) {
       <LeadCTASection />
 
       <style>{`
+        .service-hero-title { font-size: clamp(2rem, 8vw, 4.5rem); }
+        .timeline-container { padding-left: 1.5rem; }
+        .timeline-line { left: 39px; } /* 1.5rem padding + 24px half circle = 24+24 = 48px? No, if container padding is 1.5rem(24px) and circle is inside, circle left is 24px. Circle center is 24+24=48px from left edge. */
+        .timeline-item { gap: 2.5rem; }
+        .timeline-circle { width: 48px; height: 48px; font-size: 1.1rem; }
+        .timeline-card { padding: 2rem; }
+        
         @media (min-width: 900px) {
           .service-hero-grid { grid-template-columns: 1.2fr 0.8fr !important; }
+          .timeline-line { left: 47px; } /* 24px padding + 24px center = 48px - 1px for center of 2px line = 47px */
+        }
+        @media (max-width: 899px) {
+          .timeline-container { padding-left: 0; }
+          .timeline-line { left: 19px; } /* 20px center of 40px circle - 1px = 19px */
+          .timeline-item { gap: 1rem; }
+          .timeline-circle { width: 40px; height: 40px; font-size: 0.95rem; }
+          .timeline-card { padding: 1.25rem; }
         }
       `}</style>
     </div>
@@ -381,5 +175,5 @@ export default async function ServicePage({ params }: { params: Params }) {
 }
 
 export function generateStaticParams() {
-  return Object.keys(SERVICES_DATA).map((slug) => ({ slug }));
+  return SERVICES.map((service) => ({ slug: service.slug }));
 }

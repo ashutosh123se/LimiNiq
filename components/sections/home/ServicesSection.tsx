@@ -5,44 +5,7 @@ import Link from 'next/link'
 import { MonitorSmartphone, Search, Megaphone, ArrowUpRight } from 'lucide-react'
 import { gsap } from '@/lib/gsap-config'
 
-const SERVICES = [
-  {
-    id: 'web',
-    icon: <MonitorSmartphone size={24} strokeWidth={1.5} />,
-    title: 'Website Development',
-    description: 'We craft blazing-fast, conversion-optimised web experiences that leave lasting impressions and drive real business results.',
-    features: ['Custom Web Applications', 'E-Commerce (Shopify, Custom)', 'Landing Pages & Sales Funnels'],
-    href: '/services/website-development',
-    color: '#3B5BFF'
-  },
-  {
-    id: 'seo',
-    icon: <Search size={24} strokeWidth={1.5} />,
-    title: 'Search Engine Optimization',
-    description: 'Data-driven SEO strategies that move the needle — from technical foundations to authority-building link campaigns.',
-    features: ['Technical SEO Audits', 'On-Page Optimisation', 'Link Building & Authority'],
-    href: '/services/seo',
-    color: '#00C8A0'
-  },
-  {
-    id: 'marketing',
-    icon: <Megaphone size={24} strokeWidth={1.5} />,
-    title: 'Digital Marketing',
-    description: 'Full-spectrum digital marketing — from paid ads that scale profitably to organic content that builds brand authority.',
-    features: ['Google & Meta Ads (PPC)', 'Email Marketing Automation', 'Conversion Tracking'],
-    href: '/services/digital-marketing',
-    color: '#7B61FF'
-  },
-  {
-    id: 'branding',
-    icon: <MonitorSmartphone size={24} strokeWidth={1.5} />,
-    title: 'Brand Identity',
-    description: 'Strategic branding that tells your story and connects with your audience on a deeper, emotional level.',
-    features: ['Logo Design & Identity', 'Brand Guidelines', 'Creative Direction'],
-    href: '/services/branding',
-    color: '#F59E0B'
-  }
-]
+import { SERVICES } from '@/lib/data/services'
 
 export function ServicesSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -151,7 +114,7 @@ export function ServicesSection() {
                 {service.icon}
               </div>
               <Link
-                href={service.href}
+                href={`/services/${service.slug}`}
                 className="service-link-btn"
                 style={{
                   width: 44, height: 44,
@@ -202,10 +165,27 @@ export function ServicesSection() {
 
       <style>{`
         @media (max-width: 899px) {
-          .pin-container { height: auto !important; display: block !important; padding: 6rem 1.5rem !important; }
-          .services-wrapper { display: flex; flex-direction: column; width: 100% !important; padding: 0 !important; }
-          .service-card { width: 100% !important; height: auto !important; }
-          .services-header { position: relative !important; top: 0 !important; left: 0 !important; max-width: 100% !important; margin-bottom: 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; }
+          .pin-container { height: auto !important; display: block !important; padding: 3rem 0 !important; }
+          .services-header { position: relative !important; top: 0 !important; left: 0 !important; max-width: 100% !important; margin-bottom: 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; padding: 0 1.5rem; }
+          
+          .services-wrapper { 
+            display: flex !important; 
+            flex-direction: row !important; 
+            width: 100% !important; 
+            padding: 0 1.5rem 2rem 1.5rem !important; /* bottom padding for shadow */
+            overflow-x: auto !important; 
+            scroll-snap-type: x mandatory;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+          }
+          .services-wrapper::-webkit-scrollbar { display: none; }
+          
+          .service-card { 
+            width: 85vw !important; 
+            height: auto !important; 
+            flex-shrink: 0; 
+            scroll-snap-align: center; 
+          }
         }
       `}</style>
     </section>
