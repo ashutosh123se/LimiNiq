@@ -12,57 +12,64 @@ export function clientAutoReplyTemplate(lead: {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>We received your brief — LIMINIQ</title>
 </head>
-<body style="margin:0;padding:0;background:#F4F6FF;font-family:'Plus Jakarta Sans',Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#F4F6FF;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#040508;font-family:'Plus Jakarta Sans',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#040508;padding:40px 16px;">
 <tr><td align="center">
-<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:white;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(59,91,255,0.10);">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#0D1220;border:1px solid rgba(255,255,255,0.08);border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,0.5);">
 
 <!-- Header -->
-<tr><td style="background:linear-gradient(135deg,#3B5BFF 0%,#7B61FF 50%,#00C8A0 100%);padding:40px 32px;text-align:center;">
-  <div style="font-family:'Syne',Arial,sans-serif;font-size:32px;font-weight:800;color:white;letter-spacing:-1.5px;">LIMINIQ</div>
-  <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:6px;letter-spacing:2px;text-transform:uppercase;">Next-Gen Digital Solutions</div>
+<tr><td style="background:linear-gradient(135deg,rgba(59,91,255,0.1) 0%,rgba(123,97,255,0.1) 100%);padding:48px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.06);">
+  <div style="font-family:'Syne',Arial,sans-serif;font-size:36px;font-weight:800;color:#F0F4FF;letter-spacing:-1.5px;">LIMINIQ</div>
+  <div style="font-size:12px;color:#00C8A0;margin-top:8px;letter-spacing:3px;text-transform:uppercase;font-weight:700;">Next-Gen Digital Solutions</div>
 </td></tr>
 
 <!-- Main content -->
-<tr><td style="padding:40px 40px 32px;">
-  <h1 style="font-size:24px;font-weight:700;color:#0A0F2C;margin:0 0 12px;line-height:1.3;">Hi ${firstName}! 👋</h1>
-  <p style="font-size:15px;color:#3D4568;line-height:1.8;margin:0 0 24px;">
-    We've received your project brief and we're excited to learn more about your goals. Our team will review your submission and get back to you <strong style="color:#0A0F2C;">within 24 hours</strong> with a tailored growth plan.
+<tr><td style="padding:48px 40px 32px;">
+  <h1 style="font-size:26px;font-weight:700;color:#F0F4FF;margin:0 0 16px;line-height:1.3;font-family:'Syne',Arial,sans-serif;">Hi ${firstName}! 👋</h1>
+  <p style="font-size:16px;color:#8892B0;line-height:1.7;margin:0 0 32px;">
+    We've received your project brief and we're excited to learn more about your goals. Our team will review your submission and get back to you <strong style="color:#F0F4FF;">within 24 hours</strong> with a tailored growth plan.
   </p>
 
-  <div style="background:#F4F6FF;border-radius:14px;padding:24px;margin-bottom:28px;">
-    <div style="font-size:12px;font-weight:700;color:#8891B4;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">You expressed interest in:</div>
-    ${lead.services.map((s) => `<div style="display:inline-block;background:rgba(59,91,255,0.08);color:#3B5BFF;border:1px solid rgba(59,91,255,0.18);border-radius:100px;padding:5px 14px;font-size:13px;font-weight:600;margin:3px 4px 3px 0;">${s}</div>`).join("")}
+  <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:24px;margin-bottom:40px;">
+    <div style="font-size:12px;font-weight:700;color:#3B5BFF;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">You expressed interest in:</div>
+    ${lead.services.map((s) => `<div style="display:inline-block;background:rgba(59,91,255,0.15);color:#A0B4FF;border:1px solid rgba(59,91,255,0.3);border-radius:100px;padding:6px 16px;font-size:13px;font-weight:600;margin:4px 6px 4px 0;">${s}</div>`).join("")}
   </div>
 
   <!-- What happens next -->
-  <h2 style="font-size:16px;font-weight:700;color:#0A0F2C;margin:0 0 16px;">What happens next?</h2>
+  <h2 style="font-size:18px;font-weight:700;color:#F0F4FF;margin:0 0 20px;font-family:'Syne',Arial,sans-serif;">What happens next?</h2>
   ${[
     { num: "01", title: "We review your brief", desc: "Our team thoroughly analyses your requirements and goals." },
     { num: "02", title: "Strategy call", desc: "We'll reach out to schedule a 30-min discovery call at your convenience." },
     { num: "03", title: "Custom proposal", desc: "You'll receive a tailored proposal with timeline and pricing within 48h." },
   ].map((step) => `
-  <div style="display:flex;gap:16px;margin-bottom:16px;align-items:flex-start;">
-    <div style="background:linear-gradient(135deg,#3B5BFF,#7B61FF);color:white;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;text-align:center;line-height:32px;">${step.num}</div>
+  <div style="display:flex;gap:20px;margin-bottom:24px;align-items:flex-start;">
+    <div style="background:linear-gradient(135deg,#3B5BFF,#7B61FF);color:white;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;text-align:center;line-height:36px;box-shadow:0 4px 12px rgba(59,91,255,0.3);">${step.num}</div>
     <div>
-      <div style="font-size:14px;font-weight:700;color:#0A0F2C;margin-bottom:3px;">${step.title}</div>
-      <div style="font-size:13px;color:#3D4568;line-height:1.6;">${step.desc}</div>
+      <div style="font-size:15px;font-weight:700;color:#F0F4FF;margin-bottom:4px;">${step.title}</div>
+      <div style="font-size:14px;color:#8892B0;line-height:1.6;">${step.desc}</div>
     </div>
   </div>`).join("")}
 
   <!-- While you wait -->
-  <div style="border-top:1px solid #ECEFFE;margin:28px 0;"></div>
-  <h2 style="font-size:16px;font-weight:700;color:#0A0F2C;margin:0 0 14px;">While you wait:</h2>
-  <a href="${siteUrl}/portfolio" style="display:block;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);border-radius:12px;padding:14px 18px;margin-bottom:10px;text-decoration:none;color:#0A0F2C;font-size:14px;font-weight:600;">📁 View our case studies →</a>
-  <a href="${siteUrl}/blog" style="display:block;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);border-radius:12px;padding:14px 18px;text-decoration:none;color:#0A0F2C;font-size:14px;font-weight:600;">📚 Read our latest insights →</a>
+  <div style="border-top:1px solid rgba(255,255,255,0.06);margin:40px 0 32px;"></div>
+  <h2 style="font-size:16px;font-weight:700;color:#F0F4FF;margin:0 0 16px;font-family:'Syne',Arial,sans-serif;">While you wait:</h2>
+  <a href="${siteUrl}/portfolio" style="display:block;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px 20px;margin-bottom:12px;text-decoration:none;color:#F0F4FF;font-size:14px;font-weight:600;">📁 View our case studies →</a>
+  <a href="${siteUrl}/blog" style="display:block;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px 20px;text-decoration:none;color:#F0F4FF;font-size:14px;font-weight:600;">📚 Read our latest insights →</a>
 </td></tr>
 
 <!-- Footer -->
-<tr><td style="background:#F4F6FF;padding:24px 40px;text-align:center;border-top:1px solid rgba(59,91,255,0.06);">
-  <p style="font-size:13px;color:#8891B4;margin:0 0 8px;">Questions? Reply to this email or reach us at</p>
-  <a href="mailto:hello@liminiq.com" style="color:#3B5BFF;font-weight:600;text-decoration:none;font-size:13px;">hello@liminiq.com</a>
-  <p style="font-size:11px;color:#8891B4;margin:16px 0 0;">© ${new Date().getFullYear()} LIMINIQ. Based in India, Building Globally.</p>
-  <p style="font-size:11px;color:#8891B4;margin:4px 0 0;"><a href="${siteUrl}/privacy-policy" style="color:#8891B4;">Privacy Policy</a> · <a href="{unsubscribe_url}" style="color:#8891B4;">Unsubscribe</a></p>
+<tr><td style="background:rgba(255,255,255,0.02);padding:32px 40px;text-align:center;border-top:1px solid rgba(255,255,255,0.05);">
+  <p style="font-size:13px;color:#8892B0;margin:0 0 12px;">Questions? Reply to this email or reach us at</p>
+  <a href="mailto:hello@liminiq.com" style="color:#3B5BFF;font-weight:600;text-decoration:none;font-size:14px;">hello@liminiq.com</a>
+  
+  <div style="margin:24px 0;">
+    <a href="https://www.linkedin.com/company/124623896/admin/dashboard/" style="display:inline-block;margin-right:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#8892B0;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;">LinkedIn</a>
+    <a href="https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv" style="display:inline-block;margin-right:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#8892B0;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;">Instagram</a>
+    <a href="https://twitter.com/liminiq" style="display:inline-block;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#8892B0;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;">Twitter</a>
+  </div>
+
+  <p style="font-size:12px;color:#4A5568;margin:0 0 8px;">© ${new Date().getFullYear()} LIMINIQ. Based in India, Building Globally.</p>
+  <p style="font-size:12px;color:#4A5568;margin:0;"><a href="${siteUrl}/privacy-policy" style="color:#4A5568;">Privacy Policy</a> · <a href="{unsubscribe_url}" style="color:#4A5568;">Unsubscribe</a></p>
 </td></tr>
 
 </table>
