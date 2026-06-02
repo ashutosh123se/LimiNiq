@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auditRequestSchema } from "@/lib/validations";
 import { rateLimit, getClientIP } from "@/lib/rateLimit";
-import { sendAdminNotification } from "@/lib/email";
+import { sendAdminNotification, sendClientAutoReply } from "@/lib/email";
 import { calculateLeadScore, getScorePriority } from "@/lib/leadScoring";
 
 export const dynamic = 'force-dynamic';
@@ -34,7 +34,11 @@ export async function POST(req: NextRequest) {
       data: { ...leadData, score, priority, ipAddress: ip, status: "NEW" },
     });
 
-    sendAdminNotification({ ...lead, score }).catch(console.error);
+    Promise.all([
+      sendAdminNotification({ ...lead, score }),
+      sendClientAutoReply({ name: lead.name, email: lead.email, services: lead.services }),
+    ]).catch(console.error);
+    
     return NextResponse.json({ success: true }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

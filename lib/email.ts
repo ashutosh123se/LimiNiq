@@ -49,7 +49,7 @@ async function sendViaNodemailer(payload: EmailPayload): Promise<boolean> {
     const transporter = nodemailer.createTransport({
       host,
       port: Number(process.env.SMTP_PORT || 587),
-      secure: false,
+      secure: Number(process.env.SMTP_PORT) === 465, // true for 465, false for other ports
       auth: { user, pass },
     });
 
