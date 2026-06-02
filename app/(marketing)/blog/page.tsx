@@ -71,14 +71,14 @@ export default function BlogPage() {
               </div>
 
               {/* Content Area */}
-              <div style={{ padding: "2rem 2rem 2rem 0", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <div className="p-0 lg:pr-8" style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
                 <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginBottom: "1.5rem" }}>
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "var(--accent-primary)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Engineering</span>
                   <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--text-tertiary)" }} />
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "var(--text-tertiary)" }}>8 min read</span>
                 </div>
                 
-                <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "2.5rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "1.5rem", lineHeight: 1.15 }}>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6" style={{ fontFamily: "var(--font-heading)", color: "var(--text-primary)", lineHeight: 1.15, wordBreak: "break-word" }}>
                   The Future of Headless Commerce: Next.js & Shopify Integration
                 </h2>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "2rem", maxWidth: 600 }}>
