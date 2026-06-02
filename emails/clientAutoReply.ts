@@ -141,8 +141,8 @@ export function newsletterWelcomeTemplate(data: { name?: string }): string {
   <div style="border-top:1px solid #ECEFFE;padding-top:28px;">
     <div style="font-size:13px;font-weight:700;color:#8891B4;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Follow us for daily tips:</div>
     <div>
-      <a href="https://linkedin.com/company/liminiq" style="display:inline-block;margin-right:10px;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">LinkedIn</a>
-      <a href="https://instagram.com/liminiq" style="display:inline-block;margin-right:10px;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">Instagram</a>
+      <a href="https://www.linkedin.com/company/124623896/admin/dashboard/" style="display:inline-block;margin-right:10px;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">LinkedIn</a>
+      <a href="https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv" style="display:inline-block;margin-right:10px;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">Instagram</a>
       <a href="https://twitter.com/liminiq" style="display:inline-block;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">Twitter</a>
     </div>
   </div>

@@ -99,9 +99,9 @@ export default function RootLayout({
                 availableLanguage: "English",
               },
               sameAs: [
-                "https://linkedin.com/company/liminiq",
+                "https://www.linkedin.com/company/124623896/admin/dashboard/",
                 "https://twitter.com/liminiq",
-                "https://instagram.com/liminiq",
+                "https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv",
               ],
             }),
           }}

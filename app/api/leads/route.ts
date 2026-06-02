@@ -71,8 +71,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Send emails in background (don't await to speed up response)
-    Promise.all([
+    // Await the email sending so Vercel doesn't terminate the function early
+    await Promise.all([
       sendAdminNotification({ ...lead, score }),
       sendClientAutoReply({ name: lead.name, email: lead.email, services: lead.services }),
     ]).catch((err) => console.error("[Leads API] Email error:", err));
