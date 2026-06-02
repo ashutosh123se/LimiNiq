@@ -67,6 +67,11 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || "",
   },
+  icons: {
+    icon: "/images/logo-clean.png",
+    shortcut: "/images/logo-clean.png",
+    apple: "/images/logo-clean.png",
+  },
 };
 
 export default function RootLayout({
@@ -86,7 +91,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: "LIMINIQ",
               url: "https://liminiq.com",
-              logo: "https://liminiq.com/logo.png",
+              logo: "https://liminiq.com/images/logo-clean.png",
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+91 9431471654",
