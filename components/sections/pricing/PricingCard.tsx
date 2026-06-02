@@ -27,14 +27,9 @@ export function PricingCard({
 }: PricingCardProps) {
   return (
     <div
-      className={elevated ? "glass-card elevated-card" : "glass-card"}
+      className={elevated ? "glass-card elevated-card p-6 sm:p-10 flex flex-col h-full relative" : "glass-card p-6 sm:p-10 flex flex-col h-full relative"}
       style={{
-        padding: "2.5rem",
         borderRadius: 24,
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
         border: elevated ? "1.5px solid transparent" : "1px solid rgba(255,255,255,0.08)",
         background: elevated
           ? "linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box, linear-gradient(135deg, #3B5BFF, #7B61FF) border-box"
