@@ -47,41 +47,78 @@ function PrimaryPillarCard({
 }) {
   const num = String(index + 1).padStart(2, '0')
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.55, delay: index * 0.1 }}
-      className={featured ? 'pillar-card pillar-card--featured' : 'pillar-card'}
+  const cardInner = (
+    <div
+      className="pillar-card-inner glass-card-premium"
+      style={{ '--accent': service.color } as React.CSSProperties}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`)
+        e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`)
+      }}
     >
-      <Link
-        href={`/services/${service.slug}`}
-        className="pillar-card-link"
-        data-cursor="view"
-      >
-        <div
-          className="pillar-card-inner glass-card-premium"
-          style={{ '--accent': service.color } as React.CSSProperties}
-          onMouseMove={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect()
-            e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`)
-            e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`)
-          }}
-        >
-          <div className="pillar-card-glow" />
+      <div className="pillar-card-glow" />
+
+      {featured ? (
+        <>
+          <div className="pillar-card-content">
+            <div className="pillar-card-top">
+              <span className="pillar-index">{num}</span>
+              <span className="pillar-badge">Core Pillar</span>
+            </div>
+            <div
+              className="pillar-icon"
+              style={{
+                color: service.color,
+                borderColor: `${service.color}40`,
+                background: `linear-gradient(135deg, ${service.color}22, transparent)`,
+              }}
+            >
+              {service.icon}
+            </div>
+            <h3 className="pillar-title">{service.title}</h3>
+            <p className="pillar-desc">{service.subtitle}</p>
+            <ul className="pillar-tags">
+              {service.features.slice(0, 4).map((feat) => (
+                <li key={feat}>{feat}</li>
+              ))}
+            </ul>
+            <div className="pillar-footer pillar-footer--inline">
+              <span>Explore service</span>
+              <ArrowUpRight size={18} strokeWidth={2} />
+            </div>
+          </div>
+          <div
+            className="pillar-card-visual"
+            style={{
+              backgroundImage: service.coverImage ? `url(${service.coverImage})` : undefined,
+            }}
+          >
+            <div className="pillar-visual-overlay" />
+            <div className="pillar-visual-stats">
+              <div>
+                <span className="pillar-visual-value">150+</span>
+                <span className="pillar-visual-label">Projects</span>
+              </div>
+              <div>
+                <span className="pillar-visual-value">Multi-Tenant</span>
+                <span className="pillar-visual-label">Architecture</span>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
           <div
             className="pillar-card-bg"
             style={{
               backgroundImage: service.coverImage ? `url(${service.coverImage})` : undefined,
             }}
           />
-
           <div className="pillar-card-top">
             <span className="pillar-index">{num}</span>
             <span className="pillar-badge">Core Pillar</span>
           </div>
-
           <div
             className="pillar-icon"
             style={{
@@ -92,21 +129,32 @@ function PrimaryPillarCard({
           >
             {service.icon}
           </div>
-
           <h3 className="pillar-title">{service.title}</h3>
           <p className="pillar-desc">{service.subtitle}</p>
-
           <ul className="pillar-tags">
-            {service.features.slice(0, featured ? 4 : 3).map((feat) => (
+            {service.features.slice(0, 3).map((feat) => (
               <li key={feat}>{feat}</li>
             ))}
           </ul>
-
-          <div className="pillar-footer">
+          <div className="pillar-footer pillar-footer--inline">
             <span>Explore service</span>
             <ArrowUpRight size={18} strokeWidth={2} />
           </div>
-        </div>
+        </>
+      )}
+    </div>
+  )
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.55, delay: index * 0.1 }}
+      className={featured ? 'pillar-card pillar-card--featured' : 'pillar-card'}
+    >
+      <Link href={`/services/${service.slug}`} className="pillar-card-link" data-cursor="view">
+        {cardInner}
       </Link>
     </motion.div>
   )
@@ -212,7 +260,7 @@ export function ServicesSection() {
           {featured && (
             <div className="pillar-bento">
               <PrimaryPillarCard service={featured} index={0} featured />
-              <div className="pillar-bento-stack">
+              <div className="pillar-bento-row">
                 {rest.map((service, i) => (
                   <PrimaryPillarCard key={service.id} service={service} index={i + 1} />
                 ))}
@@ -346,28 +394,83 @@ export function ServicesSection() {
         }
 
         .pillar-bento {
-          display: grid;
-          grid-template-columns: 1.35fr 1fr;
-          gap: 1.25rem;
-          align-items: stretch;
-        }
-        .pillar-bento-stack {
           display: flex;
           flex-direction: column;
+          gap: 1.25rem;
+        }
+        .pillar-bento-row {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 1.25rem;
         }
 
         .pillar-card-link {
           display: block;
-          height: 100%;
           text-decoration: none;
         }
         .pillar-card--featured .pillar-card-inner {
-          min-height: 100%;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          padding: 0;
+          height: auto;
+          min-height: 0;
+          overflow: hidden;
+        }
+        .pillar-card--featured .pillar-card-content {
+          padding: 2rem;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          z-index: 1;
+        }
+        .pillar-card--featured .pillar-card-visual {
+          position: relative;
+          min-height: 240px;
+          background-size: cover;
+          background-position: center;
+          display: flex;
+          align-items: flex-end;
+          padding: 1.25rem;
+        }
+        .pillar-visual-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(4,5,8,0.2) 0%, rgba(4,5,8,0.75) 100%);
+        }
+        .pillar-visual-stats {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          gap: 0.75rem;
+          width: 100%;
+        }
+        .pillar-visual-stats > div {
+          flex: 1;
+          padding: 0.75rem 0.85rem;
+          border-radius: 12px;
+          background: rgba(4, 5, 8, 0.65);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(8px);
+        }
+        .pillar-visual-value {
+          display: block;
+          font-family: var(--font-mono);
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          line-height: 1.2;
+        }
+        .pillar-visual-label {
+          display: block;
+          font-size: 0.65rem;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: var(--text-tertiary);
+          margin-top: 0.2rem;
         }
         .pillar-card-inner {
           position: relative;
-          height: 100%;
           padding: 2rem;
           display: flex;
           flex-direction: column;
@@ -480,14 +583,16 @@ export function ServicesSection() {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          margin-top: auto;
-          padding-top: 1.5rem;
+          padding-top: 1.25rem;
           font-family: var(--font-heading);
           font-size: 0.9rem;
           font-weight: 600;
           color: var(--text-primary);
           position: relative;
           transition: color 0.25s ease;
+        }
+        .pillar-footer--inline {
+          margin-top: 0;
         }
         .pillar-card-inner:hover .pillar-footer {
           color: var(--accent-primary);
@@ -633,8 +738,15 @@ export function ServicesSection() {
         }
 
         @media (max-width: 899px) {
-          .pillar-bento {
+          .pillar-bento-row {
             grid-template-columns: 1fr;
+          }
+          .pillar-card--featured .pillar-card-inner {
+            grid-template-columns: 1fr;
+          }
+          .pillar-card--featured .pillar-card-visual {
+            min-height: 180px;
+            order: -1;
           }
           .services-stats {
             margin-bottom: 3rem;
