@@ -245,7 +245,8 @@ export function ServicesSection() {
       <style>{`
         .services-section {
           position: relative;
-          overflow: hidden;
+          overflow-x: clip;
+          overflow-y: visible;
         }
 
         .services-inner {
@@ -540,29 +541,32 @@ export function ServicesSection() {
         .secondary-panel {
           padding: 0.75rem;
           border-radius: 28px;
+          overflow: visible;
+          width: 100%;
         }
         .secondary-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 0.5rem;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 0.65rem;
+          width: 100%;
         }
         .secondary-cell {
           display: flex;
           align-items: center;
-          gap: 0.85rem;
-          padding: 1rem 1.1rem;
+          gap: 0.75rem;
+          padding: 0.9rem 1rem;
           border-radius: 16px;
           text-decoration: none;
           position: relative;
           overflow: hidden;
           background: rgba(255,255,255,0.02);
           border: 1px solid transparent;
-          transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+          min-width: 0;
+          transition: background 0.3s ease, border-color 0.3s ease;
         }
         .secondary-cell:hover {
           background: rgba(255,255,255,0.05);
           border-color: rgba(255,255,255,0.08);
-          transform: translateX(4px);
         }
         .secondary-cell-accent {
           position: absolute;
@@ -601,13 +605,14 @@ export function ServicesSection() {
         }
         .secondary-cell-title {
           font-family: var(--font-heading);
-          font-size: 0.92rem;
+          font-size: 0.88rem;
           font-weight: 600;
           color: var(--text-primary);
-          line-height: 1.3;
-          white-space: nowrap;
+          line-height: 1.35;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
           overflow: hidden;
-          text-overflow: ellipsis;
         }
         .secondary-cell-arrow {
           width: 30px;
@@ -621,12 +626,9 @@ export function ServicesSection() {
           transition: background 0.3s ease, transform 0.3s ease;
         }
 
-        @media (min-width: 900px) {
+        @media (max-width: 1024px) {
           .secondary-grid {
-            grid-template-columns: repeat(4, 1fr);
-          }
-          .secondary-grid .secondary-cell:last-child {
-            grid-column: span 2;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 
@@ -643,8 +645,11 @@ export function ServicesSection() {
           .services-bridge-chip span {
             font-size: 0.7rem;
           }
-          .secondary-cell-title {
-            white-space: normal;
+        }
+
+        @media (max-width: 560px) {
+          .secondary-grid {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
