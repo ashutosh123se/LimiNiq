@@ -14,13 +14,12 @@ const TIER_2_ORDER = [
   'ui-ux-design-branding',
   'graphic-design-creative',
   'content-creation',
-  'video-production',
   'ai-automation-cloud',
 ]
 
 const PILLAR_STATS = [
   { value: '3', label: 'Core Pillars' },
-  { value: '7', label: 'Supporting Disciplines' },
+  { value: '6', label: 'Supporting Disciplines' },
   { value: '150+', label: 'Projects Delivered' },
 ]
 

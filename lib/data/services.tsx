@@ -1,5 +1,5 @@
 import React from 'react'
-import { Globe, Smartphone, Code2, PenTool, Palette, BarChart3, TrendingUp, FileText, Video, Cpu } from "lucide-react";
+import { Globe, Smartphone, Code2, PenTool, Palette, BarChart3, TrendingUp, FileText, Cpu } from "lucide-react";
 
 export interface ServiceData {
   id: string
@@ -223,32 +223,6 @@ export const SERVICES: ServiceData[] = [
     ],
     coverImage: "/images/services/content_creation.png",
     color: '#8B5CF6'
-  },
-  {
-    id: 'video-production',
-    slug: 'video-production',
-    title: 'Video Production & Editing',
-    shortTitle: 'Video Production',
-    subtitle: "Cinematic videos and dynamic animations that bring your brand to life.",
-    icon: <Video size={24} strokeWidth={1.5} />,
-    description: "Video is the most engaging medium online. From corporate promos to social media reels and explainer animations, we handle the entire production pipeline to deliver scroll-stopping visuals.",
-    features: [
-      "Promotional & Brand Videos",
-      "Social Media Reels & Shorts",
-      "2D/3D Motion Graphics",
-      "Explainer Animations",
-      "Corporate Interviews",
-      "Video Editing & Color Grading",
-    ],
-    process: [
-      { title: "Pre-Production", desc: "Scriptwriting, storyboarding, and planning." },
-      { title: "Production", desc: "Filming with professional gear or generating animations." },
-      { title: "Editing", desc: "Cutting, pacing, and assembling the narrative." },
-      { title: "Post-Production", desc: "Adding VFX, motion graphics, color grading, and sound." },
-      { title: "Delivery", desc: "Exporting optimized formats for various platforms." },
-    ],
-    coverImage: "/images/services/video_production.png",
-    color: '#EC4899'
   },
   {
     id: 'ai-automation',

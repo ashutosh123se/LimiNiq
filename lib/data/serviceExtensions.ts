@@ -369,22 +369,6 @@ Whether you're a fintech brand needing qualified loan applications, a D2C food b
     tier: 2,
     tierOrder: 8,
   },
-  "video-production": {
-    metaTitle: "Video Production & Editing Services",
-    metaDescription:
-      "Promotional videos, social reels, motion graphics, and explainer animations that stop the scroll and communicate your brand story. Video services from LIMINIQ.",
-    metaKeywords: [
-      "video production company India",
-      "corporate video production",
-      "motion graphics agency",
-      "social media video editing",
-      "explainer video production India",
-      "video editing services India",
-    ],
-    serviceType: "Video Production",
-    tier: 2,
-    tierOrder: 9,
-  },
   "ai-automation-cloud": {
     metaTitle: "AI, Automation & Cloud Solutions",
     metaDescription:
@@ -399,7 +383,7 @@ Whether you're a fintech brand needing qualified loan applications, a D2C food b
     ],
     serviceType: "AI & Cloud Solutions",
     tier: 2,
-    tierOrder: 10,
+    tierOrder: 9,
   },
 };
 

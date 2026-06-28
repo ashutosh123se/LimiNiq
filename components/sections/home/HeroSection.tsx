@@ -30,7 +30,7 @@ function HeroBlueprint() {
 
       {PILLARS.map((pillar, i) => {
         const angle = (i * 120 - 90) * (Math.PI / 180)
-        const radius = 42
+        const radius = 46
         return (
           <motion.div
             key={pillar.label}
@@ -121,8 +121,11 @@ export function HeroSection() {
 
             <h1 className="hero-h1 hero-h1--editorial">
               <motion.span {...fade(0.2)} className="hero-h1-pre">
-                Custom Software &{' '}
-                <span className="hero-h1-highlight">SaaS</span> Development
+                <span className="hero-h1-line">Custom Software &amp;</span>
+                <span className="hero-h1-line">
+                  <span className="hero-h1-highlight">SaaS</span>{' '}
+                  <span className="hero-h1-nowrap">Development</span>
+                </span>
               </motion.span>
               <motion.span {...fade(0.35)} className="hero-h1-sub text-gradient">
                 Backed by Data-Driven Marketing
@@ -219,7 +222,7 @@ export function HeroSection() {
         }
 
         .hero-copy {
-          max-width: 620px;
+          max-width: 580px;
         }
 
         .hero-eyebrow-row {
@@ -247,13 +250,23 @@ export function HeroSection() {
         }
 
         .hero-h1-pre {
-          display: block;
+          display: flex;
+          flex-direction: column;
+          gap: 0.08em;
           font-family: var(--font-heading);
-          font-size: clamp(2.1rem, 4.8vw, 3.65rem);
+          font-size: clamp(2rem, 4.2vw, 3.35rem);
           font-weight: 800;
           line-height: 1.08;
           letter-spacing: -0.035em;
           color: var(--text-primary);
+        }
+
+        .hero-h1-line {
+          display: block;
+        }
+
+        .hero-h1-nowrap {
+          white-space: nowrap;
         }
 
         .hero-h1-highlight {
@@ -293,11 +306,14 @@ export function HeroSection() {
           display: flex;
           justify-content: center;
           align-items: center;
+          width: 100%;
+          min-height: 480px;
         }
 
         .hero-blueprint {
           position: relative;
-          width: min(100%, 420px);
+          width: 100%;
+          max-width: 560px;
           aspect-ratio: 1;
           margin: 0 auto;
         }
@@ -368,8 +384,8 @@ export function HeroSection() {
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
-          width: 58%;
-          padding: 1.35rem 1.25rem;
+          width: 62%;
+          padding: 1.5rem 1.35rem;
           border-radius: 20px;
           text-align: center;
         }
@@ -510,14 +526,17 @@ export function HeroSection() {
 
         @media (min-width: 960px) {
           .hero-grid {
-            grid-template-columns: 1.05fr 0.95fr;
-            gap: 2rem;
+            grid-template-columns: 0.92fr 1.08fr;
+            gap: 2.5rem;
           }
           .hero-copy {
-            padding-right: 1rem;
+            padding-right: 0.5rem;
           }
           .hero-visual-col {
-            justify-content: flex-end;
+            justify-content: center;
+          }
+          .hero-blueprint {
+            max-width: 520px;
           }
         }
 
