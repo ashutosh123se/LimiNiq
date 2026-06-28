@@ -3,7 +3,7 @@ import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { Users, Code2, LineChart, Globe2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us | LIMINIQ",
+  title: "About Us",
   description: "Learn about LIMINIQ, our mission, and the team building next-generation digital solutions for ambitious brands.",
   alternates: { canonical: "https://liminiq.com/about" },
 };

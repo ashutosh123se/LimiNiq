@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | LIMINIQ",
+  title: "Privacy Policy",
   description: "Learn how LIMINIQ collects, uses, and protects your personal information.",
   alternates: { canonical: "https://liminiq.com/privacy-policy" },
 };

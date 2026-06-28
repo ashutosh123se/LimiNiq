@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | LIMINIQ",
+  title: "Terms of Service",
   description: "Terms and conditions for using LIMINIQ's digital agency services.",
   alternates: { canonical: "https://liminiq.com/terms-of-service" },
 };

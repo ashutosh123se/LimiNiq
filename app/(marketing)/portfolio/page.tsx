@@ -5,7 +5,7 @@ import { ArrowRight, BarChart3, TrendingUp, Zap } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Our Work & Case Studies | LIMINIQ",
+  title: "Our Work & Case Studies",
   description: "Explore our portfolio of high-performance websites, SEO campaigns, and digital marketing success stories.",
   alternates: { canonical: "https://liminiq.com/portfolio" },
 };

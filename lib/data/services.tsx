@@ -179,7 +179,7 @@ export const SERVICES: ServiceData[] = [
     shortTitle: 'SEO & SEM',
     subtitle: "Data-driven SEO strategies that dominate search results and drive qualified traffic.",
     icon: <TrendingUp size={24} strokeWidth={1.5} />,
-    description: "Visibility is everything. We combine technical SEO, content strategy, and authoritative link building to secure top rankings for high-intent keywords. No black-hat tricks, just sustainable organic growth.",
+    description: "Visibility is everything. As an SEO agency in India, we combine technical SEO, content strategy, and authoritative link building to secure top rankings for high-intent keywords — with dedicated programs for SaaS and software companies. No black-hat tricks, just sustainable organic growth.",
     features: [
       "Technical SEO Audits & Fixes",
       "Keyword Research & Strategy",

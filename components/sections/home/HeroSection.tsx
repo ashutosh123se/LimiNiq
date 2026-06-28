@@ -76,7 +76,7 @@ export function HeroSection() {
             </motion.div>
 
             <SplitHeadline className="hero-h1">
-              Engineering Growth for Ambitious Brands
+              Custom Software & SaaS Development — Backed by Data-Driven Marketing
             </SplitHeadline>
 
             <motion.p
@@ -93,7 +93,7 @@ export function HeroSection() {
                 fontWeight: 500
               }}
             >
-              LIMINIQ engineers high-performance websites, drives organic growth through precision SEO, and executes data-backed digital marketing strategies for ambitious brands.
+              LIMINIQ builds custom software, SaaS platforms, and enterprise systems — then drives their growth with precision SEO and data-backed digital marketing.
             </motion.p>
 
             <motion.div

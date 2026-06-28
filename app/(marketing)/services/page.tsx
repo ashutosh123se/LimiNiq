@@ -6,7 +6,7 @@ import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Our Services | LIMINIQ",
+  title: "Our Services",
   description: "Explore our comprehensive suite of digital services including web development, mobile apps, SaaS, UI/UX, marketing, and SEO.",
   alternates: { canonical: "https://liminiq.com/services" },
 };

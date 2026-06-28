@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { blogPostSchema } from "@/lib/validations";
 import slugify from "slugify";
 import { auth } from "@/auth";
+import { getCategoryAliases } from "@/lib/data/blogCategories";
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +17,10 @@ export async function GET(req: NextRequest) {
   const limit = Number(searchParams.get("limit") || 12);
 
   const where: Prisma.BlogPostWhereInput = {};
-  if (category) where.category = category;
+  if (category) {
+    const aliases = getCategoryAliases(category);
+    where.category = aliases.length === 1 ? aliases[0] : { in: aliases };
+  }
   if (published !== null) where.published = published === "true";
   else where.published = true; // Default: only published
 

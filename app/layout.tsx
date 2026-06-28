@@ -14,21 +14,19 @@ const syne = Syne({ subsets: ["latin"], variable: "--font-heading" });
 export const metadata: Metadata = {
   metadataBase: new URL("https://liminiq.com"),
   title: {
-    default: "LIMINIQ — Website Development, SEO & Digital Marketing Agency",
+    default: "LIMINIQ — Custom Software, SaaS & Enterprise Development Company in India",
     template: "%s | LIMINIQ",
   },
   description:
-    "LIMINIQ is a next-gen software development agency that builds high-performance websites, drives organic growth through precision SEO, and executes data-backed digital marketing strategies for ambitious brands.",
+    "LIMINIQ builds custom software, SaaS platforms, and enterprise systems for growing businesses — and drives their growth with data-backed SEO and digital marketing. 150+ projects delivered, 4.9/5 rated.",
   keywords: [
-    "web development agency",
+    "custom software development company India",
+    "enterprise software development company",
+    "SaaS development company India",
     "SEO agency India",
-    "digital marketing agency",
-    "next.js development",
-    "website development",
-    "seo services",
-    "ppc advertising",
-    "ecommerce development",
-    "liminiq",
+    "digital marketing agency India",
+    "software development agency",
+    "ERP CRM development India",
   ],
   authors: [{ name: "LIMINIQ", url: "https://liminiq.com" }],
   creator: "LIMINIQ",
@@ -37,9 +35,9 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "https://liminiq.com",
     siteName: "LIMINIQ",
-    title: "LIMINIQ — Website Development, SEO & Digital Marketing Agency",
+    title: "LIMINIQ — Custom Software, SaaS & Enterprise Development Company in India",
     description:
-      "Next-gen software development agency. High-performance websites, precision SEO, and data-backed digital marketing.",
+      "Next-gen software & SaaS development company — backed by data-driven SEO and marketing. High-performance websites, precision SEO, and data-backed digital marketing.",
     images: [
       {
         url: "/api/og",
@@ -53,9 +51,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@liminiq",
     creator: "@liminiq",
-    title: "LIMINIQ — Website Development, SEO & Digital Marketing Agency",
+    title: "LIMINIQ — Custom Software, SaaS & Enterprise Development Company in India",
     description:
-      "Next-gen software development agency. High-performance websites, precision SEO, and data-backed digital marketing.",
+      "Next-gen software & SaaS development company — backed by data-driven SEO and marketing. High-performance websites, precision SEO, and data-backed digital marketing.",
     images: ["/api/og"],
   },
   robots: {
@@ -92,6 +90,8 @@ export default function RootLayout({
               name: "LIMINIQ",
               url: "https://liminiq.com",
               logo: "https://liminiq.com/images/logo-clean.png",
+              description:
+                "Custom software, SaaS, and enterprise development company also offering SEO and digital marketing services.",
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+91 9431471654",
@@ -99,9 +99,10 @@ export default function RootLayout({
                 availableLanguage: "English",
               },
               sameAs: [
-                "https://www.linkedin.com/company/124623896/admin/dashboard/",
+                "https://www.linkedin.com/company/124623896",
+                "https://www.instagram.com/liminiq_com",
                 "https://twitter.com/liminiq",
-                "https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv",
+                "https://github.com/liminiq",
               ],
             }),
           }}

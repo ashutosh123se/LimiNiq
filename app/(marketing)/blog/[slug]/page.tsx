@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const post = await prisma.blogPost.findUnique({ where: { slug } });
     if (!post) return { title: "Post Not Found" };
     return {
-      title: post.metaTitle || `${post.title} | LIMINIQ`,
+      title: post.metaTitle || post.title,
       description: post.metaDesc || post.excerpt,
       openGraph: {
         images: [post.ogImage || post.coverImage || ""],

@@ -5,7 +5,7 @@ import { ShieldCheck, UserCheck, Zap, RefreshCw } from "lucide-react";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Simple, Honest Pricing | LIMINIQ",
+  title: "Simple, Honest Pricing",
   description: "Transparent pricing for web development and SEO marketing. No hidden fees. Invest in high-performance digital growth.",
   alternates: { canonical: "https://liminiq.com/pricing" },
 };
