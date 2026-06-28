@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
+import { motion, useInView } from 'framer-motion'
+import { ArrowUpRight, Layers } from 'lucide-react'
 
 import { SERVICES } from '@/lib/data/services'
 import { TIER_1_SLUGS } from '@/lib/data/serviceExtensions'
@@ -17,6 +18,12 @@ const TIER_2_ORDER = [
   'ai-automation-cloud',
 ]
 
+const PILLAR_STATS = [
+  { value: '3', label: 'Core Pillars' },
+  { value: '7', label: 'Supporting Disciplines' },
+  { value: '150+', label: 'Projects Delivered' },
+]
+
 function getTier1Services() {
   return TIER_1_SLUGS
     .map((slug) => SERVICES.find((s) => s.slug === slug))
@@ -29,222 +36,210 @@ function getTier2Services() {
     .filter(Boolean) as typeof SERVICES
 }
 
-interface ServiceCardProps {
+function PrimaryPillarCard({
+  service,
+  index,
+  featured = false,
+}: {
   service: (typeof SERVICES)[number]
-  variant: 'primary' | 'secondary'
-}
-
-function ServiceCard({ service, variant }: ServiceCardProps) {
-  const [hovered, setHovered] = useState(false)
-  const isPrimary = variant === 'primary'
+  index: number
+  featured?: boolean
+}) {
+  const num = String(index + 1).padStart(2, '0')
 
   return (
-    <Link
-      href={`/services/${service.slug}`}
-      style={{ textDecoration: 'none', display: 'block', height: '100%' }}
-      data-cursor="view"
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.55, delay: index * 0.1 }}
+      className={featured ? 'pillar-card pillar-card--featured' : 'pillar-card'}
     >
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        className="glass-card-premium service-card"
-        style={{
-          height: '100%',
-          padding: isPrimary ? '2.5rem 2rem' : '1.75rem 1.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          transform: hovered ? 'translateY(-8px)' : 'translateY(0)',
-          transition: 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s ease',
-          border: hovered ? `1px solid ${service.color}40` : '1px solid rgba(255,255,255,0.08)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
+      <Link
+        href={`/services/${service.slug}`}
+        className="pillar-card-link"
+        data-cursor="view"
       >
         <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: `radial-gradient(600px circle at 50% 100%, ${service.color}12, transparent)`,
-            opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.4s ease',
-            pointerEvents: 'none',
-          }}
-        />
-
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            marginBottom: isPrimary ? '2rem' : '1.25rem',
-            position: 'relative',
+          className="pillar-card-inner glass-card-premium"
+          style={{ '--accent': service.color } as React.CSSProperties}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect()
+            e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`)
+            e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`)
           }}
         >
+          <div className="pillar-card-glow" />
           <div
+            className="pillar-card-bg"
             style={{
-              width: isPrimary ? 56 : 44,
-              height: isPrimary ? 56 : 44,
-              background: `linear-gradient(135deg, ${service.color}25, transparent)`,
-              borderRadius: 14,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              backgroundImage: service.coverImage ? `url(${service.coverImage})` : undefined,
+            }}
+          />
+
+          <div className="pillar-card-top">
+            <span className="pillar-index">{num}</span>
+            <span className="pillar-badge">Core Pillar</span>
+          </div>
+
+          <div
+            className="pillar-icon"
+            style={{
               color: service.color,
-              border: `1px solid ${service.color}35`,
-              transform: hovered ? 'scale(1.08) rotate(4deg)' : 'scale(1) rotate(0deg)',
-              transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              borderColor: `${service.color}40`,
+              background: `linear-gradient(135deg, ${service.color}22, transparent)`,
             }}
           >
             {service.icon}
           </div>
-          <div
-            style={{
-              width: isPrimary ? 40 : 34,
-              height: isPrimary ? 40 : 34,
-              borderRadius: '50%',
-              background: hovered ? service.color : 'rgba(255,255,255,0.05)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              border: hovered ? `1px solid ${service.color}` : '1px solid rgba(255,255,255,0.1)',
-              transform: hovered ? 'rotate(45deg)' : 'rotate(0deg)',
-              transition: 'all 0.3s ease',
-            }}
-          >
-            <ArrowUpRight size={isPrimary ? 18 : 16} strokeWidth={1.5} />
-          </div>
-        </div>
 
-        <h3
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: isPrimary ? '1.5rem' : '1.15rem',
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            marginBottom: '0.75rem',
-            lineHeight: 1.25,
-            position: 'relative',
-          }}
-        >
-          {service.title}
-        </h3>
+          <h3 className="pillar-title">{service.title}</h3>
+          <p className="pillar-desc">{service.subtitle}</p>
 
-        <p
-          style={{
-            fontSize: isPrimary ? '1rem' : '0.9rem',
-            color: 'var(--text-secondary)',
-            lineHeight: 1.65,
-            margin: 0,
-            flex: 1,
-            position: 'relative',
-          }}
-        >
-          {isPrimary ? service.subtitle : service.shortTitle}
-        </p>
-
-        {isPrimary && (
-          <ul
-            style={{
-              listStyle: 'none',
-              margin: '1.5rem 0 0',
-              padding: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.6rem',
-              position: 'relative',
-            }}
-          >
-            {service.features.slice(0, 3).map((feat) => (
-              <li key={feat} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div
-                  style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: '50%',
-                    background: service.color,
-                    flexShrink: 0,
-                  }}
-                />
-                <span style={{ fontSize: '0.875rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>
-                  {feat}
-                </span>
-              </li>
+          <ul className="pillar-tags">
+            {service.features.slice(0, featured ? 4 : 3).map((feat) => (
+              <li key={feat}>{feat}</li>
             ))}
           </ul>
-        )}
-      </div>
-    </Link>
+
+          <div className="pillar-footer">
+            <span>Explore service</span>
+            <ArrowUpRight size={18} strokeWidth={2} />
+          </div>
+        </div>
+      </Link>
+    </motion.div>
   )
 }
 
-function TierBlock({
-  eyebrow,
-  heading,
-  services,
-  variant,
-}: {
-  eyebrow: string
-  heading: string
-  services: typeof SERVICES
-  variant: 'primary' | 'secondary'
-}) {
+function SecondaryServiceCell({ service, index }: { service: (typeof SERVICES)[number]; index: number }) {
+  const [hovered, setHovered] = useState(false)
+
   return (
-    <div className="services-tier">
-      <div className="services-tier-header">
-        <div className="eyebrow">{eyebrow}</div>
-        <h3 className="services-tier-title">{heading}</h3>
-      </div>
-      <div className={`services-tier-grid services-tier-grid--${variant}`}>
-        {services.map((service) => (
-          <ServiceCard key={service.id} service={service} variant={variant} />
-        ))}
-      </div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
+    >
+      <Link
+        href={`/services/${service.slug}`}
+        className="secondary-cell"
+        data-cursor="view"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <div
+          className="secondary-cell-accent"
+          style={{ background: hovered ? service.color : `${service.color}80` }}
+        />
+        <div
+          className="secondary-cell-icon"
+          style={{
+            color: service.color,
+            background: `${service.color}15`,
+            borderColor: `${service.color}30`,
+          }}
+        >
+          {service.icon}
+        </div>
+        <div className="secondary-cell-body">
+          <span className="secondary-cell-label">{service.shortTitle}</span>
+          <span className="secondary-cell-title">{service.title}</span>
+        </div>
+        <div
+          className="secondary-cell-arrow"
+          style={{
+            background: hovered ? service.color : 'rgba(255,255,255,0.06)',
+            transform: hovered ? 'rotate(45deg)' : 'rotate(0deg)',
+          }}
+        >
+          <ArrowUpRight size={15} strokeWidth={2} />
+        </div>
+      </Link>
+    </motion.div>
   )
 }
 
 export function ServicesSection() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-80px' })
   const tier1 = getTier1Services()
   const tier2 = getTier2Services()
+  const [featured, ...rest] = tier1
 
   return (
-    <section className="section-padding services-section">
-      <div className="section-container">
-        <div className="services-section-intro">
-          <div className="pill-badge shimmer" style={{ marginBottom: '1rem' }}>
+    <section ref={ref} className="section-padding services-section">
+      <div className="services-bg-glow services-bg-glow--left" />
+      <div className="services-bg-glow services-bg-glow--right" />
+      <div className="services-dot-grid" />
+
+      <div className="section-container services-inner">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="services-intro"
+        >
+          <div className="pill-badge shimmer">
             <span style={{ color: 'var(--accent-primary)' }}>✦</span> Core Disciplines
           </div>
-          <h2 className="section-h2" style={{ marginBottom: '1rem' }}>
-            The Architecture of Growth
+          <h2 className="section-h2">
+            The Architecture of{' '}
+            <span className="text-gradient">Growth</span>
           </h2>
-          <p
-            style={{
-              fontSize: '1.05rem',
-              color: 'var(--text-secondary)',
-              maxWidth: 560,
-              lineHeight: 1.7,
-              margin: 0,
-            }}
-          >
-            Custom software and SaaS at the core — supported by marketing, design, and delivery
-            capabilities that scale with your product.
+          <p className="services-intro-copy">
+            Custom software and SaaS at the core — supported by marketing, design, and
+            delivery capabilities that scale with your product.
           </p>
+        </motion.div>
+
+        <div className="services-stats">
+          {PILLAR_STATS.map((stat) => (
+            <div key={stat.label} className="services-stat">
+              <span className="services-stat-value">{stat.value}</span>
+              <span className="services-stat-label">{stat.label}</span>
+            </div>
+          ))}
         </div>
 
-        <TierBlock
-          eyebrow="Our Core Expertise"
-          heading="Software, Marketing & Growth"
-          services={tier1}
-          variant="primary"
-        />
+        <div className="pillar-section">
+          <div className="pillar-section-head">
+            <div className="eyebrow">Our Core Expertise</div>
+            <h3 className="pillar-section-title">Software, Marketing & Growth</h3>
+          </div>
 
-        <TierBlock
-          eyebrow="Also Part of How We Deliver"
-          heading="Design, Content & Infrastructure"
-          services={tier2}
-          variant="secondary"
-        />
+          {featured && (
+            <div className="pillar-bento">
+              <PrimaryPillarCard service={featured} index={0} featured />
+              <div className="pillar-bento-stack">
+                {rest.map((service, i) => (
+                  <PrimaryPillarCard key={service.id} service={service} index={i + 1} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="services-bridge">
+          <div className="services-bridge-line" />
+          <div className="services-bridge-chip">
+            <Layers size={16} strokeWidth={2} />
+            <span>Also part of how we deliver</span>
+          </div>
+          <div className="services-bridge-line" />
+        </div>
+
+        <div className="secondary-section">
+          <h3 className="secondary-section-title">Design, Content & Infrastructure</h3>
+          <div className="secondary-panel glass-card-premium">
+            <div className="secondary-grid">
+              {tier2.map((service, i) => (
+                <SecondaryServiceCell key={service.id} service={service} index={i} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       <style>{`
@@ -253,62 +248,403 @@ export function ServicesSection() {
           overflow: hidden;
         }
 
-        .services-section-intro {
+        .services-inner {
+          position: relative;
+          z-index: 1;
+        }
+
+        .services-bg-glow {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .services-bg-glow--left {
+          width: 520px;
+          height: 520px;
+          top: 5%;
+          left: -180px;
+          background: rgba(59, 91, 255, 0.12);
+        }
+        .services-bg-glow--right {
+          width: 480px;
+          height: 480px;
+          bottom: 0;
+          right: -140px;
+          background: rgba(0, 200, 160, 0.08);
+        }
+
+        .services-dot-grid {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0.35;
+          background-image: radial-gradient(rgba(59, 91, 255, 0.25) 1px, transparent 1px);
+          background-size: 28px 28px;
+          mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black, transparent);
+        }
+
+        .services-intro {
+          text-align: center;
+          max-width: 720px;
+          margin: 0 auto 2.5rem;
+        }
+        .services-intro .pill-badge {
+          margin-bottom: 1.25rem;
+        }
+        .services-intro .section-h2 {
+          margin-bottom: 1rem;
+        }
+        .services-intro-copy {
+          font-size: 1.1rem;
+          color: var(--text-secondary);
+          line-height: 1.75;
+          margin: 0;
+        }
+
+        .services-stats {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          flex-wrap: wrap;
           margin-bottom: 4rem;
         }
-
-        .services-tier + .services-tier {
-          margin-top: 4rem;
-          padding-top: 4rem;
-          border-top: 1px solid var(--border-subtle);
+        .services-stat {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          padding: 0.65rem 1.25rem;
+          border-radius: 100px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+        .services-stat-value {
+          font-family: var(--font-mono);
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: var(--accent-primary);
+        }
+        .services-stat-label {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: var(--text-secondary);
+          letter-spacing: 0.02em;
         }
 
-        .services-tier-header {
+        .pillar-section-head {
           margin-bottom: 2rem;
         }
-
-        .services-tier-title {
+        .pillar-section-title {
           font-family: var(--font-heading);
-          font-size: clamp(1.5rem, 3vw, 2rem);
+          font-size: clamp(1.35rem, 2.5vw, 1.75rem);
           font-weight: 700;
           color: var(--text-primary);
-          margin: 0.75rem 0 0;
+          margin: 0.85rem 0 0;
           letter-spacing: -0.02em;
         }
 
-        .services-tier-grid {
+        .pillar-bento {
           display: grid;
-          gap: 1.5rem;
+          grid-template-columns: 1.35fr 1fr;
+          gap: 1.25rem;
+          align-items: stretch;
+        }
+        .pillar-bento-stack {
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
         }
 
-        .services-tier-grid--primary {
-          grid-template-columns: repeat(3, 1fr);
+        .pillar-card-link {
+          display: block;
+          height: 100%;
+          text-decoration: none;
+        }
+        .pillar-card--featured .pillar-card-inner {
+          min-height: 100%;
+        }
+        .pillar-card-inner {
+          position: relative;
+          height: 100%;
+          padding: 2rem;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          border-radius: 24px;
+        }
+        .pillar-card-glow {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            color-mix(in srgb, var(--accent) 18%, transparent),
+            transparent 65%
+          );
+          opacity: 0;
+          transition: opacity 0.35s ease;
+        }
+        .pillar-card-inner:hover .pillar-card-glow {
+          opacity: 1;
+        }
+        .pillar-card-bg {
+          position: absolute;
+          inset: 0;
+          background-size: cover;
+          background-position: center;
+          opacity: 0.12;
+          filter: saturate(1.2);
+          pointer-events: none;
+          mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent 85%);
+        }
+        .pillar-card-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 1.5rem;
+          position: relative;
+        }
+        .pillar-index {
+          font-family: var(--font-mono);
+          font-size: 0.8rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          color: var(--text-tertiary);
+        }
+        .pillar-badge {
+          font-size: 0.68rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 4px 10px;
+          border-radius: 100px;
+          color: var(--accent-primary);
+          background: rgba(59, 91, 255, 0.12);
+          border: 1px solid rgba(59, 91, 255, 0.25);
+        }
+        .pillar-icon {
+          width: 52px;
+          height: 52px;
+          border-radius: 14px;
+          border: 1px solid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1.25rem;
+          position: relative;
+        }
+        .pillar-card--featured .pillar-icon {
+          width: 60px;
+          height: 60px;
+        }
+        .pillar-title {
+          font-family: var(--font-heading);
+          font-size: 1.35rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          line-height: 1.25;
+          margin: 0 0 0.75rem;
+          position: relative;
+        }
+        .pillar-card--featured .pillar-title {
+          font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+        }
+        .pillar-desc {
+          font-size: 0.95rem;
+          color: var(--text-secondary);
+          line-height: 1.65;
+          margin: 0;
+          position: relative;
+        }
+        .pillar-tags {
+          list-style: none;
+          margin: 1.25rem 0 0;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          position: relative;
+        }
+        .pillar-tags li {
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 5px 10px;
+          border-radius: 8px;
+          color: var(--text-secondary);
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+        .pillar-footer {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-top: auto;
+          padding-top: 1.5rem;
+          font-family: var(--font-heading);
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          position: relative;
+          transition: color 0.25s ease;
+        }
+        .pillar-card-inner:hover .pillar-footer {
+          color: var(--accent-primary);
+        }
+        .pillar-card-inner:hover .pillar-footer svg {
+          transform: translate(3px, -3px);
+        }
+        .pillar-footer svg {
+          transition: transform 0.25s ease;
         }
 
-        .services-tier-grid--secondary {
-          grid-template-columns: repeat(4, 1fr);
+        .services-bridge {
+          display: flex;
+          align-items: center;
+          gap: 1.25rem;
+          margin: 4rem 0 2.5rem;
+        }
+        .services-bridge-line {
+          flex: 1;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(59,91,255,0.35), transparent);
+        }
+        .services-bridge-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.6rem 1.1rem;
+          border-radius: 100px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-secondary);
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+          white-space: nowrap;
+        }
+        .services-bridge-chip svg {
+          color: var(--accent-teal);
         }
 
-        @media (max-width: 1100px) {
-          .services-tier-grid--primary {
-            grid-template-columns: repeat(2, 1fr);
+        .secondary-section-title {
+          font-family: var(--font-heading);
+          font-size: clamp(1.2rem, 2vw, 1.5rem);
+          font-weight: 700;
+          color: var(--text-secondary);
+          margin: 0 0 1.25rem;
+          letter-spacing: -0.02em;
+        }
+
+        .secondary-panel {
+          padding: 0.75rem;
+          border-radius: 28px;
+        }
+        .secondary-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.5rem;
+        }
+        .secondary-cell {
+          display: flex;
+          align-items: center;
+          gap: 0.85rem;
+          padding: 1rem 1.1rem;
+          border-radius: 16px;
+          text-decoration: none;
+          position: relative;
+          overflow: hidden;
+          background: rgba(255,255,255,0.02);
+          border: 1px solid transparent;
+          transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+        .secondary-cell:hover {
+          background: rgba(255,255,255,0.05);
+          border-color: rgba(255,255,255,0.08);
+          transform: translateX(4px);
+        }
+        .secondary-cell-accent {
+          position: absolute;
+          left: 0;
+          top: 12%;
+          bottom: 12%;
+          width: 3px;
+          border-radius: 4px;
+          transition: background 0.3s ease;
+        }
+        .secondary-cell-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 11px;
+          border: 1px solid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          margin-left: 0.35rem;
+        }
+        .secondary-cell-body {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+        }
+        .secondary-cell-label {
+          font-family: var(--font-mono);
+          font-size: 0.68rem;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-tertiary);
+        }
+        .secondary-cell-title {
+          font-family: var(--font-heading);
+          font-size: 0.92rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          line-height: 1.3;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .secondary-cell-arrow {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          flex-shrink: 0;
+          transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        @media (min-width: 900px) {
+          .secondary-grid {
+            grid-template-columns: repeat(4, 1fr);
           }
-          .services-tier-grid--secondary {
-            grid-template-columns: repeat(3, 1fr);
+          .secondary-grid .secondary-cell:last-child {
+            grid-column: span 2;
           }
         }
 
-        @media (max-width: 768px) {
-          .services-section-intro {
+        @media (max-width: 899px) {
+          .pillar-bento {
+            grid-template-columns: 1fr;
+          }
+          .services-stats {
             margin-bottom: 3rem;
           }
-          .services-tier + .services-tier {
-            margin-top: 3rem;
-            padding-top: 3rem;
+          .services-bridge {
+            margin: 3rem 0 2rem;
           }
-          .services-tier-grid--primary,
-          .services-tier-grid--secondary {
-            grid-template-columns: 1fr;
+          .services-bridge-chip span {
+            font-size: 0.7rem;
+          }
+          .secondary-cell-title {
+            white-space: normal;
           }
         }
       `}</style>
