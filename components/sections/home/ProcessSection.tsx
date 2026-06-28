@@ -1,237 +1,423 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { gsap } from '@/lib/gsap-config'
+import { useRef, useState } from 'react'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Search, Target, PenTool, Code2, Rocket, LineChart } from 'lucide-react'
 
 const STEPS = [
-  { num: '01', title: 'Discovery', icon: <Search size={24} />, desc: 'Deep-dive consultation to understand your goals, audience, and competitive landscape.' },
-  { num: '02', title: 'Strategy', icon: <Target size={24} />, desc: 'Data-driven roadmap with clear KPIs, timelines, and channel prioritisation.' },
-  { num: '03', title: 'Design', icon: <PenTool size={24} />, desc: 'UI/UX prototyping that balances brand identity with conversion optimisation.' },
-  { num: '04', title: 'Build', icon: <Code2 size={24} />, desc: 'Development and integration with rigorous code reviews and performance testing.' },
-  { num: '05', title: 'Launch', icon: <Rocket size={24} />, desc: 'QA, go-live coordination, client training, and post-launch monitoring.' },
-  { num: '06', title: 'Optimise', icon: <LineChart size={24} />, desc: 'Ongoing analytics, A/B testing, and continuous growth iteration.' },
+  { num: '01', title: 'Discovery', icon: Search, desc: 'Deep-dive consultation to understand your goals, audience, and competitive landscape.' },
+  { num: '02', title: 'Strategy', icon: Target, desc: 'Data-driven roadmap with clear KPIs, timelines, and channel prioritisation.' },
+  { num: '03', title: 'Design', icon: PenTool, desc: 'UI/UX prototyping that balances brand identity with conversion optimisation.' },
+  { num: '04', title: 'Build', icon: Code2, desc: 'Development and integration with rigorous code reviews and performance testing.' },
+  { num: '05', title: 'Launch', icon: Rocket, desc: 'QA, go-live coordination, client training, and post-launch monitoring.' },
+  { num: '06', title: 'Optimise', icon: LineChart, desc: 'Ongoing analytics, A/B testing, and continuous growth iteration.' },
 ]
 
 export function ProcessSection() {
   const ref = useRef(null)
-  const lineRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: '-100px' })
-
-  useEffect(() => {
-    if (!lineRef.current) return
-    let ctx = gsap.context(() => {
-      gsap.fromTo(lineRef.current, 
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: ref.current,
-            start: 'top center',
-            end: 'bottom center',
-            scrub: 1,
-          }
-        }
-      )
-    });
-    return () => ctx.revert();
-  }, [])
+  const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const [active, setActive] = useState(0)
+  const activeStep = STEPS[active]
 
   return (
-    <section ref={ref} className="section-padding" style={{ position: 'relative', overflow: 'hidden' }}>
-      
-      {/* Background Glows */}
-      <div style={{ position: 'absolute', top: '20%', left: '10%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(59,91,255,0.08) 0%, transparent 70%)', filter: 'blur(60px)', zIndex: 0 }} />
-      <div style={{ position: 'absolute', bottom: '10%', right: '10%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(0,200,160,0.05) 0%, transparent 70%)', filter: 'blur(60px)', zIndex: 0 }} />
+    <section ref={ref} className="section-padding process-section">
+      <div className="process-glow process-glow--left" />
+      <div className="process-glow process-glow--right" />
 
-      <div className="section-container" style={{ position: 'relative', zIndex: 1 }}>
-        
+      <div className="section-container process-inner">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: '6rem' }}
+          transition={{ duration: 0.55 }}
+          className="process-header"
         >
-          <div className="pill-badge" style={{ marginBottom: '1.5rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)' }}>
-            <span style={{ color: 'var(--accent-primary)' }}>✦</span> Our Methodology
+          <div>
+            <div className="pill-badge" style={{ marginBottom: '1rem' }}>
+              <span style={{ color: 'var(--accent-primary)' }}>✦</span> Our Methodology
+            </div>
+            <h2 className="section-h2 process-title">
+              From Brief to <span className="text-gradient">Breakthrough</span>
+            </h2>
+            <p className="process-subtitle">
+              Six phases. One transparent pipeline — from first call to measurable growth.
+            </p>
           </div>
-          <h2 className="section-h2" style={{ color: 'white', marginBottom: '1.25rem', fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', fontWeight: 800, letterSpacing: '-0.02em' }}>
-            From Brief to <span style={{ background: 'var(--gradient-hero)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Breakthrough</span>
-          </h2>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '1.15rem', color: 'rgba(255,255,255,0.6)', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
-            A proven, transparent engineering process that transforms complex challenges into predictable, scalable growth.
-          </p>
+          <div className="process-meta">
+            <span className="process-meta-value">6</span>
+            <span className="process-meta-label">Phases</span>
+          </div>
         </motion.div>
 
-        <div className="process-timeline-wrapper" style={{ position: 'relative', maxWidth: 1000, margin: '0 auto' }}>
-          
-          {/* Central Connecting Line */}
-          <div className="process-line-bg" style={{ position: 'absolute', top: 0, bottom: 0, width: 2, background: 'rgba(255,255,255,0.05)', zIndex: 0 }} >
-            <div ref={lineRef} style={{ width: '100%', height: '100%', background: 'linear-gradient(180deg, var(--accent-primary), var(--accent-secondary))', transformOrigin: 'top', boxShadow: '0 0 15px var(--accent-primary)' }} />
-          </div>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="process-panel glass-card-premium"
+        >
+          <div className="process-track-wrap">
+            <div className="process-track-line">
+              <div
+                className="process-track-fill"
+                style={{ width: `${(active / (STEPS.length - 1)) * 100}%` }}
+              />
+            </div>
 
-          <div className="process-grid">
-            {STEPS.map((step, i) => {
-              const isEven = i % 2 === 0;
-              return (
-                <div key={step.num} className={`process-row ${isEven ? 'row-left' : 'row-right'}`}>
-                  
-                  {/* Timeline Node */}
-                  <div className="timeline-node">
-                    <motion.div 
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true, margin: '-20%' }}
-                      transition={{ delay: 0.2, type: 'spring' }}
-                      className="node-inner" 
-                    />
-                  </div>
-
-                  <motion.div
-                    initial={{ opacity: 0, x: isEven ? -40 : 40 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.6, type: 'spring', bounce: 0.3 }}
-                    className="glass-card process-card group"
-                    onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                      e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-                    }}
-                    style={{
-                      padding: '2.5rem',
-                      position: 'relative',
-                      borderRadius: 24,
-                      background: 'linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      overflow: 'hidden'
-                    }}
+            <div className="process-track">
+              {STEPS.map((step, i) => {
+                const Icon = step.icon
+                const isActive = i === active
+                return (
+                  <button
+                    key={step.num}
+                    type="button"
+                    className={`process-node ${isActive ? 'process-node--active' : ''}`}
+                    onClick={() => setActive(i)}
+                    aria-pressed={isActive}
                   >
-                    {/* Hover Glow Effect */}
-                    <div className="card-hover-glow" />
-
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem', position: 'relative', zIndex: 1 }}>
-                      <div
-                        style={{
-                          width: 56,
-                          height: 56,
-                          borderRadius: 16,
-                          background: 'rgba(255,255,255,0.03)',
-                          border: '1px solid rgba(255,255,255,0.08)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'var(--accent-primary)',
-                          boxShadow: 'inset 0 0 20px rgba(59,91,255,0.05)'
-                        }}
-                      >
-                        {step.icon}
-                      </div>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '4rem', fontWeight: 800, color: 'rgba(255,255,255,0.03)', lineHeight: 0.8, letterSpacing: '-0.05em' }}>
-                        {step.num}
-                      </span>
-                    </div>
-
-                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, color: 'white', marginBottom: '1rem', position: 'relative', zIndex: 1 }}>
-                      {step.title}
-                    </h3>
-                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: '1.05rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: 0, position: 'relative', zIndex: 1 }}>
-                      {step.desc}
-                    </p>
-                  </motion.div>
-                </div>
-              )
-            })}
+                    <span className="process-node-dot" />
+                    <span className="process-node-icon">
+                      <Icon size={16} strokeWidth={1.5} />
+                    </span>
+                    <span className="process-node-num">{step.num}</span>
+                    <span className="process-node-title">{step.title}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeStep.num}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="process-detail"
+            >
+              <div className="process-detail-icon">
+                <activeStep.icon size={22} strokeWidth={1.5} />
+              </div>
+              <div className="process-detail-body">
+                <div className="process-detail-head">
+                  <span className="process-detail-num">{activeStep.num}</span>
+                  <h3 className="process-detail-title">{activeStep.title}</h3>
+                </div>
+                <p className="process-detail-desc">{activeStep.desc}</p>
+              </div>
+              <div className="process-detail-progress">
+                {STEPS.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`process-detail-tick ${i <= active ? 'process-detail-tick--done' : ''}`}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </div>
 
       <style>{`
-        .process-grid {
+        .process-section {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .process-glow {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          pointer-events: none;
+        }
+        .process-glow--left {
+          width: 400px;
+          height: 400px;
+          top: 10%;
+          left: -120px;
+          background: rgba(59, 91, 255, 0.1);
+        }
+        .process-glow--right {
+          width: 360px;
+          height: 360px;
+          bottom: 0;
+          right: -100px;
+          background: rgba(0, 200, 160, 0.07);
+        }
+
+        .process-inner {
+          position: relative;
+          z-index: 1;
+        }
+
+        .process-header {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 2rem;
+          margin-bottom: 2.5rem;
+          flex-wrap: wrap;
+        }
+
+        .process-title {
+          margin-bottom: 0.75rem;
+        }
+
+        .process-subtitle {
+          font-size: 1.05rem;
+          color: var(--text-secondary);
+          line-height: 1.65;
+          max-width: 480px;
+          margin: 0;
+        }
+
+        .process-meta {
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          align-items: center;
+          padding: 1rem 1.5rem;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          min-width: 90px;
         }
-        .process-row {
-          display: flex;
+
+        .process-meta-value {
+          font-family: var(--font-mono);
+          font-size: 1.75rem;
+          font-weight: 700;
+          color: var(--accent-primary);
+          line-height: 1;
+        }
+
+        .process-meta-label {
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-tertiary);
+          margin-top: 0.35rem;
+        }
+
+        .process-panel {
+          padding: 1.75rem 1.75rem 1.5rem;
+          border-radius: 28px;
+        }
+
+        .process-track-wrap {
           position: relative;
-          width: 100%;
+          margin-bottom: 1.75rem;
         }
-        .process-card {
-          width: calc(50% - 3rem);
-          transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .process-card:hover {
-          transform: translateY(-5px);
-          border-color: rgba(59,91,255,0.3);
-          box-shadow: 0 10px 40px rgba(59,91,255,0.1);
-        }
-        .card-hover-glow {
+
+        .process-track-line {
           position: absolute;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06), transparent 40%);
-          opacity: 0;
-          transition: opacity 0.3s;
-          z-index: 0;
+          top: 18px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: rgba(255, 255, 255, 0.06);
+          border-radius: 2px;
+          overflow: hidden;
         }
-        .process-card:hover .card-hover-glow {
+
+        .process-track-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--accent-primary), var(--accent-teal));
+          box-shadow: 0 0 12px rgba(59, 91, 255, 0.5);
+          transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .process-track {
+          display: grid;
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+          gap: 0.5rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        .process-node {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.45rem;
+          padding: 0.35rem 0.25rem 0.5rem;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          text-align: center;
+          transition: opacity 0.25s ease;
+        }
+
+        .process-node:not(.process-node--active) {
+          opacity: 0.55;
+        }
+
+        .process-node:hover {
           opacity: 1;
         }
-        .timeline-node {
-          position: absolute;
-          left: 50%;
-          top: 3rem;
-          transform: translate(-50%, -50%);
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: var(--bg-surface);
-          border: 2px solid rgba(255,255,255,0.1);
-          display: flex;
-          alignItems: center;
-          justifyContent: center;
-          z-index: 2;
-        }
-        .node-inner {
+
+        .process-node-dot {
           width: 10px;
           height: 10px;
           border-radius: 50%;
+          background: var(--bg-surface);
+          border: 2px solid rgba(255, 255, 255, 0.15);
+          transition: all 0.3s ease;
+        }
+
+        .process-node--active .process-node-dot {
           background: var(--accent-primary);
-          box-shadow: 0 0 10px var(--accent-primary);
+          border-color: var(--accent-primary);
+          box-shadow: 0 0 12px var(--accent-primary);
+          transform: scale(1.15);
         }
 
-        /* Desktop specific positioning */
-        @media (min-width: 900px) {
-          .process-line-bg {
-            left: 50%;
-            transform: translateX(-50%);
-          }
-          .row-left {
-            justify-content: flex-start;
-            padding-right: 3rem;
-          }
-          .row-right {
-            justify-content: flex-end;
-            padding-left: 3rem;
-          }
+        .process-node-icon {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-secondary);
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          transition: all 0.3s ease;
         }
 
-        /* Mobile specific positioning */
+        .process-node--active .process-node-icon {
+          color: var(--accent-primary);
+          background: rgba(59, 91, 255, 0.12);
+          border-color: rgba(59, 91, 255, 0.3);
+        }
+
+        .process-node-num {
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          color: var(--text-tertiary);
+        }
+
+        .process-node-title {
+          font-family: var(--font-heading);
+          font-size: 0.78rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          line-height: 1.2;
+        }
+
+        .process-detail {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          gap: 1.25rem;
+          align-items: center;
+          padding: 1.25rem 1.35rem;
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .process-detail-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--accent-primary);
+          background: rgba(59, 91, 255, 0.1);
+          border: 1px solid rgba(59, 91, 255, 0.25);
+        }
+
+        .process-detail-head {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          margin-bottom: 0.4rem;
+        }
+
+        .process-detail-num {
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: var(--accent-teal);
+        }
+
+        .process-detail-title {
+          font-family: var(--font-heading);
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          margin: 0;
+        }
+
+        .process-detail-desc {
+          font-size: 0.95rem;
+          color: var(--text-secondary);
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        .process-detail-progress {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          padding-left: 0.5rem;
+        }
+
+        .process-detail-tick {
+          width: 3px;
+          height: 10px;
+          border-radius: 2px;
+          background: rgba(255, 255, 255, 0.08);
+          transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .process-detail-tick--done {
+          background: var(--accent-primary);
+          box-shadow: 0 0 6px rgba(59, 91, 255, 0.4);
+        }
+
         @media (max-width: 899px) {
-          .process-line-bg {
-            left: 1.5rem;
+          .process-header {
+            margin-bottom: 2rem;
           }
-          .timeline-node {
-            left: 1.5rem;
+          .process-track-wrap {
+            overflow-x: auto;
+            margin-left: -0.5rem;
+            margin-right: -0.5rem;
+            padding: 0 0.5rem 0.5rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
           }
-          .process-card {
-            width: calc(100% - 4rem);
-            margin-left: 4rem;
+          .process-track-wrap::-webkit-scrollbar {
+            display: none;
           }
-          .row-left, .row-right {
-            justify-content: flex-start;
+          .process-track {
+            grid-template-columns: repeat(6, 100px);
+            min-width: max-content;
+          }
+          .process-detail {
+            grid-template-columns: auto 1fr;
+          }
+          .process-detail-progress {
+            display: none;
+          }
+        }
+
+        @media (max-width: 560px) {
+          .process-panel {
+            padding: 1.25rem;
+          }
+          .process-detail {
+            grid-template-columns: 1fr;
+            text-align: left;
+          }
+          .process-detail-icon {
+            width: 40px;
+            height: 40px;
           }
         }
       `}</style>
