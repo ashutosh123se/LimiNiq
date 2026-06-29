@@ -10,7 +10,7 @@ export default async function middleware(req: NextRequest) {
 
     if (!session?.user) {
       const loginUrl = new URL("/admin/login", req.url);
-      loginUrl.searchParams.set("callbackUrl", req.url);
+      loginUrl.searchParams.set("callbackUrl", `${pathname}${req.nextUrl.search}`);
       return NextResponse.redirect(loginUrl);
     }
 

@@ -5,6 +5,16 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
+function normalizeCallbackUrl(url: string) {
+  if (url.startsWith("/") && !url.startsWith("//")) return url;
+  try {
+    const parsed = new URL(url, "https://liminiq.com");
+    return `${parsed.pathname}${parsed.search}`;
+  } catch {
+    return "/admin";
+  }
+}
+
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,24 +22,36 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/admin";
+  const callbackUrl = normalizeCallbackUrl(searchParams.get("callbackUrl") || "/admin");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const res = await Promise.race([
+        signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        }),
+        new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error("Login timed out. Check your connection and try again.")), 15000);
+        }),
+      ]);
 
-    if (res?.error) {
-      setError("Invalid email or password");
-      setLoading(false);
-    } else {
+      if (res?.error) {
+        setError("Invalid email or password");
+        return;
+      }
+
+      router.refresh();
       router.push(callbackUrl);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -184,6 +206,9 @@ function LoginForm() {
 
           <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "rgba(255,255,255,0.25)", marginTop: "1.5rem" }}>
             Secured by LIMINIQ CRM
+          </p>
+          <p style={{ textAlign: "center", fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "rgba(255,255,255,0.18)", marginTop: "0.75rem", lineHeight: 1.5 }}>
+            Default: admin@liminiq.com · LiminiqAdmin123!
           </p>
         </div>
       </motion.div>

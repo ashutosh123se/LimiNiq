@@ -3,6 +3,20 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { adminLoginSchema } from "@/lib/validations";
+import { withTimeout } from "@/lib/withTimeout";
+
+const BYPASS_EMAIL = process.env.ADMIN_BYPASS_EMAIL || "admin@liminiq.com";
+const BYPASS_PASSWORD = process.env.ADMIN_BYPASS_PASSWORD || "LiminiqAdmin123!";
+const DB_LOOKUP_TIMEOUT_MS = 4000;
+
+function bypassAdmin() {
+  return {
+    id: "dev-admin",
+    email: BYPASS_EMAIL,
+    name: "Development Admin",
+    role: "SUPER_ADMIN",
+  };
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -16,26 +30,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = adminLoginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        try {
-          const admin = await prisma.admin.findUnique({
-            where: { email: parsed.data.email },
-          });
+        const { email, password } = parsed.data;
 
-          if (admin) {
-            const isValid = await bcrypt.compare(parsed.data.password, admin.password);
-            if (isValid) return { id: admin.id, email: admin.email, name: admin.name, role: admin.role };
-          }
-        } catch (error) {
-          console.warn("Database connection failed during login.");
+        // Fast path: default recovery credentials (avoids hanging on slow DB)
+        if (email === BYPASS_EMAIL && password === BYPASS_PASSWORD) {
+          return bypassAdmin();
         }
 
-        // 🚀 Dev/Recovery Bypass: Allow default credentials if DB fails or isn't seeded
-        if (
-          parsed.data.email === "admin@liminiq.com" &&
-          parsed.data.password === "LiminiqAdmin123!"
-        ) {
-          console.log("Using Bypass for Admin Login");
-          return { id: "dev-admin", email: "admin@liminiq.com", name: "Development Admin", role: "SUPER_ADMIN" };
+        try {
+          const admin = await withTimeout(
+            prisma.admin.findUnique({ where: { email } }),
+            DB_LOOKUP_TIMEOUT_MS,
+            "Admin lookup"
+          );
+
+          if (admin) {
+            const isValid = await bcrypt.compare(password, admin.password);
+            if (isValid) {
+              return {
+                id: admin.id,
+                email: admin.email,
+                name: admin.name,
+                role: admin.role,
+              };
+            }
+          }
+        } catch (error) {
+          console.warn("Admin login database lookup failed:", error);
         }
 
         return null;
@@ -63,6 +84,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   trustHost: true,
 });
