@@ -3,18 +3,27 @@ import { Plus_Jakarta_Sans, JetBrains_Mono, Syne } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
-import { CustomCursor } from "@/components/layout/CustomCursor";
-import { LoadingScreen } from "@/components/layout/LoadingScreen";
-import { SocialProofToast } from "@/components/layout/SocialProofToast";
+import { DeferredClientChrome } from "@/components/layout/DeferredClientChrome";
 import { SmoothScrollProvider } from "@/app/providers/SmoothScrollProvider";
 import { SitewideSchema } from "@/components/seo/SitewideSchema";
-import { ClientErrorBoundary } from "@/components/ui/ClientErrorBoundary";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { HOME_SEO } from "@/lib/seo/homeMetadata";
 
-const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
-const syne = Syne({ subsets: ["latin"], variable: "--font-heading" });
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -69,15 +78,7 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} ${syne.variable}`}>
         <SmoothScrollProvider>
           <Providers>
-            <ClientErrorBoundary>
-              <LoadingScreen />
-            </ClientErrorBoundary>
-            <ClientErrorBoundary>
-              <CustomCursor />
-            </ClientErrorBoundary>
-            <ClientErrorBoundary>
-              <SocialProofToast />
-            </ClientErrorBoundary>
+            <DeferredClientChrome />
             {children}
           </Providers>
         </SmoothScrollProvider>
@@ -85,9 +86,9 @@ export default function RootLayout({
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics" strategy="lazyOnload">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

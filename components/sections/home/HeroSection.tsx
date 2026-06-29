@@ -1,8 +1,9 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Code2, TrendingUp, BarChart3 } from 'lucide-react'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 import { ClientErrorBoundary } from '@/components/ui/ClientErrorBoundary'
@@ -22,12 +23,15 @@ const TECH_MARQUEE = [
   'Next.js', 'Node.js', 'PostgreSQL', 'AWS', 'TypeScript', 'React', 'SEO', 'Meta Ads', 'SaaS', 'Docker',
 ]
 
-const fade = (delay = 0, x = 0) => ({
-  initial: { opacity: 0, y: 28, x },
-  animate: { opacity: 1, y: 0, x: 0, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay } },
-})
+const fade = (delay = 0, x = 0, lite = false) =>
+  lite
+    ? {}
+    : {
+        initial: { opacity: 0, y: 28, x },
+        animate: { opacity: 1, y: 0, x: 0, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay } },
+      }
 
-function HeroBlueprint() {
+function HeroBlueprint({ lite = false }: { lite?: boolean }) {
   return (
     <div className="hero-blueprint">
       <div className="hero-blueprint-grid" />
@@ -47,9 +51,9 @@ function HeroBlueprint() {
               borderColor: `${pillar.color}55`,
               boxShadow: `0 0 20px ${pillar.color}25`,
             }}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 + i * 0.12, duration: 0.5 }}
+            initial={lite ? false : { opacity: 0, scale: 0.8 }}
+            animate={lite ? undefined : { opacity: 1, scale: 1 }}
+            transition={lite ? undefined : { delay: 0.6 + i * 0.12, duration: 0.5 }}
           >
             <span className="hero-orbit-icon" style={{ color: pillar.color }}>
               <pillar.icon size={18} strokeWidth={1.5} />
@@ -76,9 +80,9 @@ function HeroBlueprint() {
 
       <motion.div
         className="hero-float-stat hero-float-stat--top"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.6 }}
+        initial={lite ? false : { opacity: 0, y: 16 }}
+        animate={lite ? undefined : { opacity: 1, y: 0 }}
+        transition={lite ? undefined : { delay: 1, duration: 0.6 }}
       >
         <span className="hero-float-value">150+</span>
         <span className="hero-float-label">Projects</span>
@@ -86,9 +90,9 @@ function HeroBlueprint() {
 
       <motion.div
         className="hero-float-stat hero-float-stat--bottom"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.15, duration: 0.6 }}
+        initial={lite ? false : { opacity: 0, y: 16 }}
+        animate={lite ? undefined : { opacity: 1, y: 0 }}
+        transition={lite ? undefined : { delay: 1.15, duration: 0.6 }}
       >
         <span className="hero-float-value">4.9★</span>
         <span className="hero-float-label">Rated</span>
@@ -99,21 +103,29 @@ function HeroBlueprint() {
 
 export function HeroSection() {
   const router = useRouter()
+  const reducedMotion = useReducedMotion()
+  const [lite, setLite] = useState(true)
+
+  useEffect(() => {
+    setLite(reducedMotion || window.matchMedia('(pointer: coarse)').matches)
+  }, [reducedMotion])
 
   return (
     <section className="hero-section">
-      <div className="hero-canvas-wrap">
-        <ClientErrorBoundary>
-          <HeroCanvas />
-        </ClientErrorBoundary>
-      </div>
+      {!lite && (
+        <div className="hero-canvas-wrap">
+          <ClientErrorBoundary>
+            <HeroCanvas />
+          </ClientErrorBoundary>
+        </div>
+      )}
 
       <div className="hero-watermark" aria-hidden>01</div>
 
       <div className="section-container hero-shell">
         <div className="hero-grid">
           <div className="hero-copy">
-            <motion.div {...fade(0.1)} className="hero-eyebrow-row">
+            <motion.div {...fade(0.1, 0, lite)} className="hero-eyebrow-row">
               <span className="hero-index">01 / Build</span>
               <div className="pill-badge shimmer">
                 <span style={{ color: 'var(--accent-primary)' }}>✦</span> India&apos;s Software-Led Agency
@@ -125,12 +137,12 @@ export function HeroSection() {
               <span className="hero-h1-sub text-gradient">Backed by Data-Driven Marketing</span>
             </h1>
 
-            <motion.p {...fade(0.48)} className="hero-lede">
+            <motion.p {...fade(0.48, 0, lite)} className="hero-lede">
               From multi-tenant platforms to growth engines — we architect the product,
               then own the pipeline that fills it.
             </motion.p>
 
-            <motion.div {...fade(0.58)} className="hero-actions">
+            <motion.div {...fade(0.58, 0, lite)} className="hero-actions">
               <MagneticButton className="btn-primary" data-cursor="cta" onClick={() => router.push('/contact')}>
                 Start Your Project
                 <ArrowRight size={16} strokeWidth={2} />
@@ -141,8 +153,8 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          <motion.div {...fade(0.4, 24)} className="hero-visual-col">
-            <HeroBlueprint />
+          <motion.div {...fade(0.4, 24, lite)} className="hero-visual-col">
+            <HeroBlueprint lite={lite} />
           </motion.div>
         </div>
       </div>

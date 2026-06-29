@@ -1,18 +1,28 @@
 'use client'
 
-import Lenis from '@studio-freight/lenis'
 import { useEffect } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    try {
+    const coarse = window.matchMedia('(pointer: coarse)').matches
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (coarse || reduced) return
+
+    let cleanup: (() => void) | undefined
+    let cancelled = false
+
+    void Promise.all([
+      import('@studio-freight/lenis'),
+      import('gsap'),
+      import('gsap/ScrollTrigger'),
+    ]).then(([{ default: Lenis }, { default: gsap }, { ScrollTrigger }]) => {
+      if (cancelled) return
+
       gsap.registerPlugin(ScrollTrigger)
 
       const lenis = new Lenis({
         duration: 1.4,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
       })
 
@@ -24,12 +34,15 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
       gsap.ticker.add(raf)
       gsap.ticker.lagSmoothing(0)
 
-      return () => {
+      cleanup = () => {
         lenis.destroy()
         gsap.ticker.remove(raf)
       }
-    } catch (error) {
-      console.warn('Smooth scroll unavailable:', error)
+    })
+
+    return () => {
+      cancelled = true
+      cleanup?.()
     }
   }, [])
 
