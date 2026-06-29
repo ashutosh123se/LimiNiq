@@ -12,20 +12,26 @@ interface AIChatModalProps {
 }
 
 export function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
-  const [sessionId, setSessionId] = useState<string>("");
-
-  useEffect(() => {
+  const [sessionId] = useState(() => {
+    if (typeof window === "undefined") return "";
     let id = localStorage.getItem("liminiq_chat_session_id");
     if (!id) {
       id = "chat_" + Math.random().toString(36).substring(2, 15);
       localStorage.setItem("liminiq_chat_session_id", id);
     }
-    setSessionId(id);
-  }, []);
+    return id;
+  });
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
     api: "/api/chat",
     body: { sessionId },
+    initialMessages: [
+      {
+        id: "welcome",
+        role: "assistant",
+        content: "Hey! I'm the LimiNiq assistant. What are you looking to build or grow?",
+      },
+    ],
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -52,7 +58,7 @@ export function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-sm">LimiNiq AI Assistant</h3>
-                <p className="text-white/60 text-xs">Online and ready to help</p>
+                <p className="text-white/60 text-xs">Quick, friendly answers</p>
               </div>
             </div>
             <button
@@ -65,16 +71,6 @@ export function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
 
           {/* Messages Area */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.length === 0 && (
-              <div className="text-center text-white/50 text-sm mt-8">
-                <div className="w-16 h-16 rounded-full mx-auto mb-4 overflow-hidden shadow-lg border border-[#3B5BFF]/30">
-                  <Image src="/images/ai_avatar.png" alt="AI" width={64} height={64} className="w-full h-full object-cover" />
-                </div>
-                <p>Hello! I'm the LimiNiq AI assistant.</p>
-                <p>How can I help you today?</p>
-              </div>
-            )}
-            
             {messages.map((m) => (
               <div
                 key={m.id}
@@ -135,7 +131,7 @@ export function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
               <input
                 value={input}
                 onChange={handleInputChange}
-                placeholder="Type your message..."
+                placeholder="Type a short reply..."
                 className="flex-1 bg-transparent text-white text-sm outline-none placeholder:text-white/40"
                 disabled={isLoading}
               />
