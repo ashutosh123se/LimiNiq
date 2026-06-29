@@ -1,39 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { PORTFOLIO_PROJECTS } from "../lib/data/portfolioProjects";
 
 const prisma = new PrismaClient();
-
-const PORTFOLIO_ITEMS = [
-  {
-    title: "E-Commerce Overhaul for FashionNova India",
-    client: "FashionNova India",
-    category: "Web Dev",
-    metrics: [{ label: "Traffic", value: "+420%" }, { label: "LCP", value: "2.8s → 0.4s" }, { label: "Revenue", value: "3.2x" }],
-    tags: ["Shopify", "Next.js", "Performance"],
-    coverImage: null,
-    description: "A complete overhaul of the e-commerce platform focusing on speed and conversions.",
-    featured: true
-  },
-  {
-    title: "SEO Domination for HealthFirst Clinics",
-    client: "HealthFirst Clinics",
-    category: "SEO",
-    metrics: [{ label: "Organic", value: "+680%" }, { label: "KWs", value: "Rank #1 for 45" }, { label: "ROI", value: "4.1x" }],
-    tags: ["Local SEO", "Technical", "Content"],
-    coverImage: null,
-    description: "Local SEO strategy that dominated the regional search results.",
-    featured: true
-  },
-  {
-    title: "Performance Marketing for EdTech Startup",
-    client: "LearnSphere",
-    category: "Digital Marketing",
-    metrics: [{ label: "ROAS", value: "4.2x" }, { label: "CPA", value: "-62%" }, { label: "Leads", value: "38K/mo" }],
-    tags: ["Meta Ads", "Google Ads", "Email"],
-    coverImage: null,
-    description: "Aggressive performance marketing to scale user acquisition.",
-    featured: true
-  }
-];
 
 const TESTIMONIALS = [
   { name: "Rohan Mehta", company: "TechScale SaaS", role: "CEO", quote: "LIMINIQ rebuilt our platform and organic traffic shot up 420% in 4 months. The team is insanely talented — they think like product builders, not just developers.", rating: 5, service: "Web Dev" },
@@ -49,17 +17,55 @@ const TESTIMONIALS = [
 ];
 
 const BLOG_POSTS = [
-  { title: "The Future of Headless Commerce in 2024", slug: "headless-commerce-2024", excerpt: "Why moving away from monolithic platforms is essential for scaling e-commerce brands.", content: "Full content here...", category: "Web Dev", coverImage: null, author: "Admin", published: true },
-  { title: "Technical SEO Checklist for Migrations", slug: "technical-seo-migration", excerpt: "Don't lose your traffic during a redesign. Here is our 40-point checklist.", content: "Full content here...", category: "SEO", coverImage: null, author: "Admin", published: true },
-  { title: "Maximizing Meta Ads ROAS with AI Creatives", slug: "meta-ads-ai-creatives", excerpt: "How we leveraged AI to reduce CPA by 40% for a D2C fashion brand.", content: "Full content here...", category: "Digital Marketing", coverImage: null, author: "Admin", published: true }
+  { title: "The Future of Headless Commerce in 2024", slug: "headless-commerce-2024", excerpt: "Why moving away from monolithic platforms is essential for scaling e-commerce brands.", content: "Full content here...", category: "Web Dev", coverImage: null, author: "LIMINIQ Team", published: true, postType: "ARTICLE" as const, trending: true, tags: ["commerce", "nextjs"] },
+  { title: "Technical SEO Checklist for Migrations", slug: "technical-seo-migration", excerpt: "Don't lose your traffic during a redesign. Here is our 40-point checklist.", content: "Full content here...", category: "SEO", coverImage: null, author: "LIMINIQ Team", published: true, postType: "ARTICLE" as const, trending: false, tags: ["seo", "migration"] },
+  { title: "Maximizing Meta Ads ROAS with AI Creatives", slug: "meta-ads-ai-creatives", excerpt: "How we leveraged AI to reduce CPA by 40% for a D2C fashion brand.", content: "Full content here...", category: "Digital Marketing", coverImage: null, author: "LIMINIQ Team", published: true, postType: "ARTICLE" as const, trending: true, tags: ["meta", "ai"] },
+  {
+    title: "What's your #1 growth priority in 2026?",
+    slug: "biggest-growth-priority-2026",
+    excerpt: "Cast your vote — see what founders and marketers are prioritising this year.",
+    content: "Community poll",
+    category: "Insights",
+    coverImage: null,
+    author: "LIMINIQ Team",
+    published: true,
+    postType: "POLL" as const,
+    trending: true,
+    tags: ["poll", "strategy"],
+    pollOptions: [
+      { id: "opt-1", label: "Custom software / SaaS product", votes: 0 },
+      { id: "opt-2", label: "SEO & organic traffic", votes: 0 },
+      { id: "opt-3", label: "Paid ads & performance marketing", votes: 0 },
+      { id: "opt-4", label: "Website redesign / conversion", votes: 0 },
+    ],
+  },
+];
+
+const TRENDING_TOPICS = [
+  { label: "Custom SaaS MVPs", slug: "custom-saas", emoji: "🚀", color: "#7B61FF", description: "Building lean SaaS products", sortOrder: 0 },
+  { label: "AI in Marketing", slug: "ai-marketing", emoji: "✨", color: "#00C8A0", description: "AI-driven ROAS strategies", sortOrder: 1 },
+  { label: "Technical SEO", slug: "technical-seo", emoji: "📈", color: "#3B5BFF", description: "Crawl, index, rank", sortOrder: 2 },
+  { label: "Next.js Performance", slug: "nextjs-perf", emoji: "⚡", color: "#F59E0B", description: "Core Web Vitals wins", sortOrder: 3 },
 ];
 
 async function main() {
   console.log("Seeding Database...");
 
-  for (const item of PORTFOLIO_ITEMS) {
+  for (const item of PORTFOLIO_PROJECTS) {
     const exists = await prisma.portfolioItem.findFirst({ where: { title: item.title } });
-    if (!exists) await prisma.portfolioItem.create({ data: item });
+    if (!exists) {
+      await prisma.portfolioItem.create({
+        data: {
+          title: item.title,
+          client: item.client,
+          category: item.category,
+          description: item.description,
+          metrics: item.deliverables.map((d) => ({ label: "Deliverable", value: d })),
+          tags: item.tags,
+          featured: item.featured ?? false,
+        },
+      });
+    }
   }
   console.log(`Seeded portfolio items.`);
 
@@ -74,6 +80,12 @@ async function main() {
     if (!exists) await prisma.blogPost.create({ data: item });
   }
   console.log(`Seeded blog posts.`);
+
+  for (const item of TRENDING_TOPICS) {
+    const exists = await prisma.trendingTopic.findUnique({ where: { slug: item.slug } });
+    if (!exists) await prisma.trendingTopic.create({ data: item });
+  }
+  console.log(`Seeded trending topics.`);
 
   console.log("Seeding complete!");
 }

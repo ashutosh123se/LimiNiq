@@ -1,248 +1,471 @@
-'use client'
+"use client";
 
-import { useRef, useState, useEffect } from 'react'
-import { motion, useInView } from 'framer-motion'
-import Link from 'next/link'
-import Image from 'next/image'
+import { useRef, useState } from "react";
+import Link from "next/link";
+import { motion, useInView } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import {
+  PORTFOLIO_PROJECTS,
+  PORTFOLIO_FILTERS,
+  getFeaturedProjects,
+  type PortfolioProject,
+} from "@/lib/data/portfolioProjects";
 
-const FALLBACK_ITEMS = [
-  {
-    id: "1",
-    title: "E-Commerce Overhaul for FashionNova India",
-    client: "FashionNova India",
-    category: "Web Dev",
-    metrics: [{ label: "Traffic", value: "+420%" }, { label: "LCP", value: "2.8s → 0.4s" }, { label: "Revenue", value: "3.2x" }],
-    tags: ["Shopify", "Next.js", "Performance"],
-    bg: "linear-gradient(135deg, #3B5BFF 0%, #7B61FF 100%)",
-    image: "/images/portfolio/ecommerce_dashboard.png",
-  },
-  {
-    id: "2",
-    title: "SEO Domination for HealthFirst Clinics",
-    client: "HealthFirst Clinics",
-    category: "SEO",
-    metrics: [{ label: "Organic", value: "+680%" }, { label: "KWs", value: "Rank #1 for 45" }, { label: "ROI", value: "4.1x" }],
-    tags: ["Local SEO", "Technical", "Content"],
-    bg: "linear-gradient(135deg, #00C8A0 0%, #3B5BFF 100%)",
-    image: "/images/portfolio/health_clinic_website.png",
-  },
-  {
-    id: "3",
-    title: "Performance Marketing for EdTech Startup",
-    client: "LearnSphere",
-    category: "Digital Marketing",
-    metrics: [{ label: "ROAS", value: "4.2x" }, { label: "CPA", value: "-62%" }, { label: "Leads", value: "38K/mo" }],
-    tags: ["Meta Ads", "Google Ads", "Email"],
-    bg: "linear-gradient(135deg, #7B61FF 0%, #00C8A0 100%)",
-    image: "/images/portfolio/edtech_marketing.png",
-  },
-];
+interface PortfolioSectionProps {
+  showAll?: boolean;
+  limit?: number;
+  hideViewAll?: boolean;
+  hideHeader?: boolean;
+}
 
-const FILTERS = ["All", "Web Dev", "SEO", "Digital Marketing"];
+function ProjectCard({
+  project,
+  index,
+  isInView,
+  size = "default",
+}: {
+  project: PortfolioProject;
+  index: number;
+  isInView: boolean;
+  size?: "default" | "compact";
+}) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 32 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: 0.08 + index * 0.06 }}
+      className={`work-card glass-card-premium ${size === "compact" ? "work-card--compact" : ""}`}
+      style={{ "--work-accent": project.accent } as React.CSSProperties}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      }}
+    >
+      <div className="work-card-glow" />
 
-export function PortfolioSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
-  const [activeFilter, setActiveFilter] = useState("All")
-  const [items, setItems] = useState<any[]>(FALLBACK_ITEMS)
+      <div className="work-browser">
+        <div className="work-browser-bar">
+          <div className="work-browser-dots">
+            <span /><span /><span />
+          </div>
+          <div className="work-browser-url">
+            {project.previewLabel}
+          </div>
+          <span className="work-browser-year">{project.year}</span>
+        </div>
 
-  useEffect(() => {
-    fetch("/api/portfolio?featured=true")
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          const enhanced = data.map((item: any, index: number) => {
-            const isSEO = item.category.toLowerCase().includes("seo");
-            const isMarketing = item.category.toLowerCase().includes("marketing");
-            
-            // Try to match with our default fallback items if possible
-            const fallbackItem = FALLBACK_ITEMS.find(f => f.title === item.title) || FALLBACK_ITEMS[index % FALLBACK_ITEMS.length];
+        <div className="work-browser-screen">
+          <div className="work-screen-grid" />
+          <div className="work-screen-content">
+            <span className="work-screen-index">{String(index + 1).padStart(2, "0")}</span>
+            <div className="work-screen-meta">
+              <span className="work-screen-category">{project.category}</span>
+              <h3 className="work-screen-title">{project.title}</h3>
+              {size !== "compact" && (
+                <p className="work-screen-desc">{project.description}</p>
+              )}
+            </div>
+            <ul className="work-deliverables">
+              {project.deliverables.slice(0, size === "compact" ? 2 : 3).map((d) => (
+                <li key={d}>{d}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
 
-            return {
-              ...item,
-              bg: isSEO
-                ? "linear-gradient(135deg, #00C8A0 0%, #3B5BFF 100%)"
-                : isMarketing
-                ? "linear-gradient(135deg, #7B61FF 0%, #00C8A0 100%)"
-                : "linear-gradient(135deg, #3B5BFF 0%, #7B61FF 100%)",
-              image: item.coverImage ? undefined : fallbackItem.image
-            }
-          })
-          setItems(enhanced)
-        }
-      })
-      .catch(() => console.error("Failed to load portfolio items, using fallback"))
-  }, [])
+      <div className="work-card-body">
+        <div className="work-card-head">
+          <div>
+            <span className="work-client">{project.client}</span>
+            <div className="work-tags">
+              {project.tags.map((tag) => (
+                <span key={tag} className="work-tag">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
 
-  const filtered = activeFilter === "All"
-    ? items
-    : items.filter((p) => p.category.toLowerCase().includes(activeFilter.toLowerCase()) || p.category === activeFilter)
+export function PortfolioSection({
+  showAll = false,
+  limit = 6,
+  hideViewAll = false,
+  hideHeader = false,
+}: PortfolioSectionProps) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const [activeFilter, setActiveFilter] = useState<(typeof PORTFOLIO_FILTERS)[number]>("All");
+
+  const source = showAll ? PORTFOLIO_PROJECTS : getFeaturedProjects(limit);
+  const filtered =
+    activeFilter === "All"
+      ? source
+      : source.filter((p) => p.category === activeFilter);
 
   return (
-    <section ref={ref} className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
-      <div className="section-container" style={{ position: "relative" }}>
-        
+    <section ref={ref} className="work-section section-padding">
+      <div className="work-bg-glow work-bg-glow--left" />
+      <div className="work-bg-glow work-bg-glow--right" />
+      <div className="work-dot-grid" />
+
+      <div className="section-container work-inner">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          style={{ textAlign: "center", marginBottom: "3rem" }}
+          className="work-intro"
+          style={{ display: hideHeader ? "none" : undefined }}
         >
-          <div className="pill-badge shimmer" style={{ marginBottom: "1rem" }}>
-            <span style={{ color: "var(--accent-primary)" }}>✦</span> Case Studies
+          <div className="pill-badge shimmer" style={{ marginBottom: "1rem", display: "inline-flex" }}>
+            <span style={{ color: "var(--accent-primary)" }}>✦</span> Selected Work
           </div>
-          <h2 className="section-h2" style={{ color: "var(--text-primary)", marginBottom: "1rem" }}>
-            Results We&apos;re <span style={{ color: "var(--text-primary)" }}>Proud Of</span>
+          <h2 className="section-h2" style={{ marginBottom: "0.75rem" }}>
+            Products We&apos;ve <span className="text-gradient">Shipped</span>
           </h2>
+          <p className="work-intro-copy">
+            A selection of software, web, and marketing work delivered by LIMINIQ — built for real clients and production use.
+          </p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.15 }}
-          style={{ display: "flex", gap: "0.5rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "3rem" }}
+          transition={{ delay: 0.12 }}
+          className="work-filters"
         >
-          {FILTERS.map((f) => (
+          {PORTFOLIO_FILTERS.map((f) => (
             <button
               key={f}
+              type="button"
               onClick={() => setActiveFilter(f)}
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-                padding: "10px 24px",
-                borderRadius: 100,
-                border: activeFilter === f ? "none" : "1px solid var(--border-subtle)",
-                background: activeFilter === f ? "var(--accent-primary)" : "rgba(255,255,255,0.05)",
-                color: activeFilter === f ? "white" : "var(--text-secondary)",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                boxShadow: activeFilter === f ? "0 4px 15px rgba(59,91,255,0.3)" : "none",
-              }}
+              className={`work-filter ${activeFilter === f ? "work-filter--active" : ""}`}
             >
               {f}
             </button>
           ))}
         </motion.div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "2rem" }}>
-          {filtered.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.1 }}
-              className="glass-card-premium group"
-              style={{ overflow: "hidden", cursor: "pointer", position: "relative", display: "flex", flexDirection: "column" }}
-              whileHover={{ y: -6, scale: 1.01 }}
-              data-cursor="view"
-            >
-              <div
-                className="portfolio-img-container"
-                style={{
-                  height: 220,
-                  background: item.coverImage ? `url(${item.coverImage}) center/cover` : item.bg,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-              >
-                {!item.coverImage && item.image && (
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    style={{ objectFit: "cover", transition: "transform 0.8s cubic-bezier(0.2, 1, 0.2, 1)" }}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="portfolio-img"
-                  />
-                )}
-                <div 
-                  className="portfolio-overlay"
-                  style={{ 
-                    position: "absolute", 
-                    inset: 0, 
-                    background: "linear-gradient(0deg, rgba(4,5,8,0.95) 0%, rgba(4,5,8,0.1) 100%)",
-                    transition: "background 0.5s ease" 
-                  }} 
-                />
-                
-                <div 
-                  className="metrics-block"
-                  style={{
-                    position: "absolute",
-                    bottom: "1.5rem",
-                    left: "1.5rem",
-                    right: "1.5rem",
-                    display: "flex",
-                    gap: "0.5rem",
-                    flexWrap: "wrap",
-                    transform: "translateY(15px)",
-                    opacity: 0,
-                    transition: "all 0.5s cubic-bezier(0.23, 1, 0.32, 1)"
-                  }}
-                >
-                  {item.metrics?.map((m: any, idx: number) => (
-                    <span key={idx} style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                      background: "rgba(4,5,8,0.8)",
-                      color: "#A0B4FF",
-                      padding: "4px 10px",
-                      borderRadius: 6,
-                      boxShadow: "0 2px 10px rgba(0,0,0,0.3)"
-                    }}>
-                      {typeof m === "string" ? m : m.value}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ padding: "1.5rem", flex: 1 }}>
-                <span className="pill-badge" style={{ marginBottom: "1rem", display: "inline-flex", fontSize: "0.75rem", background: "rgba(59,91,255,0.05)", border: "none" }}>
-                  {item.category}
-                </span>
-                <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", margin: "0 0 1rem", lineHeight: 1.4 }}>
-                  {item.title}
-                </h3>
-                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                  {item.tags?.map((t: string) => (
-                    <span key={t} style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--text-secondary)", background: "rgba(255,255,255,0.05)", border: "1px solid var(--border-subtle)", padding: "4px 10px", borderRadius: 8 }}>
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+        <div className={`work-grid ${showAll ? "work-grid--full" : ""}`}>
+          {filtered.map((project, i) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={i}
+              isInView={isInView}
+              size={showAll ? "default" : "compact"}
+            />
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.6 }}
-          style={{ textAlign: "center", marginTop: "4rem" }}
-        >
-          <Link href="/portfolio" className="btn-secondary">
-            View All Case Studies →
-          </Link>
-        </motion.div>
+        {!hideViewAll && !showAll && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.5 }}
+            className="work-footer-cta"
+          >
+            <Link href="/portfolio" className="btn-secondary">
+              View Full Delivery Archive
+              <ArrowUpRight size={18} style={{ marginLeft: 6, verticalAlign: "middle" }} />
+            </Link>
+          </motion.div>
+        )}
       </div>
 
       <style>{`
-        .group:hover .portfolio-img {
-          transform: scale(1.08) !important;
+        .work-section {
+          position: relative;
+          overflow: hidden;
+          background: var(--bg-primary);
         }
-        .group:hover .metrics-block {
-          transform: translateY(0) !important;
-          opacity: 1 !important;
+
+        .work-inner { position: relative; z-index: 1; }
+
+        .work-bg-glow {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(90px);
+          pointer-events: none;
+          z-index: 0;
         }
-        .group:hover .portfolio-overlay {
-          background: linear-gradient(0deg, rgba(4,5,8,0.85) 0%, rgba(4,5,8,0.4) 100%) !important;
+        .work-bg-glow--left {
+          width: 500px; height: 500px;
+          top: 5%; left: -140px;
+          background: rgba(59, 91, 255, 0.12);
+        }
+        .work-bg-glow--right {
+          width: 440px; height: 440px;
+          bottom: 0; right: -120px;
+          background: rgba(123, 97, 255, 0.1);
+        }
+
+        .work-dot-grid {
+          position: absolute; inset: 0; pointer-events: none; opacity: 0.28;
+          background-image: radial-gradient(rgba(59, 91, 255, 0.22) 1px, transparent 1px);
+          background-size: 28px 28px;
+          mask-image: radial-gradient(ellipse 80% 65% at 50% 30%, black, transparent);
+        }
+
+        .work-intro {
+          text-align: center;
+          max-width: 680px;
+          margin: 0 auto 2.5rem;
+        }
+
+        .work-intro-copy {
+          font-size: 1.05rem;
+          color: var(--text-secondary);
+          line-height: 1.75;
+          margin: 0;
+        }
+
+        .work-filters {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-bottom: 2.5rem;
+        }
+
+        .work-filter {
+          font-family: var(--font-heading);
+          font-size: 0.85rem;
+          font-weight: 600;
+          padding: 0.55rem 1.15rem;
+          border-radius: 100px;
+          border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(255,255,255,0.03);
+          color: var(--text-secondary);
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .work-filter--active {
+          background: var(--accent-primary);
+          border-color: transparent;
+          color: #fff;
+          box-shadow: 0 4px 20px rgba(59, 91, 255, 0.35);
+        }
+
+        .work-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.25rem;
+        }
+
+        .work-grid--full {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .work-card {
+          --mouse-x: 50%;
+          --mouse-y: 50%;
+          position: relative;
+          border-radius: 22px;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          transition: transform 0.35s ease, border-color 0.35s ease;
+        }
+
+        .work-card:hover {
+          transform: translateY(-5px);
+          border-color: color-mix(in srgb, var(--work-accent) 35%, transparent);
+        }
+
+        .work-card-glow {
+          position: absolute; inset: 0; pointer-events: none; opacity: 0;
+          transition: opacity 0.4s ease;
+          background: radial-gradient(
+            400px circle at var(--mouse-x) var(--mouse-y),
+            color-mix(in srgb, var(--work-accent) 16%, transparent),
+            transparent 45%
+          );
+        }
+
+        .work-card:hover .work-card-glow { opacity: 1; }
+
+        .work-browser { flex: 1; }
+
+        .work-browser-bar {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.65rem 1rem;
+          background: rgba(0,0,0,0.45);
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .work-browser-dots {
+          display: flex;
+          gap: 5px;
+        }
+
+        .work-browser-dots span {
+          width: 9px; height: 9px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.12);
+        }
+
+        .work-browser-url {
+          flex: 1;
+          font-family: var(--font-mono);
+          font-size: 0.68rem;
+          color: var(--text-tertiary);
+          letter-spacing: 0.03em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 4px 10px;
+          border-radius: 6px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .work-browser-year {
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          color: var(--text-tertiary);
+          letter-spacing: 0.06em;
+        }
+
+        .work-browser-screen {
+          position: relative;
+          min-height: 200px;
+          background: linear-gradient(
+            160deg,
+            color-mix(in srgb, var(--work-accent) 14%, #0a0b10),
+            #06070c 55%
+          );
+          overflow: hidden;
+        }
+
+        .work-card--compact .work-browser-screen { min-height: 170px; }
+
+        .work-screen-grid {
+          position: absolute; inset: 0; opacity: 0.35;
+          background-image:
+            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+          background-size: 24px 24px;
+        }
+
+        .work-screen-content {
+          position: relative;
+          z-index: 1;
+          padding: 1.25rem 1.35rem 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.85rem;
+          height: 100%;
+        }
+
+        .work-screen-index {
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: color-mix(in srgb, var(--work-accent) 80%, #fff);
+          letter-spacing: 0.08em;
+        }
+
+        .work-screen-category {
+          display: inline-block;
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--work-accent);
+          margin-bottom: 0.35rem;
+        }
+
+        .work-screen-title {
+          font-family: var(--font-heading);
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          margin: 0;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
+        }
+
+        .work-screen-desc {
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          line-height: 1.55;
+          margin: 0.5rem 0 0;
+        }
+
+        .work-deliverables {
+          list-style: none;
+          padding: 0;
+          margin: auto 0 0;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.35rem;
+        }
+
+        .work-deliverables li {
+          font-size: 0.68rem;
+          font-weight: 600;
+          padding: 4px 8px;
+          border-radius: 6px;
+          color: var(--text-secondary);
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .work-card-body {
+          padding: 1.15rem 1.25rem 1.25rem;
+          border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .work-client {
+          display: block;
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-tertiary);
+          margin-bottom: 0.5rem;
+        }
+
+        .work-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.35rem;
+          margin-bottom: 0.85rem;
+        }
+
+        .work-tag {
+          font-size: 0.72rem;
+          font-weight: 600;
+          padding: 4px 9px;
+          border-radius: 100px;
+          color: var(--text-secondary);
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .work-footer-cta {
+          text-align: center;
+          margin-top: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+          .work-grid--full { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 720px) {
+          .work-grid,
+          .work-grid--full { grid-template-columns: 1fr; }
         }
       `}</style>
     </section>
-  )
+  );
 }

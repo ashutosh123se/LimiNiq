@@ -1,123 +1,308 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { PortfolioSection } from "@/components/sections/home/PortfolioSection";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
-import { ArrowRight, BarChart3, TrendingUp, Zap } from "lucide-react";
-import Link from "next/link";
+import { getFeaturedProject } from "@/lib/data/portfolioProjects";
 
 export const metadata: Metadata = {
-  title: "Our Work & Case Studies",
-  description: "Explore our portfolio of high-performance websites, SEO campaigns, and digital marketing success stories.",
+  title: "Our Work & Deliveries",
+  description:
+    "Software platforms, web products, and marketing systems built by LIMINIQ for clients across India.",
   alternates: { canonical: "https://liminiq.com/portfolio" },
 };
 
 export default function PortfolioPage() {
+  const featured = getFeaturedProject();
+
   return (
     <div style={{ paddingTop: "5rem", background: "var(--bg-primary)" }}>
-      
-      {/* Premium Header */}
-      <section style={{ padding: "6rem 0 4rem", textAlign: "center", position: "relative" }}>
-        {/* Background glow behind text */}
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 400, height: 400, background: "rgba(109, 40, 217, 0.05)", borderRadius: "50%", filter: "blur(80px)", zIndex: 0, pointerEvents: "none" }} />
-        
+      <section style={{ padding: "6rem 0 3rem", textAlign: "center", position: "relative" }}>
+        <div
+          style={{
+            position: "absolute",
+            top: "40%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 500,
+            height: 500,
+            background: "rgba(123, 97, 255, 0.06)",
+            borderRadius: "50%",
+            filter: "blur(90px)",
+            pointerEvents: "none",
+          }}
+        />
         <div className="section-container" style={{ position: "relative", zIndex: 1 }}>
-          <div className="pill-badge" style={{ display: "inline-flex", marginBottom: "1.5rem" }}>
-            <span style={{ color: "var(--accent-primary)" }}>✦</span> Case Studies
+          <div className="pill-badge shimmer" style={{ display: "inline-flex", marginBottom: "1.5rem" }}>
+            <span style={{ color: "var(--accent-primary)" }}>✦</span> Delivery Archive
           </div>
-          <h1 className="text-hero" style={{ marginBottom: "1.5rem", letterSpacing: "-0.04em" }}>
-            Work That <span style={{ color: "var(--text-secondary)" }}>Performs</span>
+          <h1 className="text-hero" style={{ marginBottom: "1.25rem", letterSpacing: "-0.04em" }}>
+            Work That <span className="text-gradient">Ships</span>
           </h1>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "1.2rem", color: "var(--text-secondary)", maxWidth: 650, margin: "0 auto", lineHeight: 1.6 }}>
-            We don't just build beautiful interfaces; we build engines for growth. Dive into our recent projects where design meets conversion.
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "1.15rem",
+              color: "var(--text-secondary)",
+              maxWidth: 640,
+              margin: "0 auto",
+              lineHeight: 1.7,
+            }}
+          >
+            Every project below represents a real delivery from our studio — software, web, and growth systems built end to end.
           </p>
         </div>
       </section>
 
-      {/* Featured Case Study Bento Block */}
-      <section className="section-container section-padding" style={{ paddingBottom: "2rem" }}>
-        <div className="glass-card p-5 sm:p-8 md:p-12 lg:p-16 gap-8 md:gap-16" style={{ borderRadius: 32, display: "grid", gridTemplateColumns: "1fr", position: "relative", overflow: "hidden" }} id="featured-work">
-          
-          {/* Subtle noise and gradients */}
-          <div className="bg-noise" />
-          <div style={{ position: "absolute", bottom: 0, right: 0, width: "60%", height: "100%", background: "radial-gradient(ellipse at bottom right, rgba(109, 40, 217, 0.08), transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
-          
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "3rem", position: "relative", zIndex: 1 }} className="featured-grid">
-            
-            {/* Content */}
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "var(--accent-primary)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1rem" }}>
-                Featured Project
-              </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6" style={{ fontFamily: "var(--font-heading)", color: "var(--text-primary)", lineHeight: 1.1, wordBreak: "break-word" }}>
-                Scaling TechScale's Organic Engine
-              </h2>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "2.5rem", maxWidth: 480 }}>
-                A complete technical SEO overhaul and React rebuild that drove a massive influx of qualified B2B leads, fundamentally changing their customer acquisition model.
-              </p>
-              
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>420%</div>
-                  <div className="text-xs md:text-sm uppercase tracking-wider text-gray-400" style={{ fontFamily: "var(--font-mono)" }}>Traffic Growth</div>
-                </div>
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>0.8s</div>
-                  <div className="text-xs md:text-sm uppercase tracking-wider text-gray-400" style={{ fontFamily: "var(--font-mono)" }}>Load Time</div>
-                </div>
-                <div className="col-span-2 md:col-span-1">
-                  <div className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>#1</div>
-                  <div className="text-xs md:text-sm uppercase tracking-wider text-gray-400" style={{ fontFamily: "var(--font-mono)" }}>Rankings</div>
-                </div>
+      <section className="section-container" style={{ paddingBottom: "3rem" }}>
+        <div
+          className="glass-card-premium featured-delivery"
+          style={{ "--featured-accent": featured.accent } as React.CSSProperties}
+        >
+          <div className="featured-delivery-glow" />
+          <div className="featured-delivery-grid">
+            <div className="featured-delivery-copy">
+              <span className="featured-delivery-label">Featured Delivery</span>
+              <h2 className="featured-delivery-title">{featured.title}</h2>
+              <p className="featured-delivery-desc">{featured.description}</p>
+
+              <ul className="featured-delivery-list">
+                {featured.deliverables.map((d) => (
+                  <li key={d}>{d}</li>
+                ))}
+              </ul>
+
+              <div className="featured-delivery-tags">
+                {featured.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
               </div>
 
-              <div>
-                <Link href="/contact" className="btn-secondary" style={{ borderRadius: 30, padding: "12px 28px" }}>
-                  Read Case Study <ArrowRight size={16} />
+              <div className="featured-delivery-actions">
+                <Link href="/contact" className="btn-primary" style={{ borderRadius: 100, padding: "12px 22px", display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  Start a Project
+                  <ArrowUpRight size={16} />
                 </Link>
               </div>
             </div>
 
-            {/* Visual */}
-            <div style={{ position: "relative", minHeight: 350, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {/* Mockup Frame */}
-              <div style={{ width: "100%", height: "100%", background: "var(--bg-primary)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}>
-                {/* Browser bar */}
-                <div style={{ height: 32, background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", padding: "0 1rem", gap: "6px" }}>
-                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.1)" }} />
-                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.1)" }} />
-                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.1)" }} />
-                </div>
-                {/* Visual Area */}
-                <div className="p-4 sm:p-6 md:p-8" style={{ display: "flex", flexDirection: "column", gap: "1.5rem", height: "calc(100% - 32px)", position: "relative" }}>
-                  <div style={{ display: "flex", gap: "1rem" }}>
-                    <div style={{ flex: 1, height: 120, background: "rgba(109, 40, 217, 0.1)", borderRadius: 12, border: "1px solid rgba(109, 40, 217, 0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <TrendingUp size={32} color="var(--accent-primary)" />
-                    </div>
-                    <div style={{ flex: 1, height: 120, background: "rgba(255, 255, 255, 0.03)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <BarChart3 size={32} color="var(--text-secondary)" />
-                    </div>
+            <div className="featured-delivery-visual">
+              <div className="featured-browser">
+                <div className="featured-browser-bar">
+                  <div className="featured-browser-dots"><span /><span /><span /></div>
+                  <div className="featured-browser-url">
+                    {featured.previewLabel}
                   </div>
-                  <div style={{ width: "100%", height: "100%", background: "rgba(255,255,255,0.02)", borderRadius: 12, border: "1px dashed rgba(255,255,255,0.1)" }} />
-                  
-                  {/* Floating abstract element */}
-                  <div style={{ position: "absolute", bottom: "10%", right: "10%", width: 64, height: 64, background: "var(--accent-primary)", borderRadius: "50%", filter: "blur(20px)", opacity: 0.4 }} />
+                </div>
+                <div className="featured-browser-body">
+                  <span className="featured-browser-badge">{featured.category}</span>
+                  <h3>{featured.title}</h3>
+                  <p>{featured.client}</p>
+                  <div className="featured-browser-stack">
+                    {featured.tags.slice(0, 3).map((t) => (
+                      <span key={t}>{t}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* Grid of previous work re-using homepage portfolio component */}
-      <PortfolioSection />
-      
-      <div style={{ padding: "4rem 0" }} />
-      
+      <PortfolioSection showAll hideViewAll hideHeader />
+
+      <div style={{ padding: "3rem 0" }} />
       <LeadCTASection />
 
       <style>{`
+        .featured-delivery {
+          position: relative;
+          border-radius: 28px;
+          padding: 2rem;
+          overflow: hidden;
+          border-color: color-mix(in srgb, var(--featured-accent) 25%, rgba(255,255,255,0.08));
+        }
+
+        .featured-delivery-glow {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            ellipse 70% 80% at 80% 50%,
+            color-mix(in srgb, var(--featured-accent) 12%, transparent),
+            transparent 65%
+          );
+          pointer-events: none;
+        }
+
+        .featured-delivery-grid {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
         @media (min-width: 900px) {
-          .featured-grid { grid-template-columns: 1fr 1fr !important; }
+          .featured-delivery-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
+          .featured-delivery { padding: 2.5rem 3rem; }
+        }
+
+        .featured-delivery-label {
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--featured-accent);
+        }
+
+        .featured-delivery-title {
+          font-family: var(--font-heading);
+          font-size: clamp(1.75rem, 3vw, 2.5rem);
+          font-weight: 800;
+          color: var(--text-primary);
+          margin: 0.75rem 0;
+          line-height: 1.15;
+          letter-spacing: -0.03em;
+        }
+
+        .featured-delivery-desc {
+          font-size: 1.05rem;
+          color: var(--text-secondary);
+          line-height: 1.7;
+          margin: 0 0 1.5rem;
+          max-width: 480px;
+        }
+
+        .featured-delivery-list {
+          list-style: none;
+          padding: 0;
+          margin: 0 0 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .featured-delivery-list li {
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          padding-left: 1rem;
+          border-left: 2px solid color-mix(in srgb, var(--featured-accent) 50%, transparent);
+        }
+
+        .featured-delivery-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.4rem;
+          margin-bottom: 1.75rem;
+        }
+
+        .featured-delivery-tags span {
+          font-size: 0.72rem;
+          font-weight: 600;
+          padding: 5px 10px;
+          border-radius: 100px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
+          color: var(--text-secondary);
+        }
+
+        .featured-delivery-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+        }
+
+        .featured-browser {
+          border-radius: 18px;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.1);
+          box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+        }
+
+        .featured-browser-bar {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.7rem 1rem;
+          background: rgba(0,0,0,0.5);
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .featured-browser-dots {
+          display: flex;
+          gap: 5px;
+        }
+
+        .featured-browser-dots span {
+          width: 9px; height: 9px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.12);
+        }
+
+        .featured-browser-url {
+          flex: 1;
+          font-family: var(--font-mono);
+          font-size: 0.7rem;
+          color: var(--text-tertiary);
+          padding: 4px 10px;
+          border-radius: 6px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .featured-browser-body {
+          min-height: 280px;
+          padding: 2rem;
+          background: linear-gradient(
+            155deg,
+            color-mix(in srgb, var(--featured-accent) 16%, #080910),
+            #050608
+          );
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          gap: 0.5rem;
+        }
+
+        .featured-browser-badge {
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--featured-accent);
+          margin-bottom: 0.5rem;
+        }
+
+        .featured-browser-body h3 {
+          font-family: var(--font-heading);
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          margin: 0;
+        }
+
+        .featured-browser-body p {
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          margin: 0 0 1rem;
+        }
+
+        .featured-browser-stack {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.4rem;
+        }
+
+        .featured-browser-stack span {
+          font-size: 0.68rem;
+          font-weight: 600;
+          padding: 4px 8px;
+          border-radius: 6px;
+          background: rgba(255,255,255,0.05);
+          color: var(--text-secondary);
         }
       `}</style>
     </div>

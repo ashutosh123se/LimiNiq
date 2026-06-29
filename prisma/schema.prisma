@@ -95,23 +95,58 @@ model Activity {
 }
 
 model BlogPost {
-  id          String    @id @default(cuid())
+  id          String       @id @default(cuid())
   title       String
-  slug        String    @unique
+  slug        String       @unique
   excerpt     String
-  content     String    @db.Text
+  content     String       @db.Text
   category    String
   coverImage  String?
   author      String
-  published   Boolean   @default(false)
+  published   Boolean      @default(false)
   publishedAt DateTime?
-  views       Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  views       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   tags        String[]
   metaTitle   String?
   metaDesc    String?
   ogImage     String?
+  postType    BlogPostType @default(ARTICLE)
+  trending    Boolean      @default(false)
+  pollOptions Json?
+  pollEndsAt  DateTime?
+  pollVotes   PollVote[]
+}
+
+enum BlogPostType {
+  ARTICLE
+  POLL
+}
+
+model TrendingTopic {
+  id          String   @id @default(cuid())
+  label       String
+  slug        String   @unique
+  description String?
+  emoji       String?
+  color       String   @default("#3B5BFF")
+  href        String?
+  active      Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PollVote {
+  id        String   @id @default(cuid())
+  postId    String
+  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  optionId  String
+  voterKey  String
+  createdAt DateTime @default(now())
+
+  @@unique([postId, voterKey])
 }
 
 model PageView {

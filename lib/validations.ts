@@ -37,10 +37,16 @@ export const newsletterSchema = z.object({
 });
 
 // ── Blog ─────────────────────────────────────────────────────
+export const pollOptionSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1).max(120),
+  votes: z.number().int().min(0).default(0),
+});
+
 export const blogPostSchema = z.object({
   title: z.string().min(5).max(200),
   excerpt: z.string().min(10).max(500),
-  content: z.string().min(50),
+  content: z.string().min(1),
   category: z.string().min(1),
   coverImage: z.string().url().optional().or(z.literal("")),
   author: z.string().min(2),
@@ -48,6 +54,24 @@ export const blogPostSchema = z.object({
   tags: z.array(z.string()).optional(),
   metaTitle: z.string().max(70).optional(),
   metaDesc: z.string().max(160).optional(),
+  postType: z.enum(["ARTICLE", "POLL"]).default("ARTICLE"),
+  trending: z.boolean().default(false),
+  pollOptions: z.array(pollOptionSchema).optional(),
+  pollEndsAt: z.string().datetime().optional().nullable(),
+});
+
+export const trendingTopicSchema = z.object({
+  label: z.string().min(2).max(80),
+  description: z.string().max(200).optional(),
+  emoji: z.string().max(4).optional(),
+  color: z.string().max(20).default("#3B5BFF"),
+  href: z.string().url().optional().or(z.literal("")),
+  active: z.boolean().default(true),
+  sortOrder: z.number().int().min(0).default(0),
+});
+
+export const pollVoteSchema = z.object({
+  optionId: z.string().min(1),
 });
 
 // ── Admin ─────────────────────────────────────────────────────

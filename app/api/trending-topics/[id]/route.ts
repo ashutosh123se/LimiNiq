@@ -1,18 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { blogPostSchema } from "@/lib/validations";
+import { trendingTopicSchema } from "@/lib/validations";
 import { auth } from "@/auth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET() {
   try {
-    const { id } = await params;
-    const post = await prisma.blogPost.findUnique({ where: { id } });
-    if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json(post);
+    const topics = await prisma.trendingTopic.findMany({ orderBy: { sortOrder: "asc" } });
+    return NextResponse.json({ topics });
   } catch {
-    return NextResponse.json({ error: "Failed to fetch post" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch topics" }, { status: 500 });
   }
 }
 
@@ -28,18 +26,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const parsed = blogPostSchema.partial().safeParse(body);
+  const parsed = trendingTopicSchema.partial().safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Validation failed" }, { status: 422 });
 
-  const data: Record<string, unknown> = { ...parsed.data };
-  if (parsed.data.pollEndsAt !== undefined) {
-    data.pollEndsAt = parsed.data.pollEndsAt ? new Date(parsed.data.pollEndsAt) : null;
-  }
-  if (parsed.data.published) data.publishedAt = new Date();
-
-  const updated = await prisma.blogPost.update({
+  const updated = await prisma.trendingTopic.update({
     where: { id },
-    data,
+    data: parsed.data,
   });
   return NextResponse.json(updated);
 }
@@ -49,6 +41,6 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  await prisma.blogPost.delete({ where: { id } });
+  await prisma.trendingTopic.delete({ where: { id } });
   return NextResponse.json({ success: true });
 }
