@@ -101,8 +101,6 @@ export default function RootLayout({
               sameAs: [
                 "https://www.linkedin.com/company/124623896",
                 "https://www.instagram.com/liminiq_com",
-                "https://twitter.com/liminiq",
-                "https://github.com/liminiq",
               ],
             }),
           }}

@@ -8,7 +8,24 @@ import { TrendingTopicsBar } from "../blog/TrendingTopicsBar";
 import { BlogPollWidget } from "../blog/BlogPollWidget";
 import type { PollOption } from "@/lib/data/blogEngagement";
 
-const FALLBACK_POSTS = [
+interface PreviewPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string;
+  category?: string;
+  readTime?: string;
+  author?: string;
+  postType?: string;
+  trending?: boolean;
+  coverImage?: string | null;
+  gradient?: string;
+  pollOptions?: PollOption[];
+  pollEndsAt?: string | null;
+  content?: string;
+}
+
+const FALLBACK_POSTS: PreviewPost[] = [
   {
     id: "1",
     slug: "core-web-vitals-2025-guide",
@@ -52,10 +69,40 @@ const FALLBACK_POSTS = [
   },
 ];
 
+function ArticlePreviewCard({ post }: { post: PreviewPost }) {
+  return (
+    <Link href={`/blog/${post.slug}`} className="blog-preview-card glass-card neon-border-hover">
+      <div
+        className="blog-preview-cover"
+        style={{
+          background: post.coverImage
+            ? `url(${post.coverImage}) center/cover`
+            : post.gradient,
+        }}
+      >
+        <span className="blog-preview-category">{post.category}</span>
+        {post.trending && (
+          <span className="blog-preview-hot">
+            <Flame size={11} /> Hot
+          </span>
+        )}
+      </div>
+      <div className="blog-preview-body">
+        <h3 className="blog-preview-title">{post.title}</h3>
+        <p className="blog-preview-excerpt">{post.excerpt}</p>
+        <div className="blog-preview-meta">
+          <span>{post.author}</span>
+          <span>{post.readTime} read</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export function BlogPreviewSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const [posts, setPosts] = useState<any[]>(FALLBACK_POSTS);
+  const [posts, setPosts] = useState<PreviewPost[]>(FALLBACK_POSTS);
 
   useEffect(() => {
     Promise.all([
@@ -63,9 +110,9 @@ export function BlogPreviewSection() {
       fetch("/api/blog?limit=1&published=true&postType=POLL").then((r) => r.json()),
     ])
       .then(([articlesData, pollsData]) => {
-        const articles = (articlesData.posts || []).filter((p: any) => p.postType !== "POLL");
+        const articles = (articlesData.posts || []).filter((p: PreviewPost) => p.postType !== "POLL");
         const poll = pollsData.posts?.[0];
-        let combined = articles.slice(0, 2);
+        let combined: PreviewPost[] = articles.slice(0, 2);
 
         if (poll) {
           combined = [articles[0], poll, articles[1]].filter(Boolean).slice(0, 3);
@@ -75,7 +122,7 @@ export function BlogPreviewSection() {
 
         if (combined.length) {
           setPosts(
-            combined.map((p: any) => {
+            combined.map((p: PreviewPost) => {
               const isSEO = p.category?.toLowerCase().includes("seo");
               const isMarketing = p.category?.toLowerCase().includes("marketing");
               let fallbackImage =
@@ -105,14 +152,14 @@ export function BlogPreviewSection() {
   }, []);
 
   return (
-    <section ref={ref} className="section-padding" style={{ background: "var(--bg-secondary)", position: "relative", overflow: "hidden" }}>
-      <div className="section-container" style={{ position: "relative" }}>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "2rem" }}>
+    <section ref={ref} className="blog-preview-section section-padding">
+      <div className="section-container blog-preview-inner">
+        <div className="blog-preview-header">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}}>
-            <div className="pill-badge shimmer" style={{ marginBottom: "1rem", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }}>
+            <div className="pill-badge shimmer blog-preview-badge">
               <span style={{ color: "var(--accent-blue)" }}>✦</span> Insights & Engagement
             </div>
-            <h2 className="text-section" style={{ color: "var(--text-primary)" }}>
+            <h2 className="section-h2 blog-preview-heading">
               From the LIMINIQ <span className="text-gradient">Lab</span>
             </h2>
           </motion.div>
@@ -123,10 +170,11 @@ export function BlogPreviewSection() {
 
         <TrendingTopicsBar compact />
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
+        <div className="blog-preview-grid">
           {posts.map((post, i) => (
             <motion.div
               key={post.id}
+              className="blog-preview-cell"
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.12 }}
@@ -141,39 +189,173 @@ export function BlogPreviewSection() {
                   pollEndsAt={post.pollEndsAt}
                   compact
                   showLink
+                  embedded
                 />
               ) : (
-                <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none", display: "block" }}>
-                  <div className="glass-card neon-border-hover" style={{ overflow: "hidden", height: "100%" }}>
-                    <div style={{ height: 140, background: post.coverImage ? `url(${post.coverImage}) center/cover` : post.gradient, position: "relative" }}>
-                      <span className="pill-badge" style={{ position: "absolute", top: "0.75rem", left: "0.75rem", background: "rgba(255,255,255,0.2)", color: "white" }}>
-                        {post.category}
-                      </span>
-                      {post.trending && (
-                        <span style={{ position: "absolute", top: "0.75rem", right: "0.75rem", display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 8px", borderRadius: 100, fontSize: "0.65rem", fontWeight: 700, background: "rgba(239,68,68,0.2)", color: "#fca5a5" }}>
-                          <Flame size={11} /> Hot
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ padding: "1.25rem" }}>
-                      <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", lineHeight: 1.4, margin: "0 0 0.75rem" }}>
-                        {post.title}
-                      </h3>
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.6, margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                        {post.excerpt}
-                      </p>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem", fontSize: "0.78rem", color: "var(--text-tertiary)" }}>
-                        <span>{post.author}</span>
-                        <span>{post.readTime} read</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                <ArticlePreviewCard post={post} />
               )}
             </motion.div>
           ))}
         </div>
       </div>
+
+      <style>{`
+        .blog-preview-section {
+          background: var(--bg-secondary);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .blog-preview-header {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 1rem;
+          margin-bottom: 2rem;
+        }
+
+        .blog-preview-badge {
+          margin-bottom: 1rem;
+          display: inline-flex;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: white;
+        }
+
+        .blog-preview-heading {
+          margin: 0;
+        }
+
+        .blog-preview-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 1.25rem;
+          align-items: stretch;
+        }
+
+        .blog-preview-cell {
+          display: flex;
+          min-height: 0;
+          height: 100%;
+        }
+
+        .blog-preview-cell > * {
+          width: 100%;
+        }
+
+        .blog-preview-card {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          overflow: hidden;
+          border-radius: 20px;
+          text-decoration: none;
+        }
+
+        .blog-preview-cover {
+          height: 140px;
+          flex-shrink: 0;
+          position: relative;
+          background-size: cover;
+          background-position: center;
+        }
+
+        .blog-preview-category {
+          position: absolute;
+          top: 0.75rem;
+          left: 0.75rem;
+          padding: 4px 10px;
+          border-radius: 100px;
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          background: rgba(0, 0, 0, 0.45);
+          color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          backdrop-filter: blur(6px);
+        }
+
+        .blog-preview-hot {
+          position: absolute;
+          top: 0.75rem;
+          right: 0.75rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 3px 8px;
+          border-radius: 100px;
+          font-size: 0.65rem;
+          font-weight: 700;
+          background: rgba(239, 68, 68, 0.2);
+          color: #fca5a5;
+        }
+
+        .blog-preview-body {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          padding: 1.25rem;
+          min-height: 0;
+        }
+
+        .blog-preview-title {
+          font-family: var(--font-heading);
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          line-height: 1.35;
+          margin: 0 0 0.75rem;
+          min-height: calc(1.35em * 2);
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .blog-preview-excerpt {
+          font-family: var(--font-body);
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          line-height: 1.6;
+          margin: 0;
+          min-height: calc(1.6em * 2);
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .blog-preview-meta {
+          display: flex;
+          justify-content: space-between;
+          gap: 0.75rem;
+          margin-top: auto;
+          padding-top: 1rem;
+          font-size: 0.82rem;
+          color: var(--text-secondary);
+        }
+
+        @media (max-width: 960px) {
+          .blog-preview-grid {
+            grid-template-columns: 1fr;
+            max-width: 420px;
+            margin: 0 auto;
+          }
+        }
+
+        @media (min-width: 961px) and (max-width: 1100px) {
+          .blog-preview-grid {
+            gap: 1rem;
+          }
+
+          .blog-preview-body {
+            padding: 1rem;
+          }
+        }
+      `}</style>
     </section>
   );
 }

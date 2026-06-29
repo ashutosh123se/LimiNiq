@@ -22,10 +22,12 @@ function ManifestFeatured({
   project,
   index,
   isInView,
+  rowSpan,
 }: {
   project: PortfolioProject;
   index: number;
   isInView: boolean;
+  rowSpan: number;
 }) {
   return (
     <motion.article
@@ -33,7 +35,10 @@ function ManifestFeatured({
       animate={isInView ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.45, delay: 0.06 }}
       className="manifest-featured glass-card-premium"
-      style={{ "--work-accent": project.accent } as React.CSSProperties}
+      style={{
+        "--work-accent": project.accent,
+        gridRow: `1 / span ${rowSpan}`,
+      } as React.CSSProperties}
     >
       <div className="manifest-featured-glow" />
       <span className="manifest-watermark">{String(index + 1).padStart(2, "0")}</span>
@@ -55,24 +60,54 @@ function ManifestFeatured({
   );
 }
 
+function ManifestArchiveCell({
+  count,
+  isInView,
+  style,
+}: {
+  count: number;
+  isInView: boolean;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.4, delay: 0.32 }}
+      style={style}
+    >
+      <Link href="/portfolio" className="manifest-archive glass-card-premium" data-cursor="view">
+        <div className="manifest-archive-glow" />
+        <span className="manifest-archive-kicker">Delivery archive</span>
+        <span className="manifest-archive-count">+{count} more</span>
+        <span className="manifest-archive-label">Production builds across software, web & marketing</span>
+        <span className="manifest-archive-cta">
+          View all work
+          <ArrowUpRight size={16} />
+        </span>
+      </Link>
+    </motion.div>
+  );
+}
+
 function ManifestTile({
   project,
   index,
   isInView,
-  spanWide = false,
+  style,
 }: {
   project: PortfolioProject;
   index: number;
   isInView: boolean;
-  spanWide?: boolean;
+  style?: React.CSSProperties;
 }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 12 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.4, delay: 0.1 + index * 0.04 }}
-      className={`manifest-tile glass-card-premium ${spanWide ? "manifest-tile--wide" : ""}`}
-      style={{ "--work-accent": project.accent } as React.CSSProperties}
+      className="manifest-tile glass-card-premium"
+      style={{ ...style, "--work-accent": project.accent } as React.CSSProperties}
     >
       <div className="manifest-tile-accent" />
       <span className="manifest-tile-index">{String(index + 1).padStart(2, "0")}</span>
@@ -174,9 +209,16 @@ export function PortfolioSection({
       : source.filter((p) => p.category === activeFilter);
 
   const secondaryProjects = filtered.slice(1);
-  const lastSecondaryIndex = secondaryProjects.length - 1;
-  const spanLastTile =
+  const tileRows = Math.max(1, Math.ceil(secondaryProjects.length / 2));
+  const showArchiveCell =
     !showAll && secondaryProjects.length > 0 && secondaryProjects.length % 2 === 1;
+  const archiveCount = Math.max(PORTFOLIO_PROJECTS.length - filtered.length, 0);
+
+  const getTilePlacement = (tileIndex: number) => {
+    const row = Math.floor(tileIndex / 2) + 1;
+    const col = (tileIndex % 2) + 2;
+    return { gridColumn: col, gridRow: row };
+  };
 
   return (
     <section
@@ -244,11 +286,15 @@ export function PortfolioSection({
             ))}
           </div>
         ) : filtered.length > 0 ? (
-          <div className="manifest-bento">
+          <div
+            className="manifest-bento"
+            style={{ gridTemplateRows: `repeat(${tileRows}, minmax(78px, auto))` }}
+          >
             <ManifestFeatured
               project={filtered[0]}
               index={0}
               isInView={isInView}
+              rowSpan={tileRows}
             />
             {secondaryProjects.map((project, i) => (
               <ManifestTile
@@ -256,9 +302,16 @@ export function PortfolioSection({
                 project={project}
                 index={i + 1}
                 isInView={isInView}
-                spanWide={spanLastTile && i === lastSecondaryIndex}
+                style={getTilePlacement(i)}
               />
             ))}
+            {showArchiveCell && (
+              <ManifestArchiveCell
+                count={archiveCount}
+                isInView={isInView}
+                style={{ gridColumn: 3, gridRow: tileRows }}
+              />
+            )}
           </div>
         ) : null}
 
@@ -398,13 +451,11 @@ export function PortfolioSection({
         .manifest-bento {
           display: grid;
           grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(0, 1fr));
-          grid-auto-rows: minmax(78px, auto);
           gap: 0.6rem;
           align-items: stretch;
         }
 
         .manifest-featured {
-          grid-row: 1 / -1;
           grid-column: 1;
           position: relative;
           overflow: hidden;
@@ -536,8 +587,79 @@ export function PortfolioSection({
           border-color: color-mix(in srgb, var(--work-accent) 30%, transparent);
         }
 
-        .manifest-tile--wide {
-          grid-column: span 2;
+        .manifest-archive {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0.35rem;
+          height: 100%;
+          min-height: 78px;
+          padding: 0.85rem 1rem;
+          border-radius: 14px;
+          text-decoration: none;
+          overflow: hidden;
+          border-color: rgba(123, 97, 255, 0.22);
+          background: linear-gradient(
+            145deg,
+            rgba(123, 97, 255, 0.12),
+            rgba(59, 91, 255, 0.06)
+          );
+          transition: transform 0.28s ease, border-color 0.28s ease;
+        }
+
+        .manifest-archive:hover {
+          transform: translateY(-2px);
+          border-color: rgba(123, 97, 255, 0.4);
+        }
+
+        .manifest-archive-glow {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(circle at 80% 20%, rgba(123, 97, 255, 0.18), transparent 55%);
+        }
+
+        .manifest-archive-kicker {
+          position: relative;
+          font-family: var(--font-mono);
+          font-size: 0.58rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--accent-violet);
+        }
+
+        .manifest-archive-count {
+          position: relative;
+          font-family: var(--font-heading);
+          font-size: 1.35rem;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          background: linear-gradient(135deg, #fff, #a0b4ff);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          line-height: 1.1;
+        }
+
+        .manifest-archive-label {
+          position: relative;
+          font-size: 0.68rem;
+          color: var(--text-tertiary);
+          line-height: 1.45;
+        }
+
+        .manifest-archive-cta {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          margin-top: 0.25rem;
+          font-family: var(--font-heading);
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: var(--accent-primary);
         }
 
         .manifest-tile-accent {
@@ -820,12 +942,14 @@ export function PortfolioSection({
 
           .manifest-featured {
             grid-column: 1 / -1;
-            grid-row: auto;
+            grid-row: auto !important;
             min-height: 210px;
           }
 
-          .manifest-tile--wide {
-            grid-column: span 1;
+          .manifest-tile,
+          .manifest-archive {
+            grid-column: auto !important;
+            grid-row: auto !important;
           }
         }
 
@@ -838,8 +962,14 @@ export function PortfolioSection({
             grid-template-columns: 1fr;
           }
 
-          .manifest-tile--wide {
-            grid-column: span 1;
+          .manifest-featured {
+            grid-column: 1 !important;
+          }
+
+          .manifest-tile,
+          .manifest-archive {
+            grid-column: 1 !important;
+            grid-row: auto !important;
           }
 
           .work-grid,

@@ -14,6 +14,7 @@ interface BlogPollWidgetProps {
   pollEndsAt?: string | null;
   compact?: boolean;
   showLink?: boolean;
+  embedded?: boolean;
 }
 
 export function BlogPollWidget({
@@ -25,6 +26,7 @@ export function BlogPollWidget({
   pollEndsAt,
   compact = false,
   showLink = false,
+  embedded = false,
 }: BlogPollWidgetProps) {
   const [options, setOptions] = useState(initialOptions);
   const [votedId, setVotedId] = useState<string | null>(null);
@@ -69,21 +71,35 @@ export function BlogPollWidget({
     }
   };
 
+  const displayOptions = embedded ? options.slice(0, 3) : options;
+
   return (
-    <div className={`poll-widget glass-card-premium ${compact ? "poll-widget--compact" : ""}`}>
-      <div className="poll-widget-head">
-        <div className="poll-widget-badge">
-          <BarChart3 size={14} />
-          Community Poll
+    <div className={`poll-widget glass-card-premium ${compact ? "poll-widget--compact" : ""} ${embedded ? "poll-widget--embedded" : ""}`}>
+      {embedded && (
+        <div className="poll-widget-cover">
+          <div className="poll-widget-badge poll-widget-badge--cover">
+            <BarChart3 size={14} />
+            Community Poll
+          </div>
         </div>
-        {ended && <span className="poll-widget-ended">Closed</span>}
-      </div>
+      )}
+
+      <div className={embedded ? "poll-widget-body" : undefined}>
+      {!embedded && (
+        <div className="poll-widget-head">
+          <div className="poll-widget-badge">
+            <BarChart3 size={14} />
+            Community Poll
+          </div>
+          {ended && <span className="poll-widget-ended">Closed</span>}
+        </div>
+      )}
 
       <h3 className="poll-widget-title">{title}</h3>
-      {!compact && excerpt && <p className="poll-widget-excerpt">{excerpt}</p>}
+      {!compact && !embedded && excerpt && <p className="poll-widget-excerpt">{excerpt}</p>}
 
       <div className="poll-widget-options">
-        {options.map((option) => {
+        {displayOptions.map((option) => {
           const pct = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
           const isSelected = votedId === option.id;
           const showResults = hasVoted || ended;
@@ -121,6 +137,7 @@ export function BlogPollWidget({
           </Link>
         )}
       </div>
+      </div>
 
       <style>{`
         .poll-widget {
@@ -131,6 +148,65 @@ export function BlogPollWidget({
         }
 
         .poll-widget--compact { padding: 1.15rem; }
+
+        .poll-widget--embedded {
+          padding: 0;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          border-radius: 20px;
+        }
+
+        .poll-widget-cover {
+          height: 140px;
+          flex-shrink: 0;
+          background: linear-gradient(135deg, rgba(123, 97, 255, 0.35), rgba(0, 200, 160, 0.2));
+          position: relative;
+          display: flex;
+          align-items: flex-end;
+          padding: 0.75rem;
+        }
+
+        .poll-widget-badge--cover {
+          position: static;
+        }
+
+        .poll-widget-body {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          padding: 1.25rem;
+          min-height: 0;
+        }
+
+        .poll-widget--embedded .poll-widget-title {
+          font-size: 1rem;
+          min-height: calc(1.35em * 2);
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          margin-bottom: 0.75rem;
+        }
+
+        .poll-widget--embedded .poll-widget-options {
+          flex: 1;
+        }
+
+        .poll-widget--embedded .poll-option {
+          padding: 0.6rem 0.85rem;
+        }
+
+        .poll-widget--embedded .poll-option-label {
+          font-size: 0.84rem;
+        }
+
+        .poll-widget--embedded .poll-widget-footer {
+          margin-top: auto;
+          padding-top: 1rem;
+          font-size: 0.82rem;
+        }
 
         .poll-widget-head {
           display: flex;

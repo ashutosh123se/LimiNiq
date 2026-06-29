@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 import { SERVICES } from '@/lib/data/services'
 import { ChevronDown } from 'lucide-react'
+import { ServicesMegaMenu } from '@/components/layout/ServicesMegaMenu'
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -141,141 +142,20 @@ export function Navbar() {
                     <AnimatePresence>
                       {isServices && servicesMenuOpen && (
                         <motion.div
-                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          initial={{ opacity: 0, y: 10, scale: 0.98 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                          transition={{ duration: 0.2, ease: "easeOut" }}
+                          exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                          transition={{ duration: 0.22, ease: "easeOut" }}
                           style={{
                             position: 'absolute',
                             top: '100%',
                             left: '50%',
                             transform: 'translateX(-50%)',
-                            paddingTop: '1.5rem',
-                            zIndex: 100
+                            paddingTop: '1.25rem',
+                            zIndex: 100,
                           }}
                         >
-                          <div
-                            style={{
-                              width: '950px',
-                              background: 'rgba(12, 12, 12, 0.98)',
-                              backdropFilter: 'blur(20px)',
-                              border: '1px solid rgba(255,255,255,0.08)',
-                              borderRadius: '24px',
-                              padding: '2.5rem',
-                              display: 'flex',
-                              gap: '3rem',
-                              boxShadow: '0 24px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02) inset',
-                              overflow: 'hidden'
-                            }}
-                          >
-                            <div style={{ flex: 1 }}>
-                              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent-primary)', marginBottom: '1.5rem', fontWeight: 600 }}>
-                                Our Expertise
-                              </div>
-                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem 1.5rem' }}>
-                                {SERVICES.map(service => (
-                                  <Link
-                                    key={service.id}
-                                    href={`/services/${service.slug}`}
-                                    className="group"
-                                    style={{
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '1.25rem',
-                                      padding: '0.85rem 1rem',
-                                      borderRadius: '16px',
-                                      textDecoration: 'none',
-                                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    }}
-                                    onMouseEnter={(e) => { 
-                                      e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; 
-                                      e.currentTarget.style.transform = 'translateX(4px)';
-                                    }}
-                                    onMouseLeave={(e) => { 
-                                      e.currentTarget.style.background = 'transparent'; 
-                                      e.currentTarget.style.transform = 'translateX(0)';
-                                    }}
-                                  >
-                                    <div style={{ 
-                                      width: 44, height: 44, 
-                                      borderRadius: '12px', 
-                                      background: `linear-gradient(135deg, ${service.color}20, ${service.color}05)`,
-                                      color: service.color,
-                                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                      border: `1px solid ${service.color}30`,
-                                      boxShadow: `0 4px 12px ${service.color}15`,
-                                      flexShrink: 0
-                                    }}>
-                                      {React.cloneElement(service.icon as React.ReactElement<any>, { size: 20 })}
-                                    </div>
-                                    <div>
-                                      <div style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 600, marginBottom: '2px', whiteSpace: 'nowrap' }}>
-                                        {service.shortTitle}
-                                      </div>
-                                    </div>
-                                  </Link>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Right Side Visual Block */}
-                            <div style={{ 
-                              width: '320px', 
-                              background: 'linear-gradient(145deg, rgba(59,91,255,0.08), rgba(0,0,0,0.4))',
-                              borderRadius: '20px',
-                              padding: '2.5rem',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              justifyContent: 'center',
-                              position: 'relative',
-                              overflow: 'hidden',
-                              border: '1px solid rgba(59,91,255,0.15)',
-                              boxShadow: 'inset 0 0 20px rgba(59,91,255,0.05)'
-                            }}>
-                              <div style={{ position: 'relative', zIndex: 2 }}>
-                                <h4 style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.75rem', fontFamily: 'var(--font-heading)' }}>Ready to Scale?</h4>
-                                <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                                  Partner with LimiNiq to transform your digital presence and accelerate growth.
-                                </p>
-                                <button 
-                                  onClick={() => router.push('/contact')} 
-                                  style={{ 
-                                    padding: '12px 24px', 
-                                    fontSize: '0.95rem', 
-                                    width: '100%',
-                                    background: 'linear-gradient(90deg, #3B5BFF, #6B3BFF)',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '12px',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                    boxShadow: '0 8px 24px rgba(59,91,255,0.25)',
-                                    transition: 'transform 0.2s ease, box-shadow 0.2s ease'
-                                  }}
-                                  onMouseEnter={(e) => { 
-                                    e.currentTarget.style.transform = 'translateY(-2px)'; 
-                                    e.currentTarget.style.boxShadow = '0 12px 28px rgba(59,91,255,0.35)';
-                                  }}
-                                  onMouseLeave={(e) => { 
-                                    e.currentTarget.style.transform = 'translateY(0)'; 
-                                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(59,91,255,0.25)';
-                                  }}
-                                >
-                                  Book a Consultation
-                                </button>
-                              </div>
-                              <div style={{
-                                position: 'absolute',
-                                right: '-30px',
-                                bottom: '-30px',
-                                width: '200px',
-                                height: '200px',
-                                background: 'radial-gradient(circle, var(--accent-primary) 0%, transparent 70%)',
-                                opacity: 0.15,
-                                filter: 'blur(40px)'
-                              }} />
-                            </div>
-                          </div>
+                          <ServicesMegaMenu onConsultClick={() => router.push('/contact')} />
                         </motion.div>
                       )}
                     </AnimatePresence>

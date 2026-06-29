@@ -64,8 +64,7 @@ export function clientAutoReplyTemplate(lead: {
   
   <div style="margin:24px 0;">
     <a href="https://www.linkedin.com/company/124623896/admin/dashboard/" style="display:inline-block;margin-right:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#8892B0;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;">LinkedIn</a>
-    <a href="https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv" style="display:inline-block;margin-right:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#8892B0;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;">Instagram</a>
-    <a href="https://twitter.com/liminiq" style="display:inline-block;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#8892B0;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;">Twitter</a>
+    <a href="https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv" style="display:inline-block;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#8892B0;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;">Instagram</a>
   </div>
 
   <p style="font-size:12px;color:#4A5568;margin:0 0 8px;">© ${new Date().getFullYear()} LIMINIQ. Based in India, Building Globally.</p>
@@ -149,8 +148,7 @@ export function newsletterWelcomeTemplate(data: { name?: string }): string {
     <div style="font-size:13px;font-weight:700;color:#8891B4;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Follow us for daily tips:</div>
     <div>
       <a href="https://www.linkedin.com/company/124623896/admin/dashboard/" style="display:inline-block;margin-right:10px;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">LinkedIn</a>
-      <a href="https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv" style="display:inline-block;margin-right:10px;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">Instagram</a>
-      <a href="https://twitter.com/liminiq" style="display:inline-block;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">Twitter</a>
+      <a href="https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv" style="display:inline-block;background:#F4F6FF;border:1px solid rgba(59,91,255,0.12);color:#3B5BFF;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">Instagram</a>
     </div>
   </div>
 </td></tr>
