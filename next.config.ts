@@ -17,6 +17,24 @@ const nextConfig: NextConfig = {
         destination: "https://www.liminiq.com/:path*",
         permanent: true,
       },
+      {
+        source: "/contact",
+        has: [{ type: "query", key: "service", value: "(?<slug>.*)" }],
+        destination: "/contact/service/:slug",
+        permanent: true,
+      },
+      {
+        source: "/blog",
+        has: [{ type: "query", key: "topic", value: "(?<slug>.*)" }],
+        destination: "/blog/topic/:slug",
+        permanent: true,
+      },
+      {
+        source: "/blog",
+        has: [{ type: "query", key: "category", value: "(?<slug>.*)" }],
+        destination: "/blog/category/:slug",
+        permanent: true,
+      },
     ];
   },
   async headers() {

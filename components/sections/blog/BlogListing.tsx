@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Flame, BarChart3 } from "lucide-react";
 import { BLOG_CATEGORY_FILTERS } from "@/lib/data/blogCategories";
+import { blogCategoryPath } from "@/lib/blogRoutes";
 import { TrendingTopicsBar } from "./TrendingTopicsBar";
 import { BlogPollWidget } from "./BlogPollWidget";
 import type { PollOption } from "@/lib/data/blogEngagement";
@@ -61,8 +62,7 @@ interface BlogListingProps {
 
 export function BlogListing({ initialCategory = null }: BlogListingProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const activeCategory = searchParams.get("category") ?? initialCategory;
+  const activeCategory = initialCategory;
   const [posts, setPosts] = useState<any[]>(FALLBACK_POSTS);
   const [filterType, setFilterType] = useState<"all" | "articles" | "polls">("all");
 
@@ -99,7 +99,7 @@ export function BlogListing({ initialCategory = null }: BlogListingProps) {
   }, [activeCategory, filterType]);
 
   const setCategory = (slug: string | null) => {
-    if (slug) router.push(`/blog?category=${slug}`, { scroll: false });
+    if (slug) router.push(blogCategoryPath(slug), { scroll: false });
     else router.push("/blog", { scroll: false });
   };
 

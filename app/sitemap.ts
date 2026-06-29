@@ -2,6 +2,9 @@ import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
 import { SERVICES } from '@/lib/data/services';
 import { SITE_URL } from '@/lib/site';
+import { CONTACT_SERVICE_SLUGS } from '@/lib/contactServices';
+import { BLOG_CATEGORY_FILTERS } from '@/lib/data/blogCategories';
+import { FALLBACK_TRENDING_TOPICS } from '@/lib/data/blogEngagement';
 
 export const revalidate = 86400; // Cache for 24 hours
 
@@ -32,6 +35,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+  }));
+
+  const contactServiceUrls = CONTACT_SERVICE_SLUGS.map((slug) => ({
+    url: `${baseUrl}/contact/service/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'yearly' as const,
+    priority: 0.6,
+  }));
+
+  const blogCategoryUrls = BLOG_CATEGORY_FILTERS.map((cat) => ({
+    url: `${baseUrl}/blog/category/${cat.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.65,
+  }));
+
+  const blogTopicUrls = FALLBACK_TRENDING_TOPICS.map((topic) => ({
+    url: `${baseUrl}/blog/topic/${topic.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.65,
   }));
 
   const staticUrls = [
@@ -91,5 +115,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  return [...staticUrls, ...serviceUrls, ...blogUrls];
+  return [...staticUrls, ...serviceUrls, ...contactServiceUrls, ...blogCategoryUrls, ...blogTopicUrls, ...blogUrls];
 }

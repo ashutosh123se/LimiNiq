@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { STARTING_PRICES, type StartingPriceItem } from "@/lib/data/startingPrices";
+import { contactServicePath } from "@/lib/contactServices";
 
 function RateRow({
   item,
@@ -27,7 +28,7 @@ function RateRow({
       className={`rate-row ${featured ? "rate-row--featured" : ""}`}
       style={{ "--rate-accent": item.color } as React.CSSProperties}
     >
-      <Link href={`/contact?service=${item.slug}`} className="rate-row-link" data-cursor="view">
+      <Link href={contactServicePath(item.slug)} className="rate-row-link" data-cursor="view">
         <span className="rate-row-accent" />
         <span className="rate-row-index">{String(index + 1).padStart(2, "0")}</span>
 

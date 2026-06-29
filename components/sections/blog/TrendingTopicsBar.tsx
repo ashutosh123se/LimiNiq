@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
 import { FALLBACK_TRENDING_TOPICS, type TrendingTopicItem } from "@/lib/data/blogEngagement";
+import { blogTopicPath } from "@/lib/blogRoutes";
 
 interface TrendingTopicsBarProps {
   compact?: boolean;
@@ -31,7 +32,7 @@ export function TrendingTopicsBar({ compact = false }: TrendingTopicsBarProps) {
         {topics.map((topic) => (
           <Link
             key={topic.id}
-            href={topic.href || `/blog?topic=${topic.slug}`}
+            href={topic.href || blogTopicPath(topic.slug)}
             className="trending-chip"
             style={{ "--chip-color": topic.color } as React.CSSProperties}
           >

@@ -447,7 +447,7 @@ export default function BlogAdminPage() {
               </div>
               <div>
                 <label style={labelStyle}>Custom link (optional)</label>
-                <input value={topicForm.href} onChange={(e) => setTopicForm({ ...topicForm, href: e.target.value })} placeholder="https:// or /blog?category=..." style={inputStyle} />
+                <input value={topicForm.href} onChange={(e) => setTopicForm({ ...topicForm, href: e.target.value })} placeholder="https:// or /blog/topic/..." style={inputStyle} />
               </div>
               <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
                 <input type="checkbox" checked={topicForm.active} onChange={(e) => setTopicForm({ ...topicForm, active: e.target.checked })} />

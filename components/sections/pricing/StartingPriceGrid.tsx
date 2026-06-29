@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { STARTING_PRICES, type StartingPriceItem } from "@/lib/data/startingPrices";
+import { contactServicePath } from "@/lib/contactServices";
 import { PricingFAQ } from "./PricingFAQ";
 import { PricingCTA } from "./PricingCTA";
 
@@ -84,7 +85,7 @@ function PriceCard({
           <span className="price-card-value">{item.startingPrice}</span>
           <span className="price-card-note">{item.priceNote}</span>
         </div>
-        <Link href={`/contact?service=${item.slug}`} className="price-card-cta">
+        <Link href={contactServicePath(item.slug)} className="price-card-cta">
           <span>Get Details</span>
           <ArrowUpRight size={18} strokeWidth={2} />
         </Link>

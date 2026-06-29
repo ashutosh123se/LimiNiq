@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
+import { CONTACT_SERVICE_SLUG_MAP } from "@/lib/contactServices";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -31,12 +32,7 @@ const SERVICES = [
   "Digital Marketing",
 ];
 
-const SERVICE_SLUG_MAP: Record<string, string> = {
-  "custom-software-saas": "Custom Software & SaaS",
-  "website-ecommerce": "Website Development",
-  "seo-search-engine-marketing": "SEO",
-  "digital-marketing": "Digital Marketing",
-};
+const SERVICE_SLUG_MAP = CONTACT_SERVICE_SLUG_MAP;
 
 const BUDGETS = [
   "Under ₹50K",
@@ -49,15 +45,15 @@ const BUDGETS = [
 const TIMELINES = ["ASAP", "Within 1 month", "1–3 months", "3–6 months", "Flexible"];
 const SOURCES = ["Google Search", "Social Media", "Referral", "Linkedin", "Instagram", "Other"];
 
-export function ContactPage() {
+export function ContactPage({ initialServiceSlug }: { initialServiceSlug?: string } = {}) {
   return (
     <Suspense fallback={null}>
-      <ContactPageInner />
+      <ContactPageInner initialServiceSlug={initialServiceSlug} />
     </Suspense>
   );
 }
 
-function ContactPageInner() {
+function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string }) {
   const searchParams = useSearchParams();
   const [submitState, setSubmitState] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -75,13 +71,13 @@ function ContactPageInner() {
   const selectedServices = watch("services") || [];
 
   useEffect(() => {
-    const slug = searchParams.get("service");
+    const slug = initialServiceSlug ?? searchParams.get("service");
     if (!slug) return;
     const mapped = SERVICE_SLUG_MAP[slug];
     if (mapped) {
       setValue("services", [mapped]);
     }
-  }, [searchParams, setValue]);
+  }, [initialServiceSlug, searchParams, setValue]);
 
   const toggleService = (service: string) => {
     const current = selectedServices;
