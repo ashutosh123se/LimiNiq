@@ -66,9 +66,9 @@ export const metadata: Metadata = {
     google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || "",
   },
   icons: {
-    icon: "/images/logo-clean.png",
-    shortcut: "/images/logo-clean.png",
-    apple: "/images/logo-clean.png",
+    icon: [{ url: '/icon', type: 'image/png', sizes: '48x48' }],
+    shortcut: [{ url: '/icon', type: 'image/png', sizes: '48x48' }],
+    apple: [{ url: '/apple-icon', type: 'image/png', sizes: '180x180' }],
   },
 };
 
@@ -89,7 +89,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: "LIMINIQ",
               url: "https://liminiq.com",
-              logo: "https://liminiq.com/images/logo-clean.png",
+              logo: "https://liminiq.com/apple-icon",
               description:
                 "Custom software, SaaS, and enterprise development company also offering SEO and digital marketing services.",
               contactPoint: {

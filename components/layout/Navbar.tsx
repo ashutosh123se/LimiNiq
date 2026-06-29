@@ -150,7 +150,7 @@ export function Navbar() {
                             position: 'absolute',
                             top: '100%',
                             left: '50%',
-                            transform: 'translateX(-28%)',
+                            transform: 'translateX(-38%)',
                             paddingTop: '1.25rem',
                             zIndex: 200,
                           }}
