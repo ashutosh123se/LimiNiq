@@ -1,5 +1,7 @@
 import { StartingPriceGrid } from "../pricing/StartingPriceGrid";
+import { HomeRateBoard } from "./HomeRateBoard";
 
 export function PricingSection({ showFAQ = false, compact = false }: { showFAQ?: boolean; compact?: boolean }) {
-  return <StartingPriceGrid showFAQ={showFAQ} compact={compact} />;
+  if (compact) return <HomeRateBoard />;
+  return <StartingPriceGrid showFAQ={showFAQ} />;
 }

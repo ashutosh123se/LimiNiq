@@ -164,6 +164,7 @@ function SecondaryServiceCell({ service, index }: { service: (typeof SERVICES)[n
 
   return (
     <motion.div
+      className="secondary-cell-wrap"
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
@@ -651,13 +652,22 @@ export function ServicesSection() {
         .secondary-grid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-auto-rows: 1fr;
+          align-items: stretch;
           gap: 0.65rem;
           width: 100%;
+        }
+        .secondary-cell-wrap {
+          display: flex;
+          height: 100%;
+          min-height: 0;
         }
         .secondary-cell {
           display: flex;
           align-items: center;
           gap: 0.75rem;
+          width: 100%;
+          height: 100%;
           padding: 0.9rem 1rem;
           border-radius: 16px;
           text-decoration: none;
@@ -713,6 +723,7 @@ export function ServicesSection() {
           font-weight: 600;
           color: var(--text-primary);
           line-height: 1.35;
+          min-height: calc(1.35em * 2);
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
