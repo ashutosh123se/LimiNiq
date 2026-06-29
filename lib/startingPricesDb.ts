@@ -1,20 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { STARTING_PRICES } from "@/lib/data/startingPrices";
+import type { StartingPriceRecord } from "@/lib/startingPriceTypes";
 
-export type StartingPriceRecord = {
-  id: string;
-  slug: string;
-  title: string;
-  shortLabel: string;
-  startingPrice: string;
-  priceNote: string;
-  summary: string;
-  highlights: string[];
-  color: string;
-  iconKey: string;
-  featured: boolean;
-  sortOrder: number;
-};
+export type { StartingPriceRecord } from "@/lib/startingPriceTypes";
 
 export async function getStartingPricesFromDb(): Promise<StartingPriceRecord[]> {
   try {

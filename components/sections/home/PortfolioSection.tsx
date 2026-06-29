@@ -10,7 +10,7 @@ import {
   getFeaturedProjects,
   type PortfolioProject,
 } from "@/lib/data/portfolioProjects";
-import { mapPortfolioItem } from "@/lib/portfolioDb";
+import { mapPortfolioItem } from "@/lib/portfolioMap";
 
 interface PortfolioSectionProps {
   showAll?: boolean;
@@ -209,7 +209,7 @@ export function PortfolioSection({
       .then((r) => r.json())
       .then((items) => {
         if (Array.isArray(items) && items.length > 0) {
-          setProjects(items.map((item: Parameters<typeof mapPortfolioItem>[0], i: number) => mapPortfolioItem(item, i)));
+          setProjects(items.map((item, i) => mapPortfolioItem(item, i)));
         }
       })
       .catch(() => {});

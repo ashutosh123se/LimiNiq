@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { STARTING_PRICES, type StartingPriceItem } from "@/lib/data/startingPrices";
 import { getStartingPriceIcon } from "@/lib/startingPriceIcons";
-import type { StartingPriceRecord } from "@/lib/startingPricesDb";
+import type { StartingPriceRecord } from "@/lib/startingPriceTypes";
 
 export function useStartingPrices() {
   const [items, setItems] = useState<StartingPriceItem[]>(STARTING_PRICES);
