@@ -7,11 +7,12 @@ export function SiteNap() {
       <meta itemProp="name" content={SITE_NAME} />
       <p className="site-nap-text">
         <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
-          <span itemProp="streetAddress">{SITE_CONTACT.streetAddress}</span>,{" "}
-          <span itemProp="addressLocality">{SITE_CONTACT.addressLocality}</span>,{" "}
-          <span itemProp="addressRegion">{SITE_CONTACT.addressRegion}</span>{" "}
-          <span itemProp="postalCode">{SITE_CONTACT.postalCode}</span>,{" "}
-          <span itemProp="addressCountry">India</span>
+          <meta itemProp="streetAddress" content={SITE_CONTACT.streetAddress} />
+          <meta itemProp="addressLocality" content={SITE_CONTACT.addressLocality} />
+          <meta itemProp="addressRegion" content={SITE_CONTACT.addressRegion} />
+          <meta itemProp="postalCode" content={SITE_CONTACT.postalCode} />
+          <meta itemProp="addressCountry" content="IN" />
+          {SITE_CONTACT.addressDisplay}
         </span>
         {" · "}
         Phone: <a href={`tel:${SITE_CONTACT.phoneTel}`} itemProp="telephone">{SITE_CONTACT.phone}</a>

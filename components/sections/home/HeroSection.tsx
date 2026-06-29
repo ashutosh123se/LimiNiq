@@ -133,7 +133,8 @@ export function HeroSection() {
             </motion.div>
 
             <h1 className="hero-h1 hero-h1--editorial">
-              <span className="hero-h1-line">Custom Software &amp; SaaS Development</span>
+              <span className="hero-h1-line">Custom Software &amp; SaaS</span>
+              <span className="hero-h1-line hero-h1-nowrap">Development</span>
               <span className="hero-h1-sub text-gradient">Backed by Data-Driven Marketing</span>
             </h1>
 
@@ -268,6 +269,8 @@ export function HeroSection() {
 
         .hero-h1-line {
           display: block;
+          overflow-wrap: normal;
+          word-break: normal;
         }
 
         .hero-h1-nowrap {

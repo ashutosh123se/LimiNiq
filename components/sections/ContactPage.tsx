@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
 import { CONTACT_SERVICE_SLUG_MAP } from "@/lib/contactServices";
+import { SITE_CONTACT } from "@/lib/site";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -114,9 +115,14 @@ function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string 
   };
 
   const CONTACT_INFO = [
-    { icon: <Mail size={20} />, label: "Email", value: "hello@liminiq.com", href: "mailto:hello@liminiq.com" },
-    { icon: <Phone size={20} />, label: "Phone", value: "9431471654", href: "tel:9431471654" },
-    { icon: <MapPin size={20} />, label: "Location", value: "Shivangi KunjB47C, Madipur JJ Colony, Block A, Janta Colony, Paschim Vihar, Delhi, 110063", href: "https://maps.google.com/?q=Shivangi+KunjB47C,+Madipur+JJ+Colony,+Block+A,+Janta+Colony,+Paschim+Vihar,+Delhi,+110063" },
+    { icon: <Mail size={20} />, label: "Email", value: SITE_CONTACT.email, href: `mailto:${SITE_CONTACT.email}` },
+    { icon: <Phone size={20} />, label: "Phone", value: SITE_CONTACT.phoneDisplay, href: `tel:${SITE_CONTACT.phoneTel}` },
+    {
+      icon: <MapPin size={20} />,
+      label: "Location",
+      value: `${SITE_CONTACT.streetAddress}, ${SITE_CONTACT.addressLocality}, ${SITE_CONTACT.postalCode}`,
+      href: `https://maps.google.com/?q=${encodeURIComponent(SITE_CONTACT.mapsQuery)}`,
+    },
     { icon: <Clock size={20} />, label: "Hours", value: "Mon–Sat, 9am–7pm", href: "#" },
   ];
 
@@ -197,7 +203,7 @@ function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string 
               }}
             >
               <iframe 
-                src="https://maps.google.com/maps?q=Shivangi%20KunjB47C,%20Madipur%20JJ%20Colony,%20Block%20A,%20Janta%20Colony,%20Paschim%20Vihar,%20Delhi,%20110063&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(SITE_CONTACT.mapsQuery)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                 width="100%" 
                 height="100%" 
                 style={{ border: 0, filter: "grayscale(100%) opacity(70%)" }}

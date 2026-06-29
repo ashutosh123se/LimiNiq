@@ -7,11 +7,16 @@ export const SITE_CONTACT = {
   phone: "+91 9431471654",
   phoneTel: "+919431471654",
   phoneDisplay: "9431471654",
-  location: "India",
-  addressLocality: "Patna",
-  addressRegion: "Bihar",
-  postalCode: "800001",
-  streetAddress: "Patna, Bihar",
+  location: "Delhi, India",
+  streetAddress:
+    "Shivangi Kunj B47C, Madipur JJ Colony, Block A, Janta Colony, Paschim Vihar",
+  addressLocality: "Delhi",
+  addressRegion: "Delhi",
+  postalCode: "110063",
+  /** Short single-line address for footer / NAP */
+  addressDisplay: "Paschim Vihar, Delhi 110063, India",
+  mapsQuery:
+    "Shivangi KunjB47C, Madipur JJ Colony, Block A, Janta Colony, Paschim Vihar, Delhi, 110063",
   foundingYear: "2019",
 } as const;
 
