@@ -11,56 +11,92 @@ function averageRating(): { ratingValue: string; reviewCount: string } {
   };
 }
 
-export function organizationSchema() {
+/** Top-level Organization JSON-LD (auditor-friendly, not @graph). */
+export function organizationJsonLd() {
   const { ratingValue, reviewCount } = averageRating();
 
   return {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": `${SITE_URL}/#organization`,
-        name: SITE_NAME,
-        url: SITE_URL,
-        logo: `${SITE_URL}/apple-icon`,
-        foundingDate: SITE_CONTACT.foundingYear,
-        description:
-          "Custom software, SaaS, and enterprise development company also offering SEO and digital marketing services.",
-        contactPoint: {
-          "@type": "ContactPoint",
-          telephone: SITE_CONTACT.phone,
-          email: SITE_CONTACT.email,
-          contactType: "customer service",
-          availableLanguage: "English",
-          areaServed: "IN",
-        },
-        sameAs: [SITE_SOCIAL.linkedin, SITE_SOCIAL.instagram],
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue,
-          reviewCount,
-          bestRating: "5",
-          worstRating: "4",
-        },
-      },
-      {
-        "@type": "LocalBusiness",
-        "@id": `${SITE_URL}/#localbusiness`,
-        name: SITE_NAME,
-        url: SITE_URL,
-        image: `${SITE_URL}/apple-icon`,
-        telephone: SITE_CONTACT.phone,
-        email: SITE_CONTACT.email,
-        foundingDate: SITE_CONTACT.foundingYear,
-        address: {
-          "@type": "PostalAddress",
-          addressCountry: "IN",
-          addressLocality: SITE_CONTACT.location,
-        },
-        priceRange: "₹₹₹",
-        sameAs: [SITE_SOCIAL.linkedin, SITE_SOCIAL.instagram],
-      },
-    ],
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/apple-icon`,
+      width: 180,
+      height: 180,
+    },
+    foundingDate: SITE_CONTACT.foundingYear,
+    description:
+      "Custom software, SaaS, and enterprise development company also offering SEO and digital marketing services.",
+    email: SITE_CONTACT.email,
+    telephone: SITE_CONTACT.phone,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: SITE_CONTACT.streetAddress,
+      addressLocality: SITE_CONTACT.addressLocality,
+      addressRegion: SITE_CONTACT.addressRegion,
+      postalCode: SITE_CONTACT.postalCode,
+      addressCountry: "IN",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: SITE_CONTACT.phone,
+      email: SITE_CONTACT.email,
+      contactType: "customer service",
+      availableLanguage: "English",
+      areaServed: "IN",
+    },
+    sameAs: [SITE_SOCIAL.linkedin, SITE_SOCIAL.instagram],
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue,
+      reviewCount,
+      bestRating: "5",
+      worstRating: "4",
+    },
+  };
+}
+
+/** Top-level LocalBusiness JSON-LD (separate script tag for audit tools). */
+export function localBusinessJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${SITE_URL}/#localbusiness`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    image: `${SITE_URL}/apple-icon`,
+    telephone: SITE_CONTACT.phone,
+    email: SITE_CONTACT.email,
+    foundingDate: SITE_CONTACT.foundingYear,
+    priceRange: "$$",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: SITE_CONTACT.streetAddress,
+      addressLocality: SITE_CONTACT.addressLocality,
+      addressRegion: SITE_CONTACT.addressRegion,
+      postalCode: SITE_CONTACT.postalCode,
+      addressCountry: "IN",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      addressCountry: "IN",
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "India",
+    },
+    sameAs: [SITE_SOCIAL.linkedin, SITE_SOCIAL.instagram],
+  };
+}
+
+/** @deprecated Use organizationJsonLd + localBusinessJsonLd separately */
+export function organizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [organizationJsonLd(), localBusinessJsonLd()],
   };
 }
 

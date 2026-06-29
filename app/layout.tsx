@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono, Syne } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -7,15 +7,21 @@ import { CustomCursor } from "@/components/layout/CustomCursor";
 import { LoadingScreen } from "@/components/layout/LoadingScreen";
 import { SocialProofToast } from "@/components/layout/SocialProofToast";
 import { SmoothScrollProvider } from "@/app/providers/SmoothScrollProvider";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { SitewideSchema } from "@/components/seo/SitewideSchema";
 import { ClientErrorBoundary } from "@/components/ui/ClientErrorBoundary";
-import { organizationSchema } from "@/lib/seo/schema";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { HOME_SEO } from "@/lib/seo/homeMetadata";
 
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 const syne = Syne({ subsets: ["latin"], variable: "--font-heading" });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#040508",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -44,9 +50,9 @@ export const metadata: Metadata = {
     google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || "",
   },
   icons: {
-    icon: [{ url: '/icon', type: 'image/png', sizes: '48x48' }],
-    shortcut: [{ url: '/icon', type: 'image/png', sizes: '48x48' }],
-    apple: [{ url: '/apple-icon', type: 'image/png', sizes: '180x180' }],
+    icon: [{ url: "/icon", type: "image/png", sizes: "48x48" }],
+    shortcut: [{ url: "/icon", type: "image/png", sizes: "48x48" }],
+    apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
   },
 };
 
@@ -57,8 +63,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en-IN" suppressHydrationWarning>
+      <head>
+        <SitewideSchema />
+      </head>
       <body suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} ${syne.variable}`}>
-        <JsonLd data={organizationSchema()} />
         <SmoothScrollProvider>
           <Providers>
             <ClientErrorBoundary>

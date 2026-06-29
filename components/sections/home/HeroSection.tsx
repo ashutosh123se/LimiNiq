@@ -1,11 +1,16 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ArrowRight, Code2, TrendingUp, BarChart3 } from 'lucide-react'
-import { HeroCanvas } from '@/components/three/HeroCanvas'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 import { ClientErrorBoundary } from '@/components/ui/ClientErrorBoundary'
+
+const HeroCanvas = dynamic(
+  () => import('@/components/three/HeroCanvas').then((m) => m.HeroCanvas),
+  { ssr: false }
+)
 
 const PILLARS = [
   { icon: Code2, label: 'Software', color: '#7B61FF' },

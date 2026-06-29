@@ -6,7 +6,12 @@ export const SITE_CONTACT = {
   email: "hello@liminiq.com",
   phone: "+91 9431471654",
   phoneTel: "+919431471654",
+  phoneDisplay: "9431471654",
   location: "India",
+  addressLocality: "Patna",
+  addressRegion: "Bihar",
+  postalCode: "800001",
+  streetAddress: "Patna, Bihar",
   foundingYear: "2019",
 } as const;
 

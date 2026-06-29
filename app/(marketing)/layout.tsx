@@ -1,8 +1,8 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { ExitIntentPopup } from "@/components/layout/ExitIntentPopup";
 import { FloatingContactBar } from "@/components/layout/FloatingContactBar";
+import { SiteNap } from "@/components/seo/SiteNap";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,6 +16,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <div className="grid-overlay" aria-hidden />
       <Navbar />
       <main>{children}</main>
+      <SiteNap />
       <Footer />
       {/* <WhatsAppButton /> Replaced by FloatingContactBar */}
       <FloatingContactBar />

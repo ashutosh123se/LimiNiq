@@ -12,6 +12,7 @@ import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { AuditTool } from "@/components/sections/home/AuditTool";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { HOME_SEO } from "@/lib/seo/homeMetadata";
+import { HomeCrawlableIntro } from "@/components/seo/HomeCrawlableIntro";
 
 export const metadata: Metadata = buildPageMetadata({
   title: HOME_SEO.title,
@@ -32,6 +33,7 @@ export const metadata: Metadata = buildPageMetadata({
 export default function HomePage() {
   return (
     <>
+      <HomeCrawlableIntro />
       <HeroSection />
       <StatsStrip />
       <ServicesSection />
