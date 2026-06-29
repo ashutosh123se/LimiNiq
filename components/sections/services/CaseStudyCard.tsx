@@ -8,31 +8,33 @@ export interface CaseStudyData {
 
 interface CaseStudyCardProps {
   caseStudy: CaseStudyData;
+  accent?: string;
 }
 
-export function CaseStudyCard({ caseStudy }: CaseStudyCardProps) {
+export function CaseStudyCard({ caseStudy, accent = "var(--accent-primary)" }: CaseStudyCardProps) {
   return (
     <div
       className="glass-card"
       style={{
-        padding: "2.5rem",
+        padding: "2rem",
         borderRadius: 20,
         display: "flex",
         flexDirection: "column",
-        gap: "1.5rem",
+        gap: "1.25rem",
         height: "100%",
-        border: "1px solid rgba(59,91,255,0.1)",
+        border: `1px solid color-mix(in srgb, ${accent} 22%, rgba(255,255,255,0.08))`,
+        background: `linear-gradient(160deg, color-mix(in srgb, ${accent} 8%, rgba(255,255,255,0.02)), rgba(255,255,255,0.02))`,
       }}
     >
       {caseStudy.highlight && (
         <div
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "0.8rem",
-            fontWeight: 600,
-            color: "var(--accent-primary)",
+            fontSize: "0.72rem",
+            fontWeight: 700,
+            color: accent,
             textTransform: "uppercase",
-            letterSpacing: "0.08em",
+            letterSpacing: "0.1em",
           }}
         >
           {caseStudy.highlight}
@@ -56,7 +58,7 @@ export function CaseStudyCard({ caseStudy }: CaseStudyCardProps) {
             width: 48,
             height: 48,
             borderRadius: "50%",
-            background: "linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary))",
+            background: `linear-gradient(135deg, ${accent}, color-mix(in srgb, ${accent} 55%, #7B61FF))`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

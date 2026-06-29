@@ -212,17 +212,6 @@ export function TestimonialsSection() {
             <div className="greviews-summary-score">{avgRating}</div>
             <StarRating rating={summaryStars} size={18} />
             <p className="greviews-summary-label">Based on {testimonials.length}+ Google reviews</p>
-            <a
-              href="https://www.google.com/search?q=LIMINIQ+reviews"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="greviews-summary-link"
-            >
-              View on Google
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
           </div>
         </div>
       </div>
@@ -328,23 +317,7 @@ export function TestimonialsSection() {
         .greviews-summary-label {
           font-size: 0.82rem;
           color: var(--text-secondary);
-          margin: 0.45rem 0 0.75rem;
-        }
-
-        .greviews-summary-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.3rem;
-          font-family: var(--font-heading);
-          font-size: 0.82rem;
-          font-weight: 600;
-          color: #1a73e8;
-          text-decoration: none;
-          transition: opacity 0.2s ease;
-        }
-
-        .greviews-summary-link:hover {
-          opacity: 0.85;
+          margin: 0.45rem 0 0;
         }
 
         .greview-stars {

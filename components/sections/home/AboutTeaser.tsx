@@ -4,13 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-
-const TEAM = [
-  { name: "Ashutosh Shekhar", role: "CEO", color: "#3B5BFF", initials: "AS", bio: "Leads with a vision for innovation & growth.", image: "/images/team/ashutosh.png" },
-  { name: "Ayush Shekhar", role: "Technical Head", color: "#00C8A0", initials: "AS", bio: "Architects scalable & secure digital solutions.", image: "/images/team/ayush.png" },
-  { name: "Akanksha Singh", role: "Marketing Head", color: "#7B61FF", initials: "AK", bio: "Maximizes online visibility & growth strategies.", image: "/images/team/akanksha.jpg" },
-  { name: "Aman Kumar", role: "Animation Head", color: "#FF4A7A", initials: "AM", bio: "Brings ideas to life through stunning visuals.", image: "/images/team/aman.png" },
-];
+import { TEAM } from "@/lib/data/about";
 
 const MARQUEE_LINE_1 =
   "WEB DEVELOPMENT • SEO STRATEGY • PERFORMANCE MARKETING • BRAND IDENTITY • ";

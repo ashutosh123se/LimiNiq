@@ -10,20 +10,22 @@ export interface InternalLinkItem {
 interface InternalLinkCalloutProps {
   heading?: string;
   links: InternalLinkItem[];
+  accent?: string;
 }
 
 export function InternalLinkCallout({
   heading = "Related Services",
   links,
+  accent = "var(--accent-primary)",
 }: InternalLinkCalloutProps) {
   return (
     <div
       className="glass-card"
       style={{
-        padding: "2.5rem",
+        padding: "2rem",
         borderRadius: 24,
-        border: "1px solid rgba(59,91,255,0.15)",
-        background: "rgba(59,91,255,0.03)",
+        border: `1px solid color-mix(in srgb, ${accent} 20%, rgba(255,255,255,0.08))`,
+        background: `color-mix(in srgb, ${accent} 5%, rgba(255,255,255,0.02))`,
       }}
     >
       <h2
@@ -81,7 +83,7 @@ export function InternalLinkCallout({
             </div>
             <ArrowRight
               size={20}
-              style={{ color: "var(--accent-primary)", flexShrink: 0 }}
+              style={{ color: accent, flexShrink: 0 }}
             />
           </Link>
         ))}

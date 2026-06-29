@@ -2,76 +2,83 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { SERVICES } from "@/lib/data/services";
+import { TIER_1_SLUGS } from "@/lib/data/serviceExtensions";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Our Services",
-  description: "Explore our comprehensive suite of digital services including web development, mobile apps, SaaS, UI/UX, marketing, and SEO.",
+  description: "Explore our comprehensive suite of digital services including custom software, SaaS, web development, mobile apps, UI/UX, marketing, and SEO.",
   alternates: { canonical: "https://liminiq.com/services" },
 };
 
 export default function ServicesPage() {
-  const services = SERVICES;
+  const tier1 = TIER_1_SLUGS.map((slug) => SERVICES.find((s) => s.slug === slug)).filter(Boolean) as typeof SERVICES;
+  const tier2 = SERVICES.filter((s) => !TIER_1_SLUGS.includes(s.slug as (typeof TIER_1_SLUGS)[number]));
 
   return (
-    <div style={{ paddingTop: "5rem", background: "var(--bg-primary)", minHeight: "100vh" }}>
-      
-      {/* Hero */}
-      <section className="services-hero">
-        <div className="section-container">
-          <div className="pill-badge shimmer" style={{ marginBottom: "1.5rem", margin: "0 auto" }}>
-            <span style={{ color: "var(--accent-primary)" }}>✦</span> Capabilities
+    <div className="svc-index">
+      <section className="svc-index-hero">
+        <div className="svc-index-glow" />
+        <div className="section-container svc-index-hero-inner">
+          <div className="pill-badge shimmer">
+            <span style={{ color: "var(--accent-primary)" }}>✦</span> Capability deck
           </div>
-          <h1 className="text-hero" style={{ marginBottom: "1.5rem" }}>
-            Engineering <span style={{ color: "var(--text-secondary)" }}>Your</span><br />
-            Digital Growth.
+          <h1 className="section-h2 svc-index-title">
+            Nine disciplines.
+            <span className="text-gradient"> One delivery team.</span>
           </h1>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "1.2rem", color: "var(--text-secondary)", maxWidth: 600, margin: "0 auto", lineHeight: 1.6 }}>
-            From high-performance applications to data-driven marketing, we provide end-to-end solutions to scale your business.
+          <p className="svc-index-lede">
+            From custom software and SaaS to SEO and performance marketing — engineered to scale your product and your pipeline.
           </p>
         </div>
       </section>
 
-      {/* Grid */}
       <section className="section-padding section-container">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-          {services.map((service) => (
-            <Link 
+        <div className="svc-index-label">Core pillars</div>
+        <div className="svc-index-pillars">
+          {tier1.map((service, i) => (
+            <Link
               key={service.slug}
               href={`/services/${service.slug}`}
-              className="glass-card group"
-              style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", borderRadius: 24, textDecoration: "none" }}
+              className="svc-index-pillar glass-card-premium"
+              style={{ "--svc-color": service.color } as React.CSSProperties}
             >
-              <div style={{ position: "relative", height: 220, width: "100%", background: "var(--bg-surface)" }}>
+              <span className="svc-index-num">{String(i + 1).padStart(2, "0")}</span>
+              <div className="svc-index-pillar-icon">{service.icon}</div>
+              <h2>{service.shortTitle}</h2>
+              <p>{service.subtitle}</p>
+              <span className="svc-index-link">
+                Explore <ArrowUpRight size={15} />
+              </span>
+              <div className="svc-index-pillar-cover">
                 {service.coverImage && (
-                  <Image 
-                    src={service.coverImage} 
-                    alt={service.title} 
-                    fill 
-                    style={{ objectFit: 'cover' }} 
-                    className="group-hover-scale"
-                  />
+                  <Image src={service.coverImage} alt="" fill sizes="400px" style={{ objectFit: "cover" }} />
                 )}
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, var(--bg-surface) 0%, transparent 100%)" }} />
+                <div className="svc-index-pillar-cover-fade" />
               </div>
-              
-              <div style={{ padding: "2rem", flex: 1, display: "flex", flexDirection: "column" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
-                  <div style={{ color: "var(--accent-primary)" }}>
-                    {service.icon}
-                  </div>
-                  <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.4rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
-                    {service.title}
-                  </h3>
-                </div>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: "2rem", flex: 1 }}>
-                  {service.subtitle}
-                </p>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--accent-primary)", fontFamily: "var(--font-mono)", fontSize: "0.9rem", fontWeight: 600 }}>
-                  Explore Service <ArrowRight size={16} />
-                </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-padding section-container svc-index-support-wrap">
+        <div className="svc-index-label">Supporting craft</div>
+        <div className="svc-index-support">
+          {tier2.map((service) => (
+            <Link
+              key={service.slug}
+              href={`/services/${service.slug}`}
+              className="svc-index-support-card glass-card"
+              style={{ "--svc-color": service.color } as React.CSSProperties}
+            >
+              <span className="svc-index-support-accent" />
+              <div className="svc-index-support-icon">{service.icon}</div>
+              <div>
+                <strong>{service.shortTitle}</strong>
+                <em>{service.features[0]}</em>
               </div>
+              <ArrowUpRight size={16} className="svc-index-support-arrow" />
             </Link>
           ))}
         </div>
@@ -80,12 +87,190 @@ export default function ServicesPage() {
       <LeadCTASection />
 
       <style>{`
-        .services-hero { padding: 6rem 1.5rem; text-align: center; }
-        @media (max-width: 899px) {
-          .services-hero { padding: 4rem 1rem; }
+        .svc-index {
+          padding-top: 5rem;
+          background: var(--bg-primary);
+          overflow-x: clip;
         }
-        .group-hover-scale { transition: transform 0.5s ease; }
-        .group:hover .group-hover-scale { transform: scale(1.05); }
+        .svc-index-hero {
+          position: relative;
+          padding: clamp(3rem, 7vw, 5rem) 0 2rem;
+          overflow: hidden;
+        }
+        .svc-index-glow {
+          position: absolute;
+          width: 500px; height: 300px;
+          top: 0; left: 50%;
+          transform: translateX(-50%);
+          background: radial-gradient(ellipse, rgba(59,91,255,0.15), transparent 70%);
+          pointer-events: none;
+        }
+        .svc-index-hero-inner {
+          position: relative;
+          text-align: center;
+          max-width: 720px;
+        }
+        .svc-index-title { margin: 1rem 0; }
+        .svc-index-lede {
+          font-size: 1.05rem;
+          color: var(--text-secondary);
+          line-height: 1.65;
+          margin: 0;
+        }
+        .svc-index-label {
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--text-tertiary);
+          margin-bottom: 1rem;
+        }
+        .svc-index-pillars {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 1rem;
+        }
+        .svc-index-pillar {
+          position: relative;
+          padding: 1.5rem;
+          border-radius: 22px;
+          text-decoration: none;
+          overflow: hidden;
+          min-height: 280px;
+          display: flex;
+          flex-direction: column;
+          border-color: color-mix(in srgb, var(--svc-color) 20%, rgba(255,255,255,0.08)) !important;
+          transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+        .svc-index-pillar:hover {
+          transform: translateY(-4px);
+          border-color: color-mix(in srgb, var(--svc-color) 40%, rgba(255,255,255,0.1)) !important;
+        }
+        .svc-index-num {
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          font-weight: 700;
+          color: var(--svc-color);
+          letter-spacing: 0.08em;
+        }
+        .svc-index-pillar-icon {
+          width: 44px; height: 44px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0.75rem 0;
+          color: var(--svc-color);
+          background: color-mix(in srgb, var(--svc-color) 12%, transparent);
+          border: 1px solid color-mix(in srgb, var(--svc-color) 28%, transparent);
+        }
+        .svc-index-pillar h2 {
+          font-family: var(--font-heading);
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: var(--text-primary);
+          margin: 0 0 0.5rem;
+        }
+        .svc-index-pillar p {
+          font-size: 0.88rem;
+          color: var(--text-secondary);
+          line-height: 1.55;
+          margin: 0 0 1rem;
+          flex: 1;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .svc-index-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          font-family: var(--font-heading);
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: var(--svc-color);
+        }
+        .svc-index-pillar-cover {
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          opacity: 0.18;
+        }
+        .svc-index-pillar-cover-fade {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(160deg, var(--bg-primary) 20%, transparent 70%);
+        }
+        .svc-index-support-wrap { padding-top: 0; }
+        .svc-index-support {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 0.65rem;
+        }
+        .svc-index-support-card {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.85rem 1rem;
+          border-radius: 14px;
+          text-decoration: none;
+          position: relative;
+          overflow: hidden;
+          transition: all 0.22s ease;
+        }
+        .svc-index-support-card:hover {
+          border-color: color-mix(in srgb, var(--svc-color) 30%, rgba(255,255,255,0.08));
+          background: color-mix(in srgb, var(--svc-color) 6%, rgba(255,255,255,0.03));
+        }
+        .svc-index-support-accent {
+          position: absolute;
+          left: 0; top: 18%; bottom: 18%;
+          width: 3px;
+          border-radius: 4px;
+          background: var(--svc-color);
+          opacity: 0;
+          transition: opacity 0.22s ease;
+        }
+        .svc-index-support-card:hover .svc-index-support-accent { opacity: 1; }
+        .svc-index-support-icon {
+          width: 34px; height: 34px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--svc-color);
+          background: color-mix(in srgb, var(--svc-color) 12%, transparent);
+        }
+        .svc-index-support-card strong {
+          display: block;
+          font-family: var(--font-heading);
+          font-size: 0.88rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+        .svc-index-support-card em {
+          font-style: normal;
+          font-size: 0.72rem;
+          color: var(--text-tertiary);
+        }
+        .svc-index-support-arrow {
+          color: var(--text-tertiary);
+          transition: all 0.22s ease;
+        }
+        .svc-index-support-card:hover .svc-index-support-arrow {
+          color: var(--svc-color);
+          transform: translate(2px, -2px);
+        }
+        @media (max-width: 960px) {
+          .svc-index-pillars { grid-template-columns: 1fr; }
+          .svc-index-support { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 560px) {
+          .svc-index-support { grid-template-columns: 1fr; }
+        }
       `}</style>
     </div>
   );

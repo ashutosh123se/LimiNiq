@@ -13,9 +13,14 @@ export interface FAQItem {
 interface FAQAccordionProps {
   items: FAQItem[];
   title?: string;
+  accent?: string;
 }
 
-export function FAQAccordion({ items, title = "Frequently Asked Questions" }: FAQAccordionProps) {
+export function FAQAccordion({
+  items,
+  title = "Frequently Asked Questions",
+  accent = "var(--accent-primary)",
+}: FAQAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const faqSchema = {
@@ -34,32 +39,23 @@ export function FAQAccordion({ items, title = "Frequently Asked Questions" }: FA
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
       <JsonLd data={faqSchema} />
-      <h2
-        style={{
-          fontFamily: "var(--font-heading)",
-          fontSize: "2rem",
-          fontWeight: 800,
-          color: "var(--text-primary)",
-          marginBottom: "2rem",
-          textAlign: "center",
-        }}
-      >
-        {title}
-      </h2>
+      <h2 className="svc-faq-title">{title}</h2>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
         {items.map((faq, i) => (
           <div
             key={faq.question}
             className="glass-card"
             style={{
-              padding: "1.5rem",
+              padding: "1.25rem 1.35rem",
               borderRadius: 16,
               border:
                 openIndex === i
-                  ? "1px solid rgba(59, 91, 255, 0.3)"
+                  ? `1px solid color-mix(in srgb, ${accent} 35%, rgba(255,255,255,0.1))`
                   : "1px solid rgba(255,255,255,0.08)",
-              background: openIndex === i ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.01)",
+              background: openIndex === i
+                ? `color-mix(in srgb, ${accent} 6%, rgba(255,255,255,0.03))`
+                : "rgba(255,255,255,0.02)",
               transition: "all 0.3s ease",
             }}
           >
@@ -86,7 +82,7 @@ export function FAQAccordion({ items, title = "Frequently Asked Questions" }: FA
               <motion.div
                 animate={{ rotate: openIndex === i ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
-                style={{ color: "var(--accent-primary)", flexShrink: 0 }}
+                style={{ color: accent, flexShrink: 0 }}
               >
                 <ChevronDown size={20} />
               </motion.div>
@@ -118,6 +114,17 @@ export function FAQAccordion({ items, title = "Frequently Asked Questions" }: FA
           </div>
         ))}
       </div>
+
+      <style>{`
+        .svc-faq-title {
+          font-family: var(--font-heading);
+          font-size: clamp(1.5rem, 3vw, 2rem);
+          font-weight: 800;
+          color: var(--text-primary);
+          margin-bottom: 1.75rem;
+          text-align: center;
+        }
+      `}</style>
     </div>
   );
 }
