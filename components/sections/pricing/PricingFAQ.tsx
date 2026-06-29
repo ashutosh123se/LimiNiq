@@ -12,7 +12,7 @@ interface FAQItem {
 const FAQS: FAQItem[] = [
   {
     q: "How is custom software priced?",
-    a: "Software and SaaS projects are scoped after a discovery call. MVPs typically start from ₹8 lakhs; enterprise platforms with multi-tenant architecture, integrations, and compliance requirements are quoted individually.",
+    a: "Software and SaaS projects are scoped after a discovery call. MVPs typically start from ₹75,000; larger platforms with multi-tenant architecture, integrations, and compliance requirements are quoted individually.",
   },
   {
     q: "Do you require full payment upfront?",

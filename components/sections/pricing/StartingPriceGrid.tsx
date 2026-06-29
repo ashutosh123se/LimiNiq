@@ -3,8 +3,8 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { STARTING_PRICES } from "@/lib/data/startingPrices";
+import { ArrowUpRight, Sparkles } from "lucide-react";
+import { STARTING_PRICES, type StartingPriceItem } from "@/lib/data/startingPrices";
 import { PricingFAQ } from "./PricingFAQ";
 import { PricingCTA } from "./PricingCTA";
 
@@ -13,110 +13,138 @@ interface StartingPriceGridProps {
   compact?: boolean;
 }
 
+function PriceCard({
+  item,
+  index,
+  isInView,
+  featured = false,
+  compact = false,
+}: {
+  item: StartingPriceItem;
+  index: number;
+  isInView: boolean;
+  featured?: boolean;
+  compact?: boolean;
+}) {
+  const Icon = item.icon;
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 28 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: 0.12 + index * 0.08 }}
+      className={`price-card glass-card-premium ${featured ? "price-card--featured" : ""} ${compact ? "price-card--compact" : ""}`}
+      style={{ "--accent": item.color } as React.CSSProperties}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      }}
+    >
+      <div className="price-card-glow" />
+
+      <div className="price-card-top">
+        {featured ? (
+          <span className="price-card-badge">
+            <Sparkles size={12} />
+            Primary Focus
+          </span>
+        ) : (
+          <span className="price-card-index">{String(index + 1).padStart(2, "0")}</span>
+        )}
+      </div>
+
+      <div className={featured ? "price-card-mid" : undefined}>
+        <div
+          className="price-card-icon"
+          style={{
+            color: item.color,
+            borderColor: `${item.color}35`,
+            background: `linear-gradient(135deg, ${item.color}22, transparent)`,
+          }}
+        >
+          <Icon size={featured ? 26 : 22} strokeWidth={1.5} />
+        </div>
+
+        <div className="price-card-body">
+          <span className="price-card-label">{item.shortLabel}</span>
+          <h3 className="price-card-title">{item.title}</h3>
+          {!compact && <p className="price-card-summary">{item.summary}</p>}
+          <ul className="price-card-tags">
+            {item.highlights.slice(0, compact ? 2 : 3).map((tag) => (
+              <li key={tag}>{tag}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="price-card-footer">
+        <div className="price-card-price">
+          <span className="price-card-from">Starting from</span>
+          <span className="price-card-value">{item.startingPrice}</span>
+          <span className="price-card-note">{item.priceNote}</span>
+        </div>
+        <Link href={`/contact?service=${item.slug}`} className="price-card-cta">
+          <span>Get Details</span>
+          <ArrowUpRight size={18} strokeWidth={2} />
+        </Link>
+      </div>
+    </motion.article>
+  );
+}
+
 export function StartingPriceGrid({ showFAQ = false, compact = false }: StartingPriceGridProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 
+  const [featured, ...rest] = STARTING_PRICES;
+
   return (
-    <section
-      ref={ref}
-      className="section-padding"
-      style={{ background: "var(--bg-primary)", position: "relative", overflow: "hidden" }}
-    >
-      <div className="section-container">
+    <section ref={ref} className="pricing-section section-padding">
+      <div className="pricing-bg-glow pricing-bg-glow--left" />
+      <div className="pricing-bg-glow pricing-bg-glow--right" />
+      <div className="pricing-dot-grid" />
+
+      <div className="section-container pricing-inner">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="sp-header"
-          style={{ textAlign: compact ? "center" : "left", maxWidth: compact ? 640 : 560, margin: compact ? "0 auto 2.5rem" : "0 0 2.5rem" }}
+          className="pricing-intro"
+          style={{ textAlign: compact ? "center" : "center" }}
         >
           <div className="pill-badge shimmer" style={{ marginBottom: "1rem", display: "inline-flex" }}>
             <span style={{ color: "var(--accent-primary)" }}>✦</span> Investment
           </div>
           <h2 className="section-h2" style={{ marginBottom: "0.75rem" }}>
-            Starting Points,{" "}
-            <span className="text-gradient">Not Ceiling Prices</span>
+            Transparent <span className="text-gradient">Starting Rates</span>
           </h2>
-          <p style={{ fontSize: "1.05rem", color: "var(--text-secondary)", lineHeight: 1.7, margin: 0 }}>
-            Every engagement is scoped after discovery. These are where projects typically begin — contact us for
-            a tailored quote.
+          <p className="pricing-intro-copy">
+            Every project is scoped individually. These are entry points — reach out for a quote tailored to your
+            goals and timeline.
           </p>
         </motion.div>
 
+        <div className={`pricing-grid ${compact ? "pricing-grid--compact" : ""}`}>
+          {featured && (
+            <PriceCard item={featured} index={0} isInView={isInView} featured compact={compact} />
+          )}
+          {rest.map((item, i) => (
+            <PriceCard key={item.id} item={item} index={i + 1} isInView={isInView} compact={compact} />
+          ))}
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, delay: 0.1 }}
-          className="sp-sheet glass-card-premium"
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.5 }}
+          className="pricing-trust"
         >
-          <div className="sp-sheet-bar">
-            <span className="sp-sheet-label">LIMINIQ — service rate card</span>
-            <span className="sp-sheet-meta">INR · 2026</span>
-          </div>
-
-          <div className="sp-rows">
-            {STARTING_PRICES.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.15 + i * 0.08 }}
-                  className={`sp-row ${item.featured ? "sp-row--featured" : ""}`}
-                  style={{ "--row-accent": item.color } as React.CSSProperties}
-                >
-                  {item.featured && (
-                    <div className="sp-row-badge">
-                      <Sparkles size={12} />
-                      Primary Focus
-                    </div>
-                  )}
-
-                  <div className="sp-row-left">
-                    <div className="sp-row-icon" style={{ color: item.color, borderColor: `${item.color}40`, background: `${item.color}15` }}>
-                      <Icon size={22} strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <div className="sp-row-label">{item.shortLabel}</div>
-                      <h3 className="sp-row-title">{item.title}</h3>
-                      {!compact && <p className="sp-row-summary">{item.summary}</p>}
-                      <div className="sp-row-tags">
-                        {item.highlights.slice(0, compact ? 2 : 3).map((tag) => (
-                          <span key={tag} className="sp-tag">{tag}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="sp-row-right">
-                    <div className="sp-price-block">
-                      <span className="sp-price-from">Starting from</span>
-                      <span className="sp-price-value">{item.startingPrice}</span>
-                      <span className="sp-price-note">{item.priceNote}</span>
-                    </div>
-                    <Link
-                      href={`/contact?service=${item.slug}`}
-                      className="sp-cta-btn"
-                      style={{ borderColor: `${item.color}50`, color: item.color }}
-                    >
-                      Get Details
-                      <ArrowRight size={16} />
-                    </Link>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <div className="sp-sheet-footer">
-            <span>Custom enterprise scopes quoted individually</span>
-            <span className="sp-sheet-footer-dot">·</span>
-            <span>No hidden fees</span>
-            <span className="sp-sheet-footer-dot">·</span>
-            <span>Source code & assets yours to keep</span>
-          </div>
+          <span>No hidden fees</span>
+          <span className="pricing-trust-dot">·</span>
+          <span>Milestone billing available</span>
+          <span className="pricing-trust-dot">·</span>
+          <span>You own the code</span>
         </motion.div>
 
         {!compact && (
@@ -127,7 +155,7 @@ export function StartingPriceGrid({ showFAQ = false, compact = false }: Starting
         )}
 
         {compact && (
-          <div style={{ textAlign: "center", marginTop: "2rem" }}>
+          <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
             <Link href="/pricing" className="btn-secondary">
               View Full Pricing Details
             </Link>
@@ -136,66 +164,194 @@ export function StartingPriceGrid({ showFAQ = false, compact = false }: Starting
       </div>
 
       <style>{`
-        .sp-sheet {
-          border-radius: 28px;
+        .pricing-section {
+          position: relative;
           overflow: hidden;
-          padding: 0;
+          background: var(--bg-primary);
         }
 
-        .sp-sheet-bar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 0.85rem 1.5rem;
-          background: rgba(0, 0, 0, 0.4);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-          font-family: var(--font-mono);
-          font-size: 0.72rem;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
+        .pricing-inner {
+          position: relative;
+          z-index: 1;
         }
 
-        .sp-sheet-label {
+        .pricing-bg-glow {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(90px);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .pricing-bg-glow--left {
+          width: 480px;
+          height: 480px;
+          top: 8%;
+          left: -160px;
+          background: rgba(123, 97, 255, 0.14);
+        }
+        .pricing-bg-glow--right {
+          width: 420px;
+          height: 420px;
+          bottom: 5%;
+          right: -120px;
+          background: rgba(59, 91, 255, 0.1);
+        }
+
+        .pricing-dot-grid {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0.3;
+          background-image: radial-gradient(rgba(59, 91, 255, 0.22) 1px, transparent 1px);
+          background-size: 28px 28px;
+          mask-image: radial-gradient(ellipse 75% 65% at 50% 35%, black, transparent);
+        }
+
+        .pricing-intro {
+          max-width: 640px;
+          margin: 0 auto 3rem;
+        }
+
+        .pricing-intro-copy {
+          font-size: 1.05rem;
           color: var(--text-secondary);
+          line-height: 1.75;
+          margin: 0;
         }
 
-        .sp-sheet-meta {
-          color: var(--text-tertiary);
+        .pricing-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.25rem;
         }
 
-        .sp-rows {
+        .pricing-grid > .price-card--featured {
+          grid-column: 1 / -1;
+        }
+
+        .pricing-grid--compact {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .pricing-grid--compact > .price-card--featured {
+          grid-column: 1 / -1;
+        }
+
+        .price-card {
+          --mouse-x: 50%;
+          --mouse-y: 50%;
+          position: relative;
           display: flex;
           flex-direction: column;
+          padding: 1.75rem;
+          border-radius: 24px;
+          overflow: hidden;
+          min-height: 100%;
+          transition: transform 0.35s ease, border-color 0.35s ease;
         }
 
-        .sp-row {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 1.5rem;
-          align-items: center;
-          padding: 1.5rem 1.75rem;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-          position: relative;
-          transition: background 0.25s ease;
+        .price-card:hover {
+          transform: translateY(-4px);
+          border-color: color-mix(in srgb, var(--accent) 35%, transparent);
         }
 
-        .sp-row:last-of-type {
-          border-bottom: none;
-        }
-
-        .sp-row:hover {
-          background: rgba(255, 255, 255, 0.02);
-        }
-
-        .sp-row--featured {
-          background: rgba(123, 97, 255, 0.04);
-          border-left: 3px solid var(--row-accent);
-        }
-
-        .sp-row-badge {
+        .price-card-glow {
           position: absolute;
-          top: 0.75rem;
-          right: 1.75rem;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          background: radial-gradient(
+            420px circle at var(--mouse-x) var(--mouse-y),
+            color-mix(in srgb, var(--accent) 18%, transparent),
+            transparent 45%
+          );
+        }
+
+        .price-card:hover .price-card-glow {
+          opacity: 1;
+        }
+
+        .price-card--featured {
+          padding: 2rem 2.25rem;
+          border-color: color-mix(in srgb, var(--accent) 30%, rgba(255,255,255,0.08));
+          background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--accent) 8%, rgba(255,255,255,0.02)),
+            rgba(255,255,255,0.02)
+          );
+        }
+
+        .price-card--featured .price-card-mid {
+          display: flex;
+          gap: 1.5rem;
+          align-items: flex-start;
+        }
+
+        .price-card--featured .price-card-icon {
+          width: 64px;
+          height: 64px;
+          border-radius: 18px;
+          margin-bottom: 0;
+          flex-shrink: 0;
+        }
+
+        .price-card--featured .price-card-tags {
+          margin-bottom: 0;
+        }
+
+        .price-card--featured .price-card-footer {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 1.75rem;
+        }
+
+        .price-card--featured .price-card-value {
+          font-size: 2.25rem;
+          background: linear-gradient(135deg, #fff 30%, color-mix(in srgb, var(--accent) 80%, #fff));
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .price-card--compact {
+          padding: 1.35rem;
+          border-radius: 20px;
+        }
+
+        .price-card--compact .price-card-title {
+          font-size: 1.05rem;
+        }
+
+        .price-card--compact .price-card-value {
+          font-size: 1.35rem;
+        }
+
+        .price-card--compact.price-card--featured {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+
+        .price-card--compact.price-card--featured .price-card-footer {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1rem;
+        }
+
+        .price-card--compact.price-card--featured .price-card-price {
+          text-align: left;
+        }
+
+        .price-card-top {
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 1rem;
+          min-height: 24px;
+        }
+
+        .price-card-badge {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
@@ -205,187 +361,185 @@ export function StartingPriceGrid({ showFAQ = false, compact = false }: Starting
           letter-spacing: 0.08em;
           text-transform: uppercase;
           color: var(--accent-violet);
-          padding: 3px 8px;
+          padding: 4px 10px;
           border-radius: 100px;
           background: rgba(123, 97, 255, 0.12);
-          border: 1px solid rgba(123, 97, 255, 0.25);
+          border: 1px solid rgba(123, 97, 255, 0.22);
         }
 
-        .sp-row-left {
-          display: flex;
-          gap: 1.25rem;
-          align-items: flex-start;
-          min-width: 0;
+        .price-card-index {
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: var(--text-tertiary);
+          letter-spacing: 0.06em;
         }
 
-        .sp-row-icon {
+        .price-card-icon {
           width: 52px;
           height: 52px;
-          border-radius: 14px;
+          border-radius: 16px;
           border: 1px solid;
           display: flex;
           align-items: center;
           justify-content: center;
-          flex-shrink: 0;
+          margin-bottom: 1.25rem;
         }
 
-        .sp-row-label {
+        .price-card--compact .price-card-icon {
+          width: 44px;
+          height: 44px;
+          margin-bottom: 1rem;
+        }
+
+        .price-card-label {
+          display: block;
           font-family: var(--font-mono);
           font-size: 0.68rem;
           font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-tertiary);
+          margin-bottom: 0.35rem;
+        }
+
+        .price-card-title {
+          font-family: var(--font-heading);
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          margin: 0 0 0.6rem;
+          letter-spacing: -0.02em;
+          line-height: 1.25;
+        }
+
+        .price-card-summary {
+          font-size: 0.92rem;
+          color: var(--text-secondary);
+          line-height: 1.6;
+          margin: 0 0 1rem;
+        }
+
+        .price-card-tags {
+          list-style: none;
+          padding: 0;
+          margin: 0 0 1.5rem;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.4rem;
+        }
+
+        .price-card-tags li {
+          font-size: 0.72rem;
+          font-weight: 600;
+          padding: 5px 10px;
+          border-radius: 100px;
+          color: var(--text-secondary);
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .price-card-body {
+          flex: 1;
+        }
+
+        .price-card-footer {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          margin-top: auto;
+          padding-top: 1.25rem;
+          border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .price-card-price {
+          text-align: left;
+        }
+
+        .price-card-from {
+          display: block;
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          font-weight: 600;
           letter-spacing: 0.1em;
           text-transform: uppercase;
           color: var(--text-tertiary);
           margin-bottom: 0.25rem;
         }
 
-        .sp-row-title {
-          font-family: var(--font-heading);
-          font-size: 1.2rem;
-          font-weight: 700;
-          color: var(--text-primary);
-          margin: 0 0 0.5rem;
-          line-height: 1.25;
-        }
-
-        .sp-row-summary {
-          font-size: 0.9rem;
-          color: var(--text-secondary);
-          line-height: 1.55;
-          margin: 0 0 0.75rem;
-          max-width: 480px;
-        }
-
-        .sp-row-tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.4rem;
-        }
-
-        .sp-tag {
-          font-size: 0.68rem;
-          font-weight: 600;
-          padding: 4px 8px;
-          border-radius: 6px;
-          color: var(--text-secondary);
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.07);
-        }
-
-        .sp-row-right {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 0.85rem;
-          flex-shrink: 0;
-        }
-
-        .sp-price-block {
-          text-align: right;
-        }
-
-        .sp-price-from {
-          display: block;
-          font-family: var(--font-mono);
-          font-size: 0.65rem;
-          font-weight: 600;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: var(--text-tertiary);
-          margin-bottom: 0.2rem;
-        }
-
-        .sp-price-value {
+        .price-card-value {
           display: block;
           font-family: var(--font-heading);
-          font-size: 1.65rem;
+          font-size: 1.75rem;
           font-weight: 800;
           color: var(--text-primary);
+          letter-spacing: -0.03em;
           line-height: 1;
-          letter-spacing: -0.02em;
         }
 
-        .sp-row--featured .sp-price-value {
-          background: linear-gradient(135deg, #fff, #a0b4ff);
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .sp-price-note {
+        .price-card-note {
           display: block;
-          font-family: var(--font-mono);
-          font-size: 0.65rem;
+          font-size: 0.78rem;
           color: var(--text-tertiary);
           margin-top: 0.35rem;
         }
 
-        .sp-cta-btn {
+        .price-card-cta {
           display: inline-flex;
           align-items: center;
-          gap: 0.45rem;
-          padding: 0.6rem 1.1rem;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.25rem;
           border-radius: 100px;
           font-family: var(--font-heading);
-          font-size: 0.85rem;
+          font-size: 0.88rem;
           font-weight: 600;
           text-decoration: none;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid;
-          transition: all 0.25s ease;
-          white-space: nowrap;
+          color: var(--text-primary);
+          background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 25%, transparent), rgba(255,255,255,0.04));
+          border: 1px solid color-mix(in srgb, var(--accent) 35%, rgba(255,255,255,0.1));
+          transition: all 0.3s ease;
         }
 
-        .sp-cta-btn:hover {
-          background: rgba(255, 255, 255, 0.07);
-          transform: translateX(3px);
+        .price-card-cta:hover {
+          background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 40%, transparent), rgba(255,255,255,0.06));
+          border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+          transform: translateY(-1px);
         }
 
-        .sp-sheet-footer {
+        .price-card-cta span {
+          flex: 1;
+        }
+
+        .pricing-trust {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 0.5rem 0.75rem;
-          padding: 1rem 1.5rem;
-          background: rgba(0, 0, 0, 0.25);
-          border-top: 1px solid rgba(255, 255, 255, 0.05);
-          font-family: var(--font-mono);
-          font-size: 0.68rem;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
+          gap: 0.5rem 0.85rem;
+          margin-top: 2.5rem;
+          font-size: 0.82rem;
+          font-weight: 500;
           color: var(--text-tertiary);
         }
 
-        .sp-sheet-footer-dot {
-          opacity: 0.4;
+        .pricing-trust-dot {
+          opacity: 0.35;
         }
 
-        @media (max-width: 768px) {
-          .sp-row {
+        @media (max-width: 960px) {
+          .pricing-grid {
             grid-template-columns: 1fr;
-            gap: 1.25rem;
-            padding: 1.25rem;
           }
-          .sp-row-badge {
-            position: static;
-            align-self: flex-start;
-            margin-bottom: 0.5rem;
-            order: -1;
-          }
-          .sp-row--featured {
-            display: flex;
+
+          .price-card--featured .price-card-footer {
             flex-direction: column;
+            align-items: stretch;
           }
-          .sp-row-right {
-            align-items: flex-start;
-            width: 100%;
-          }
-          .sp-price-block {
-            text-align: left;
-          }
-          .sp-cta-btn {
-            width: 100%;
-            justify-content: center;
+        }
+
+        @media (max-width: 640px) {
+          .pricing-grid--compact {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
