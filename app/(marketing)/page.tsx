@@ -11,11 +11,11 @@ import { AboutTeaser } from "@/components/sections/home/AboutTeaser";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { AuditTool } from "@/components/sections/home/AuditTool";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { HOME_SEO } from "@/lib/seo/homeMetadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "LIMINIQ — Custom Software, SaaS & Enterprise Development Company in India",
-  description:
-    "LIMINIQ builds custom software, SaaS platforms, and enterprise systems for growing businesses — and drives their growth with data-backed SEO and digital marketing. 150+ projects delivered, 4.9/5 rated.",
+  title: HOME_SEO.title,
+  description: HOME_SEO.description,
   path: "/",
   absoluteTitle: true,
   keywords: [

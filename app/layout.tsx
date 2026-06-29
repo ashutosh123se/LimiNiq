@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono, Syne } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { CustomCursor } from "@/components/layout/CustomCursor";
@@ -7,8 +8,10 @@ import { LoadingScreen } from "@/components/layout/LoadingScreen";
 import { SocialProofToast } from "@/components/layout/SocialProofToast";
 import { SmoothScrollProvider } from "@/app/providers/SmoothScrollProvider";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { ClientErrorBoundary } from "@/components/ui/ClientErrorBoundary";
 import { organizationSchema } from "@/lib/seo/schema";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { HOME_SEO } from "@/lib/seo/homeMetadata";
 
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
@@ -17,11 +20,10 @@ const syne = Syne({ subsets: ["latin"], variable: "--font-heading" });
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "LIMINIQ — Custom Software, SaaS & Enterprise Development Company in India",
+    default: HOME_SEO.title,
     template: "%s | LIMINIQ",
   },
-  description:
-    "LIMINIQ builds custom software, SaaS platforms, and enterprise systems for growing businesses — and drives their growth with data-backed SEO and digital marketing. 150+ projects delivered, 4.9/5 rated.",
+  description: HOME_SEO.description,
   keywords: [
     "custom software development company India",
     "enterprise software development company",
@@ -54,38 +56,39 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <JsonLd data={organizationSchema()} />
-      </head>
+    <html lang="en-IN" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} ${syne.variable}`}>
+        <JsonLd data={organizationSchema()} />
         <SmoothScrollProvider>
           <Providers>
-            <LoadingScreen />
-            <CustomCursor />
-            <SocialProofToast />
+            <ClientErrorBoundary>
+              <LoadingScreen />
+            </ClientErrorBoundary>
+            <ClientErrorBoundary>
+              <CustomCursor />
+            </ClientErrorBoundary>
+            <ClientErrorBoundary>
+              <SocialProofToast />
+            </ClientErrorBoundary>
             {children}
           </Providers>
         </SmoothScrollProvider>
-        {/* Google Analytics */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
+        {process.env.NEXT_PUBLIC_GA_ID ? (
           <>
-            <script
-              async
+            <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
             />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { page_path: window.location.pathname });
-                `,
-              }}
-            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { page_path: window.location.pathname });
+              `}
+            </Script>
           </>
-        )}
+        ) : null}
       </body>
     </html>
   );

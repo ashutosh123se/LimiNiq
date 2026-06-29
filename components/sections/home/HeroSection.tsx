@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Code2, TrendingUp, BarChart3 } from 'lucide-react'
 import { HeroCanvas } from '@/components/three/HeroCanvas'
 import { MagneticButton } from '@/components/ui/MagneticButton'
+import { ClientErrorBoundary } from '@/components/ui/ClientErrorBoundary'
 
 const PILLARS = [
   { icon: Code2, label: 'Software', color: '#7B61FF' },
@@ -97,7 +98,9 @@ export function HeroSection() {
   return (
     <section className="hero-section">
       <div className="hero-canvas-wrap">
-        <HeroCanvas />
+        <ClientErrorBoundary>
+          <HeroCanvas />
+        </ClientErrorBoundary>
       </div>
 
       <div className="hero-watermark" aria-hidden>01</div>
@@ -113,16 +116,8 @@ export function HeroSection() {
             </motion.div>
 
             <h1 className="hero-h1 hero-h1--editorial">
-              <motion.span {...fade(0.2)} className="hero-h1-pre">
-                <span className="hero-h1-line">Custom Software &amp;</span>
-                <span className="hero-h1-line">
-                  <span className="hero-h1-highlight">SaaS</span>{' '}
-                  <span className="hero-h1-nowrap">Development</span>
-                </span>
-              </motion.span>
-              <motion.span {...fade(0.35)} className="hero-h1-sub text-gradient">
-                Backed by Data-Driven Marketing
-              </motion.span>
+              <span className="hero-h1-line">Custom Software &amp; SaaS Development</span>
+              <span className="hero-h1-sub text-gradient">Backed by Data-Driven Marketing</span>
             </h1>
 
             <motion.p {...fade(0.48)} className="hero-lede">
