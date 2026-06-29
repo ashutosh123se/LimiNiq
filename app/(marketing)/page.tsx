@@ -33,7 +33,6 @@ export const metadata: Metadata = buildPageMetadata({
 export default function HomePage() {
   return (
     <>
-      <HomeCrawlableIntro />
       <HeroSection />
       <StatsStrip />
       <ServicesSection />
@@ -45,6 +44,7 @@ export default function HomePage() {
       <BlogPreviewSection />
       <AboutTeaser />
       <LeadCTASection />
+      <HomeCrawlableIntro />
     </>
   );
 }
