@@ -21,7 +21,7 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
   const active = hovered ?? PILLARS[0];
 
   return (
-    <div className="mega-menu glass-card-premium">
+    <div className="mega-menu">
       <div
         className="mega-menu-accent-glow"
         style={{ "--mega-accent": active.color } as React.CSSProperties}
@@ -148,12 +148,10 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
           overflow: hidden;
           border-radius: 22px;
           padding: 0;
-          border-color: rgba(255, 255, 255, 0.12) !important;
-          background: rgba(8, 12, 22, 0.98) !important;
-          backdrop-filter: blur(28px) saturate(160%);
-          -webkit-backdrop-filter: blur(28px) saturate(160%);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: #070b14;
           box-shadow:
-            0 28px 90px rgba(0, 0, 0, 0.72),
+            0 28px 90px rgba(0, 0, 0, 0.85),
             0 0 0 1px rgba(255, 255, 255, 0.08),
             inset 0 1px 0 rgba(255, 255, 255, 0.06);
           isolation: isolate;
@@ -201,7 +199,7 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
           gap: 1rem;
           position: relative;
           z-index: 2;
-          background: rgba(6, 9, 18, 0.92);
+          background: #070b14;
         }
 
         .mega-menu-head {
@@ -355,13 +353,13 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
           position: relative;
           overflow: hidden;
           border: 1px solid rgba(255, 255, 255, 0.06);
-          background: rgba(255, 255, 255, 0.04);
+          background: #0c1019;
           transition: all 0.22s ease;
         }
 
         .mega-support-item:hover,
         .mega-support-item--active {
-          background: rgba(255, 255, 255, 0.03);
+          background: #101522;
           border-color: color-mix(in srgb, var(--svc-color) 22%, rgba(255,255,255,0.06));
         }
 
@@ -441,8 +439,8 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
           z-index: 2;
           background: linear-gradient(
             165deg,
-            color-mix(in srgb, var(--mega-accent) 14%, rgba(8, 12, 22, 0.98)),
-            rgba(6, 9, 18, 0.98)
+            color-mix(in srgb, var(--mega-accent) 14%, #070b14),
+            #060912
           );
         }
 

@@ -141,22 +141,39 @@ export function Navbar() {
                     {/* Mega Menu Dropdown */}
                     <AnimatePresence>
                       {isServices && servicesMenuOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                          transition={{ duration: 0.22, ease: "easeOut" }}
-                          style={{
-                            position: 'absolute',
-                            top: '100%',
-                            left: '50%',
-                            transform: 'translateX(-38%)',
-                            paddingTop: '1.25rem',
-                            zIndex: 200,
-                          }}
-                        >
-                          <ServicesMegaMenu onConsultClick={() => router.push('/contact')} />
-                        </motion.div>
+                        <>
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            aria-hidden
+                            style={{
+                              position: 'fixed',
+                              inset: 0,
+                              top: 0,
+                              background: 'rgba(4, 6, 12, 0.72)',
+                              zIndex: 90,
+                              pointerEvents: 'none',
+                            }}
+                          />
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                            transition={{ duration: 0.22, ease: "easeOut" }}
+                            style={{
+                              position: 'absolute',
+                              top: '100%',
+                              left: '50%',
+                              transform: 'translateX(-38%)',
+                              paddingTop: '1.25rem',
+                              zIndex: 200,
+                            }}
+                          >
+                            <ServicesMegaMenu onConsultClick={() => router.push('/contact')} />
+                          </motion.div>
+                        </>
                       )}
                     </AnimatePresence>
                   </div>
