@@ -512,6 +512,7 @@ export function HomeRateBoard() {
           .rate-board-header {
             flex-direction: column;
             align-items: flex-start;
+            gap: 1rem;
           }
 
           .rate-board-trust {
@@ -519,48 +520,43 @@ export function HomeRateBoard() {
             text-align: left;
             max-width: none;
           }
-
-          .rate-row-link {
-            grid-template-columns: auto auto 1fr auto;
-            grid-template-rows: auto auto;
-            gap: 0.65rem 0.75rem;
-          }
-
-          .rate-row-index {
-            grid-row: 1;
-            grid-column: 1;
-          }
-
-          .rate-row-icon {
-            grid-row: 1;
-            grid-column: 2;
-          }
-
-          .rate-row-info {
-            grid-row: 1 / 3;
-            grid-column: 3;
-          }
-
-          .rate-row-price-block {
-            grid-row: 1;
-            grid-column: 4;
-          }
-
-          .rate-row-arrow {
-            grid-row: 2;
-            grid-column: 4;
-            justify-self: end;
-          }
-
-          .rate-row-note {
-            white-space: normal;
-          }
         }
 
-        @media (max-width: 520px) {
+        @media (max-width: 640px) {
+          .rate-board {
+            padding-top: 40px !important;
+            padding-bottom: 56px !important;
+          }
+
+          .rate-board-h2 {
+            font-size: clamp(1.45rem, 6.5vw, 1.85rem) !important;
+          }
+
+          .rate-ledger-watermark {
+            font-size: clamp(4rem, 28vw, 6rem);
+            right: 2%;
+            opacity: 0.6;
+          }
+
+          .rate-ledger-head {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+          }
+
+          .rate-ledger-foot {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.65rem;
+            padding: 0.75rem 1rem;
+          }
+
           .rate-row-link {
-            grid-template-columns: auto 1fr auto;
-            padding: 0.85rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 0.65rem;
+            padding: 0.95rem 1rem;
           }
 
           .rate-row-index {
@@ -568,39 +564,55 @@ export function HomeRateBoard() {
           }
 
           .rate-row-icon {
-            grid-column: 1;
+            flex-shrink: 0;
           }
 
           .rate-row-info {
-            grid-column: 2;
+            flex: 1;
+            min-width: 0;
           }
 
-          .rate-row-price-block {
-            grid-column: 1 / -1;
-            grid-row: 2;
-            text-align: left;
-            display: flex;
-            align-items: baseline;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-          }
-
-          .rate-row-from {
-            display: inline;
-          }
-
-          .rate-row-price {
-            display: inline;
-          }
-
-          .rate-row-note {
-            display: inline;
-            margin-top: 0;
+          .rate-row-title {
+            font-size: 0.92rem;
           }
 
           .rate-row-arrow {
-            grid-row: 1;
-            grid-column: 3;
+            margin-left: auto;
+            flex-shrink: 0;
+          }
+
+          .rate-row-price-block {
+            width: 100%;
+            flex-basis: 100%;
+            text-align: left;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.35rem 0.6rem;
+            padding-top: 0.55rem;
+            margin-top: 0.1rem;
+            border-top: 1px dashed rgba(255,255,255,0.08);
+          }
+
+          .rate-row-from,
+          .rate-row-price,
+          .rate-row-note {
+            display: inline;
+            white-space: normal;
+          }
+
+          .rate-row--featured .rate-row-price {
+            font-size: 1.15rem;
+          }
+
+          .rate-board-cta {
+            margin-top: 1.25rem;
+            padding: 0 0.25rem 0.5rem;
+          }
+
+          .rate-board-cta .btn-primary {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>

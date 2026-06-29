@@ -930,26 +930,47 @@ export function PortfolioSection({
           .work-intro--compact {
             flex-direction: column;
             align-items: flex-start;
+            gap: 1rem;
           }
 
           .work-intro--compact .work-filters {
             justify-content: flex-start;
+            width: 100%;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 0.15rem;
+          }
+
+          .work-intro--compact .work-filters::-webkit-scrollbar {
+            display: none;
           }
 
           .manifest-bento {
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
           }
 
           .manifest-featured {
-            grid-column: 1 / -1;
-            grid-row: auto !important;
-            min-height: 210px;
+            min-height: auto;
+          }
+
+          .manifest-featured-title,
+          .manifest-featured-desc {
+            max-width: none;
+          }
+
+          .manifest-watermark {
+            font-size: clamp(3.5rem, 22vw, 5rem);
+            right: 0.15rem;
+            bottom: 0;
           }
 
           .manifest-tile,
           .manifest-archive {
-            grid-column: auto !important;
-            grid-row: auto !important;
+            min-height: auto;
           }
         }
 
@@ -957,19 +978,46 @@ export function PortfolioSection({
           .work-grid--full { grid-template-columns: repeat(2, 1fr); }
         }
 
-        @media (max-width: 560px) {
-          .manifest-bento {
-            grid-template-columns: 1fr;
+        @media (max-width: 640px) {
+          .work-section--home {
+            padding-top: 40px !important;
+            padding-bottom: 56px !important;
           }
 
-          .manifest-featured {
-            grid-column: 1 !important;
+          .work-h2--compact {
+            font-size: clamp(1.45rem, 6.5vw, 1.85rem) !important;
           }
 
-          .manifest-tile,
+          .work-intro-copy--short {
+            font-size: 0.88rem;
+          }
+
+          .manifest-featured-inner {
+            padding: 1rem 1rem 1.05rem;
+          }
+
+          .manifest-tile {
+            padding: 0.85rem 0.9rem 0.85rem 1rem;
+          }
+
+          .manifest-tile-title {
+            font-size: 0.92rem;
+            min-height: auto;
+            -webkit-line-clamp: 3;
+          }
+
           .manifest-archive {
-            grid-column: 1 !important;
-            grid-row: auto !important;
+            padding: 1rem;
+          }
+
+          .work-footer-cta {
+            margin-top: 1.25rem;
+            padding-bottom: 0.5rem;
+          }
+
+          .work-footer-cta .btn-secondary {
+            width: 100%;
+            justify-content: center;
           }
 
           .work-grid,
