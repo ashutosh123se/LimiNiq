@@ -11,28 +11,28 @@ interface FAQItem {
 
 const FAQS: FAQItem[] = [
   {
-    q: "Do you require full payment upfront for web development?",
-    a: "We follow a 50/50 model — 50% to begin the project, 50% on final delivery before handover.",
+    q: "How is custom software priced?",
+    a: "Software and SaaS projects are scoped after a discovery call. MVPs typically start from ₹8 lakhs; enterprise platforms with multi-tenant architecture, integrations, and compliance requirements are quoted individually.",
   },
   {
-    q: "What's included in the 'support' period?",
-    a: "Bug fixes, minor content updates, and technical assistance. Does not include new features or redesigns.",
+    q: "Do you require full payment upfront?",
+    a: "For software projects we use milestone-based billing — typically 30% to start, with payments tied to agreed delivery phases. Web projects follow a 50/50 model.",
   },
   {
-    q: "Can I upgrade my SEO plan later?",
-    a: "Yes, anytime. We'll prorate the difference.",
+    q: "What's included in the support period?",
+    a: "Bug fixes, minor content updates, and technical assistance during the agreed warranty window. New features or scope changes are quoted separately.",
+  },
+  {
+    q: "Can I start with SEO and add software later?",
+    a: "Yes. Many clients begin with a web or marketing engagement and expand into custom software as their product roadmap grows.",
   },
   {
     q: "Do you offer custom packages not listed here?",
-    a: "Absolutely. Contact us for a tailored quote based on your exact requirements.",
+    a: "Every project is tailored. Contact us with your requirements and we'll send a detailed proposal after discovery.",
   },
   {
-    q: "How do you measure SEO results?",
-    a: "We provide monthly rank tracking reports, Google Analytics data, and conversion reports so you see exactly what's improving.",
-  },
-  {
-    q: "What technologies do you use for web development?",
-    a: "Next.js, React, Node.js, PostgreSQL — modern, fast, and built to scale. We do not use slow page builders or off-the-shelf templates.",
+    q: "What technologies do you use?",
+    a: "Next.js, React, Node.js, PostgreSQL, and cloud-native deployment on AWS or Vercel — modern stacks built to scale. No page builders or off-the-shelf templates.",
   },
 ];
 

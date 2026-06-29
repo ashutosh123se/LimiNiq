@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,12 +24,41 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const SERVICES = ["Website Development", "SEO", "Digital Marketing", "Full-Stack Suite"];
-const BUDGETS = ["Under ₹10K", "₹10K–₹30K", "₹30K–₹75K", "₹75K–₹2L", "₹2L+"];
+const SERVICES = [
+  "Custom Software & SaaS",
+  "Website Development",
+  "SEO",
+  "Digital Marketing",
+];
+
+const SERVICE_SLUG_MAP: Record<string, string> = {
+  "custom-software-saas": "Custom Software & SaaS",
+  "website-ecommerce": "Website Development",
+  "seo-search-engine-marketing": "SEO",
+  "digital-marketing": "Digital Marketing",
+};
+
+const BUDGETS = [
+  "Under ₹50K",
+  "₹50K–₹2L",
+  "₹2L–₹8L",
+  "₹8L–₹20L",
+  "₹20L+",
+  "Not sure yet",
+];
 const TIMELINES = ["ASAP", "Within 1 month", "1–3 months", "3–6 months", "Flexible"];
 const SOURCES = ["Google Search", "Social Media", "Referral", "Linkedin", "Instagram", "Other"];
 
 export function ContactPage() {
+  return (
+    <Suspense fallback={null}>
+      <ContactPageInner />
+    </Suspense>
+  );
+}
+
+function ContactPageInner() {
+  const searchParams = useSearchParams();
   const [submitState, setSubmitState] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const {
@@ -43,6 +73,15 @@ export function ContactPage() {
   });
 
   const selectedServices = watch("services") || [];
+
+  useEffect(() => {
+    const slug = searchParams.get("service");
+    if (!slug) return;
+    const mapped = SERVICE_SLUG_MAP[slug];
+    if (mapped) {
+      setValue("services", [mapped]);
+    }
+  }, [searchParams, setValue]);
 
   const toggleService = (service: string) => {
     const current = selectedServices;

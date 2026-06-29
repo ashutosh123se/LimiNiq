@@ -50,7 +50,7 @@ export default function HomePage() {
       <AuditTool />
       <PortfolioSection />
       <TestimonialsSection />
-      <PricingSection />
+      <PricingSection compact />
       <BlogPreviewSection />
       <AboutTeaser />
       <LeadCTASection />

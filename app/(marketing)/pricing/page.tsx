@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import { PricingSection } from "@/components/sections/home/PricingSection";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { ShieldCheck, UserCheck, Zap, RefreshCw } from "lucide-react";
-import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Simple, Honest Pricing",
-  description: "Transparent pricing for web development and SEO marketing. No hidden fees. Invest in high-performance digital growth.",
+  title: "Pricing & Starting Rates",
+  description:
+    "Starting rates for custom software, SaaS development, web projects, SEO, and digital marketing. Get a tailored quote after a free discovery call.",
   alternates: { canonical: "https://liminiq.com/pricing" },
 };
 
