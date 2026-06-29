@@ -5,6 +5,7 @@ import { leadSchema } from "@/lib/validations";
 import { calculateLeadScore, getScorePriority } from "@/lib/leadScoring";
 import { rateLimit, getClientIP } from "@/lib/rateLimit";
 import { sendAdminNotification, sendClientAutoReply } from "@/lib/email";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export const dynamic = 'force-dynamic';
 
@@ -84,8 +85,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/leads — List all leads (admin only, protected by middleware)
+// GET /api/leads — List all leads (admin only)
 export async function GET(req: NextRequest) {
+  const { error } = await requireAdmin();
+  if (error) return error;
+
   const { searchParams } = new URL(req.url);
   const page = Number(searchParams.get("page") || 1);
   const limit = Number(searchParams.get("limit") || 25);

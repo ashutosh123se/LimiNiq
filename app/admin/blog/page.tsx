@@ -18,6 +18,8 @@ interface BlogPost {
   published: boolean;
   views: number;
   tags: string[];
+  metaTitle?: string | null;
+  metaDesc?: string | null;
   postType: "ARTICLE" | "POLL";
   trending: boolean;
   pollOptions: { id: string; label: string; votes: number }[] | null;
@@ -46,6 +48,8 @@ const emptyPostForm = {
   published: false,
   tags: "",
   coverImage: "",
+  metaTitle: "",
+  metaDesc: "",
   postType: "ARTICLE" as "ARTICLE" | "POLL",
   trending: false,
   pollOptions: ["Option A", "Option B"],
@@ -126,6 +130,8 @@ export default function BlogAdminPage() {
       published: post.published,
       tags: post.tags.join(", "),
       coverImage: post.coverImage || "",
+      metaTitle: post.metaTitle || "",
+      metaDesc: post.metaDesc || "",
       postType: post.postType,
       trending: post.trending,
       pollOptions: opts.length >= 2 ? opts : ["Option A", "Option B"],
@@ -190,6 +196,8 @@ export default function BlogAdminPage() {
       published: postForm.published,
       tags: postForm.tags.split(",").map((t) => t.trim()).filter(Boolean),
       coverImage: postForm.coverImage,
+      metaTitle: postForm.metaTitle || null,
+      metaDesc: postForm.metaDesc || null,
       postType: postForm.postType,
       trending: postForm.trending,
       pollOptions,
@@ -402,6 +410,29 @@ export default function BlogAdminPage() {
               <div>
                 <label style={labelStyle}>Tags (comma separated)</label>
                 <input value={postForm.tags} onChange={(e) => setPostForm({ ...postForm, tags: e.target.value })} style={inputStyle} />
+              </div>
+              <div style={{ padding: "1rem", borderRadius: 10, background: "rgba(59,91,255,0.08)", border: "1px solid rgba(59,91,255,0.2)" }}>
+                <div style={{ fontWeight: 700, marginBottom: "0.75rem", fontSize: "0.9rem" }}>SEO (for Google & AI)</div>
+                <div style={{ marginBottom: "0.75rem" }}>
+                  <label style={labelStyle}>Meta title ({postForm.metaTitle.length}/60)</label>
+                  <input
+                    value={postForm.metaTitle}
+                    onChange={(e) => setPostForm({ ...postForm, metaTitle: e.target.value })}
+                    placeholder={postForm.title || "Defaults to post title"}
+                    maxLength={70}
+                    style={inputStyle}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Meta description ({postForm.metaDesc.length}/160)</label>
+                  <textarea
+                    value={postForm.metaDesc}
+                    onChange={(e) => setPostForm({ ...postForm, metaDesc: e.target.value })}
+                    placeholder={postForm.excerpt || "Defaults to excerpt"}
+                    maxLength={170}
+                    style={{ ...inputStyle, minHeight: 70 }}
+                  />
+                </div>
               </div>
               <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
                 <input type="checkbox" checked={postForm.trending} onChange={(e) => setPostForm({ ...postForm, trending: e.target.checked })} />

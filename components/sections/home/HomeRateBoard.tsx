@@ -4,8 +4,9 @@ import { useRef } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { STARTING_PRICES, type StartingPriceItem } from "@/lib/data/startingPrices";
+import type { StartingPriceItem } from "@/lib/data/startingPrices";
 import { contactServicePath } from "@/lib/contactServices";
+import { useStartingPrices } from "@/lib/hooks/useStartingPrices";
 
 function RateRow({
   item,
@@ -70,6 +71,7 @@ function RateRow({
 export function HomeRateBoard() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const { items: startingPrices } = useStartingPrices();
 
   return (
     <section ref={ref} className="rate-board section-padding">
@@ -118,7 +120,7 @@ export function HomeRateBoard() {
           </div>
 
           <ul className="rate-ledger-list">
-            {STARTING_PRICES.map((item, i) => (
+            {startingPrices.map((item, i) => (
               <RateRow
                 key={item.id}
                 item={item}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
@@ -10,6 +10,7 @@ import {
   getFeaturedProjects,
   type PortfolioProject,
 } from "@/lib/data/portfolioProjects";
+import { mapPortfolioItem } from "@/lib/portfolioDb";
 
 interface PortfolioSectionProps {
   showAll?: boolean;
@@ -201,8 +202,20 @@ export function PortfolioSection({
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [activeFilter, setActiveFilter] = useState<(typeof PORTFOLIO_FILTERS)[number]>("All");
+  const [projects, setProjects] = useState<PortfolioProject[]>(PORTFOLIO_PROJECTS);
 
-  const source = showAll ? PORTFOLIO_PROJECTS : getFeaturedProjects(limit);
+  useEffect(() => {
+    fetch("/api/portfolio")
+      .then((r) => r.json())
+      .then((items) => {
+        if (Array.isArray(items) && items.length > 0) {
+          setProjects(items.map((item: Parameters<typeof mapPortfolioItem>[0], i: number) => mapPortfolioItem(item, i)));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const source = showAll ? projects : getFeaturedProjects(limit, projects);
   const filtered =
     activeFilter === "All"
       ? source
@@ -212,7 +225,7 @@ export function PortfolioSection({
   const tileRows = Math.max(1, Math.ceil(secondaryProjects.length / 2));
   const showArchiveCell =
     !showAll && secondaryProjects.length > 0 && secondaryProjects.length % 2 === 1;
-  const archiveCount = Math.max(PORTFOLIO_PROJECTS.length - filtered.length, 0);
+  const archiveCount = Math.max(projects.length - filtered.length, 0);
 
   const getTilePlacement = (tileIndex: number) => {
     const row = Math.floor(tileIndex / 2) + 1;

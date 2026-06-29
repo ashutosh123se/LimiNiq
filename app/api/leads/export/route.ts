@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export const dynamic = 'force-dynamic';
 
 
 export async function GET(req: NextRequest) {
+  const { error } = await requireAdmin();
+  if (error) return error;
+
   const { searchParams } = new URL(req.url);
   const status = searchParams.get("status") as any;
   const service = searchParams.get("service");

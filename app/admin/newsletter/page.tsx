@@ -15,6 +15,12 @@ export default function NewsletterAdminPage() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<"subscribers" | "campaigns">("subscribers");
+  const [newEmail, setNewEmail] = useState("");
+  const [newName, setNewName] = useState("");
+  const [campaignSubject, setCampaignSubject] = useState("");
+  const [campaignBody, setCampaignBody] = useState("");
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     fetchSubscribers();
@@ -61,6 +67,40 @@ export default function NewsletterAdminPage() {
     }
   };
 
+  const addSubscriber = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEmail.trim()) return;
+    const res = await fetch("/api/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: newEmail.trim(), name: newName.trim() || undefined }),
+    });
+    if (res.ok) {
+      setNewEmail("");
+      setNewName("");
+      fetchSubscribers();
+    }
+  };
+
+  const sendCampaign = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!confirm(`Send "${campaignSubject}" to all active subscribers?`)) return;
+    setSending(true);
+    const res = await fetch("/api/admin/newsletter/campaigns", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ subject: campaignSubject, body: campaignBody, sendNow: true }),
+    });
+    if (res.ok) {
+      setCampaignSubject("");
+      setCampaignBody("");
+      alert("Campaign sent.");
+    } else {
+      alert("Failed to send campaign.");
+    }
+    setSending(false);
+  };
+
   const filtered = subscribers.filter((s) =>
     s.email.toLowerCase().includes(search.toLowerCase()) ||
     (s.name && s.name.toLowerCase().includes(search.toLowerCase()))
@@ -71,13 +111,50 @@ export default function NewsletterAdminPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
         <div>
           <h1 style={{ fontFamily: "var(--font-display)", fontSize: "1.75rem", fontWeight: 800, marginBottom: "0.5rem" }}>
-            Newsletter Subscribers
+            Newsletter
           </h1>
           <p style={{ color: "rgba(255,255,255,0.6)" }}>
-            Manage your email list and subscriptions.
+            Manage subscribers and send email campaigns.
           </p>
         </div>
       </div>
+
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem" }}>
+        {(["subscribers", "campaigns"] as const).map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setTab(t)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: 100,
+              border: tab === t ? "1px solid var(--accent-primary)" : "1px solid rgba(255,255,255,0.12)",
+              background: tab === t ? "rgba(59,91,255,0.15)" : "transparent",
+              color: "white",
+              cursor: "pointer",
+            }}
+          >
+            {t === "subscribers" ? "Subscribers" : "Send Campaign"}
+          </button>
+        ))}
+      </div>
+
+      {tab === "campaigns" ? (
+        <form onSubmit={sendCampaign} style={{ maxWidth: 560, marginBottom: "2rem", padding: "1.25rem", borderRadius: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+          <h2 style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>Compose newsletter</h2>
+          <input required placeholder="Subject line" value={campaignSubject} onChange={(e) => setCampaignSubject(e.target.value)} style={{ width: "100%", marginBottom: 8, padding: "0.65rem", borderRadius: 8, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(0,0,0,0.2)", color: "white" }} />
+          <textarea required placeholder="Email body (plain text — line breaks preserved)" value={campaignBody} onChange={(e) => setCampaignBody(e.target.value)} style={{ width: "100%", minHeight: 160, marginBottom: 12, padding: "0.65rem", borderRadius: 8, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(0,0,0,0.2)", color: "white" }} />
+          <button type="submit" className="btn-primary" disabled={sending}>{sending ? "Sending…" : "Send to all subscribers"}</button>
+        </form>
+      ) : (
+        <form onSubmit={addSubscriber} style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+          <input required type="email" placeholder="Add email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} style={{ flex: 1, minWidth: 200, padding: "0.65rem", borderRadius: 8, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(0,0,0,0.2)", color: "white" }} />
+          <input placeholder="Name (optional)" value={newName} onChange={(e) => setNewName(e.target.value)} style={{ flex: 1, minWidth: 140, padding: "0.65rem", borderRadius: 8, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(0,0,0,0.2)", color: "white" }} />
+          <button type="submit" className="btn-primary">Add subscriber</button>
+        </form>
+      )}
+
+      {tab === "subscribers" && (
 
       <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden" }}>
         <div style={{ padding: "1rem 1.5rem", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", gap: "1rem" }}>
@@ -162,6 +239,7 @@ export default function NewsletterAdminPage() {
           </table>
         )}
       </div>
+      )}
     </div>
   );
 }

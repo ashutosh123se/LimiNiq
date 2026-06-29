@@ -322,9 +322,10 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
 
 export const PORTFOLIO_FILTERS = ["All", "Software", "Web", "Marketing"] as const;
 
-export function getFeaturedProjects(limit?: number) {
-  const featured = PORTFOLIO_PROJECTS.filter((p) => p.featured);
-  return limit ? featured.slice(0, limit) : featured;
+export function getFeaturedProjects(limit?: number, list: PortfolioProject[] = PORTFOLIO_PROJECTS) {
+  const featured = list.filter((p) => p.featured);
+  const result = featured.length > 0 ? featured : list;
+  return limit ? result.slice(0, limit) : result;
 }
 
 export function getProjectById(id: string) {

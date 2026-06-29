@@ -4,8 +4,9 @@ import { useRef } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
-import { STARTING_PRICES, type StartingPriceItem } from "@/lib/data/startingPrices";
+import type { StartingPriceItem } from "@/lib/data/startingPrices";
 import { contactServicePath } from "@/lib/contactServices";
+import { useStartingPrices } from "@/lib/hooks/useStartingPrices";
 import { PricingFAQ } from "./PricingFAQ";
 import { PricingCTA } from "./PricingCTA";
 
@@ -97,8 +98,10 @@ function PriceCard({
 export function StartingPriceGrid({ showFAQ = false, compact = false }: StartingPriceGridProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const { items: startingPrices } = useStartingPrices();
 
-  const [featured, ...rest] = STARTING_PRICES;
+  const featured = startingPrices.find((p) => p.featured) ?? startingPrices[0];
+  const rest = startingPrices.filter((p) => p.id !== featured?.id);
 
   return (
     <section ref={ref} className="pricing-section section-padding">

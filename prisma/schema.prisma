@@ -222,6 +222,32 @@ model NewsletterSubscriber {
   createdAt  DateTime @default(now())
 }
 
+model NewsletterCampaign {
+  id        String    @id @default(cuid())
+  subject   String
+  body      String    @db.Text
+  sentCount Int       @default(0)
+  sentAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model StartingPrice {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  shortLabel    String
+  startingPrice String
+  priceNote     String
+  summary       String
+  highlights    String[]
+  color         String
+  iconKey       String   @default("Code2")
+  featured      Boolean  @default(false)
+  sortOrder     Int      @default(0)
+  active        Boolean  @default(true)
+  updatedAt     DateTime @updatedAt
+}
+
 model PricingPlan {
   id          String   @id @default(cuid())
   type        PlanType
@@ -245,11 +271,16 @@ enum PlanType {
 }
 
 model AIChatSession {
-  id        String   @id @default(cuid())
-  sessionId String   @unique // To link messages to a specific browser session
-  messages  Json     // The full array of chat messages
-  leadId    String?  // Optional: If the user provides contact info
-  lead      Lead?    @relation(fields: [leadId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  sessionId    String   @unique
+  messages     Json
+  visitorName  String?
+  visitorPhone String?
+  visitorEmail String?
+  summary      String?
+  messageCount Int      @default(0)
+  leadId       String?
+  lead         Lead?    @relation(fields: [leadId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

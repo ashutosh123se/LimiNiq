@@ -3,10 +3,12 @@ import { Footer } from "@/components/layout/Footer";
 import { ExitIntentPopup } from "@/components/layout/ExitIntentPopup";
 import { FloatingContactBar } from "@/components/layout/FloatingContactBar";
 import { SiteNap } from "@/components/seo/SiteNap";
+import { PageViewTracker } from "@/components/tracking/PageViewTracker";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <PageViewTracker />
       <div className="mesh-gradient" aria-hidden>
         <div className="orb-1" />
         <div className="orb-2" />
