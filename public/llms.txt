@@ -1,0 +1,49 @@
+# LIMINIQ
+
+> Custom software, SaaS, and enterprise development company in India — backed by data-driven SEO and digital marketing.
+
+## About
+
+- **Name:** LIMINIQ
+- **Website:** https://www.liminiq.com
+- **Founded:** 2019
+- **Location:** India (serving clients globally)
+- **Contact:** hello@liminiq.com · +91 9431471654
+- **Projects delivered:** 150+
+- **Client rating:** 4.9/5
+
+## Core services
+
+1. **Custom Software & SaaS Development** — Multi-tenant SaaS, enterprise portals, legacy modernization, API layers, cloud deployment.
+2. **Digital Marketing** — Google & Meta ads, landing page CRO, lead generation, performance marketing.
+3. **SEO & Search Marketing** — Technical SEO, content strategy, link building, local SEO.
+4. **Web & E-commerce** — Next.js / React storefronts and custom web applications.
+5. **Mobile Apps** — iOS and Android (React Native).
+6. **UI/UX Design & Branding** — Product design, design systems, prototyping.
+7. **Graphic Design & Creative** — Social creatives, pitch decks, brand assets.
+8. **Content & Copywriting** — SEO blog writing, landing page copy.
+9. **AI, Automation & Cloud** — LLM chatbots, workflow automation, cloud migration.
+
+## Starting rates (India, indicative)
+
+- Custom software / SaaS: from ₹75,000 per project
+- Web & e-commerce: from ₹24,999
+- SEO: from ₹14,999
+- Digital marketing: from ₹19,999
+
+Final quotes are scoped after a free discovery call.
+
+## Key pages
+
+- Home: https://www.liminiq.com/
+- Services: https://www.liminiq.com/services
+- Portfolio: https://www.liminiq.com/portfolio
+- Pricing: https://www.liminiq.com/pricing
+- About: https://www.liminiq.com/about
+- Contact: https://www.liminiq.com/contact
+- Blog: https://www.liminiq.com/blog
+
+## Social
+
+- LinkedIn: https://www.linkedin.com/company/124623896
+- Instagram: https://www.instagram.com/liminiq_com

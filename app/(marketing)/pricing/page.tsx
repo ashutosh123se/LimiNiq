@@ -2,13 +2,14 @@ import { Metadata } from "next";
 import { PricingSection } from "@/components/sections/home/PricingSection";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { ShieldCheck, UserCheck, Zap, RefreshCw } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Pricing & Starting Rates",
   description:
-    "Starting rates for custom software, SaaS development, web projects, SEO, and digital marketing. Get a tailored quote after a free discovery call.",
-  alternates: { canonical: "https://liminiq.com/pricing" },
-};
+    "Starting rates for custom software (from ₹75,000), web projects, SEO (from ₹14,999), and digital marketing. Transparent pricing — tailored quote after a free discovery call.",
+  path: "/pricing",
+});
 
 const TRUST_POINTS = [
   { icon: <ShieldCheck size={24} />, title: "Transparent Pricing", desc: "No hidden fees or surprise invoices. Ever." },

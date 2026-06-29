@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { SITE_CONTACT, SITE_SOCIAL } from "@/lib/site";
 
 const FOOTER_LINKS = {
   services: [
@@ -27,7 +28,7 @@ const FOOTER_LINKS = {
 const SOCIAL_LINKS = [
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/company/124623896/admin/dashboard/",
+    href: SITE_SOCIAL.linkedin,
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
@@ -38,7 +39,7 @@ const SOCIAL_LINKS = [
   },
   {
     label: "Instagram",
-    href: "https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv",
+    href: SITE_SOCIAL.instagram,
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -119,8 +120,13 @@ export function Footer() {
             <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.65)", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: "1.5rem", maxWidth: 240 }}>
               Building the digital future, one ambitious brand at a time.
             </p>
-            <p style={{ fontFamily: "var(--font-heading)", color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "1rem" }}>
+            <p style={{ fontFamily: "var(--font-heading)", color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
               Based in India. Building Globally.
+            </p>
+            <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.45)", fontSize: "0.88rem", lineHeight: 1.6, marginBottom: "1rem" }}>
+              <a href={`mailto:${SITE_CONTACT.email}`} style={{ color: "rgba(255,255,255,0.65)", textDecoration: "none" }}>{SITE_CONTACT.email}</a>
+              <span style={{ margin: "0 0.5rem", opacity: 0.35 }}>·</span>
+              <a href={`tel:${SITE_CONTACT.phoneTel}`} style={{ color: "rgba(255,255,255,0.65)", textDecoration: "none" }}>{SITE_CONTACT.phone}</a>
             </p>
             {/* Social links */}
             <div style={{ display: "flex", gap: "0.75rem" }}>

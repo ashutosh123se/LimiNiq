@@ -2,13 +2,16 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import { BlogListing } from "@/components/sections/blog/BlogListing";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Insights & Strategy Blog",
-  description:
-    "Read the latest insights on custom software development, SaaS engineering, SEO strategies, and digital marketing from the LIMINIQ team.",
-  alternates: { canonical: "https://liminiq.com/blog" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return buildPageMetadata({
+    title: "Insights & Strategy Blog",
+    description:
+      "Read the latest insights on custom software development, SaaS engineering, SEO strategies, and digital marketing from the LIMINIQ team.",
+    path: "/blog",
+  });
+}
 
 export default function BlogPage() {
   return (

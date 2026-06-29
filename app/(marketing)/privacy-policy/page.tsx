@@ -1,11 +1,13 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
-  description: "Learn how LIMINIQ collects, uses, and protects your personal information.",
-  alternates: { canonical: "https://liminiq.com/privacy-policy" },
-};
+  description:
+    "How LIMINIQ collects, uses, stores, and protects your personal information when you use our website and services.",
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   return (

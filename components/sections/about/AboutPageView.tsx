@@ -61,6 +61,9 @@ export function AboutPageView() {
             <p className="about-hero-lede">
               We&apos;re a collective of engineers, designers, and growth strategists partnering with ambitious brands to build scalable digital engines — software first, marketing backed by data.
             </p>
+            <p className="about-hero-facts">
+              Founded in 2019 · 150+ projects delivered · 80+ global clients · 4.9 client rating · Based in India, serving clients worldwide.
+            </p>
 
             <div className="about-hero-actions">
               <Link href="/contact" className="btn-primary">
@@ -335,6 +338,16 @@ export function AboutPageView() {
           color: var(--text-secondary);
           line-height: 1.65;
           max-width: 34rem;
+          margin: 0 0 0.85rem;
+        }
+        .about-hero-facts {
+          font-family: var(--font-mono);
+          font-size: 0.78rem;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          color: var(--text-tertiary);
+          line-height: 1.6;
+          max-width: 36rem;
           margin: 0 0 1.75rem;
         }
         .about-hero-actions {

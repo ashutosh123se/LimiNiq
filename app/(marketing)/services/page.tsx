@@ -5,12 +5,14 @@ import { SERVICES } from "@/lib/data/services";
 import { TIER_1_SLUGS } from "@/lib/data/serviceExtensions";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { ArrowUpRight } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Our Services",
-  description: "Explore our comprehensive suite of digital services including custom software, SaaS, web development, mobile apps, UI/UX, marketing, and SEO.",
-  alternates: { canonical: "https://liminiq.com/services" },
-};
+  description:
+    "Nine delivery disciplines under one team: custom software & SaaS, digital marketing, SEO, web development, mobile apps, UI/UX, creative, content, and AI/cloud solutions.",
+  path: "/services",
+});
 
 export default function ServicesPage() {
   const tier1 = TIER_1_SLUGS.map((slug) => SERVICES.find((s) => s.slug === slug)).filter(Boolean) as typeof SERVICES;

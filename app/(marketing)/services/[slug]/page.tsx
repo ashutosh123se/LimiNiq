@@ -4,6 +4,8 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { ServicePageView } from "@/components/sections/services/ServicePageView";
 import { SERVICES } from "@/lib/data/services";
 import { getServiceExtension } from "@/lib/data/serviceExtensions";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbSchema, serviceSchema } from "@/lib/seo/schema";
 
 type Params = Promise<{ slug: string }>;
 
@@ -14,12 +16,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
   if (!service) return { title: "Service Not Found" };
 
-  return {
+  return buildPageMetadata({
     title: extension?.metaTitle ?? service.title,
     description: extension?.metaDescription ?? service.subtitle,
+    path: `/services/${slug}`,
     keywords: extension?.metaKeywords,
-    alternates: { canonical: `https://liminiq.com/services/${slug}` },
-  };
+  });
 }
 
 export default async function ServicePage({ params }: { params: Params }) {
@@ -29,29 +31,23 @@ export default async function ServicePage({ params }: { params: Params }) {
 
   if (!service) notFound();
 
-  const serviceSchema = extension
-    ? {
-        "@context": "https://schema.org",
-        "@type": "Service",
-        name: service.title,
-        serviceType: extension.serviceType,
-        provider: {
-          "@type": "Organization",
-          name: "LIMINIQ",
-          url: "https://liminiq.com",
-        },
-        description: extension.metaDescription,
-        areaServed: {
-          "@type": "Country",
-          name: "India",
-        },
-        url: `https://liminiq.com/services/${slug}`,
-      }
-    : null;
-
   return (
     <>
-      {serviceSchema && <JsonLd data={serviceSchema} />}
+      <JsonLd
+        data={serviceSchema({
+          name: service.title,
+          slug,
+          serviceType: extension?.serviceType ?? service.title,
+          description: extension?.metaDescription ?? service.subtitle,
+        })}
+      />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: service.shortTitle, path: `/services/${slug}` },
+        ])}
+      />
       <ServicePageView
         service={{
           slug: service.slug,

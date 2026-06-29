@@ -1,11 +1,13 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Terms of Service",
-  description: "Terms and conditions for using LIMINIQ's digital agency services.",
-  alternates: { canonical: "https://liminiq.com/terms-of-service" },
-};
+  description:
+    "Terms and conditions governing use of the LIMINIQ website, services, and client engagements.",
+  path: "/terms-of-service",
+});
 
 export default function TermsOfServicePage() {
   return (

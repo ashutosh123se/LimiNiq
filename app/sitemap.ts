@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
 import { SERVICES } from '@/lib/data/services';
+import { SITE_URL } from '@/lib/site';
 
 export const revalidate = 86400; // Cache for 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://liminiq.com';
+  const baseUrl = SITE_URL;
 
   // Fetch dynamic blog posts
   let blogPosts: { slug: string; updatedAt: Date }[] = [];
@@ -75,6 +76,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'yearly' as const,
       priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms-of-service`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
     },
   ];
 

@@ -4,13 +4,14 @@ import { ArrowUpRight } from "lucide-react";
 import { PortfolioSection } from "@/components/sections/home/PortfolioSection";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { getFeaturedProject } from "@/lib/data/portfolioProjects";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Our Work & Deliveries",
   description:
-    "Software platforms, web products, and marketing systems built by LIMINIQ for clients across India.",
-  alternates: { canonical: "https://liminiq.com/portfolio" },
-};
+    "Software platforms, web products, and marketing systems built by LIMINIQ for clients across India — LeadFlow AI, PropSearch, StockSense, and more.",
+  path: "/portfolio",
+});
 
 export default function PortfolioPage() {
   const featured = getFeaturedProject();

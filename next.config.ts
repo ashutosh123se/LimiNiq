@@ -9,6 +9,16 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "liminiq.com" }],
+        destination: "https://www.liminiq.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

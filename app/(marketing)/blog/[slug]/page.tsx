@@ -3,22 +3,36 @@ import { prisma } from "@/lib/prisma";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { BlogPollWidget } from "@/components/sections/blog/BlogPollWidget";
 import { TrendingTopicsBar } from "@/components/sections/blog/TrendingTopicsBar";
+import { JsonLd } from "@/components/seo/JsonLd";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Eye, Flame } from "lucide-react";
 import type { PollOption } from "@/lib/data/blogEngagement";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { articleSchema, breadcrumbSchema } from "@/lib/seo/schema";
+import type { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   try {
     const post = await prisma.blogPost.findUnique({ where: { slug } });
     if (!post) return { title: "Post Not Found" };
-    return {
+
+    return buildPageMetadata({
       title: post.metaTitle || post.title,
-      description: post.metaDesc || post.excerpt,
-      openGraph: { images: [post.ogImage || post.coverImage || ""] },
-    };
+      description: post.metaDesc || post.excerpt || `Read ${post.title} on the LIMINIQ blog.`,
+      path: `/blog/${slug}`,
+      ogImage: post.ogImage || post.coverImage || "/api/og",
+    });
   } catch {
-    return { title: "Blog Post" };
+    return buildPageMetadata({
+      title: "Blog Post",
+      description: "Insights on software, SEO, and digital marketing from LIMINIQ.",
+      path: `/blog/${slug}`,
+    });
   }
 }
 
@@ -42,6 +56,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <article style={{ background: "var(--bg-primary)", minHeight: "100vh" }}>
+      <JsonLd
+        data={articleSchema({
+          title: post.title,
+          slug: post.slug,
+          description: post.excerpt,
+          author: post.author,
+          publishedAt: post.publishedAt,
+          updatedAt: post.updatedAt,
+          image: post.ogImage || post.coverImage,
+        })}
+      />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: post.title, path: `/blog/${post.slug}` },
+        ])}
+      />
+
       <header
         style={{
           padding: isPoll ? "8rem 0 3rem" : "10rem 0 6rem",
