@@ -78,18 +78,20 @@ function StatCell({
 
       <div className="impact-cell-value">
         {stat.prefix && <span className="impact-cell-prefix">{stat.prefix}</span>}
-        {isInView ? (
-          <CountUp
-            start={0}
-            end={stat.number}
-            duration={2.2}
-            delay={index * 0.12}
-            useEasing
-            separator=","
-          />
-        ) : (
-          0
-        )}
+        <span className="impact-cell-number">
+          {isInView ? (
+            <CountUp
+              start={0}
+              end={stat.number}
+              duration={2.2}
+              delay={index * 0.12}
+              useEasing
+              separator=","
+            />
+          ) : (
+            stat.number.toLocaleString('en-IN')
+          )}
+        </span>
         <span className="impact-cell-suffix">{stat.suffix}</span>
       </div>
 
@@ -117,6 +119,10 @@ export function StatsStrip() {
           <span className="impact-strip-dot" />
           Live impact telemetry
         </motion.div>
+
+        <p className="impact-board-sr-summary">
+          150+ projects delivered since 2019 · $12M+ revenue generated for clients · 98% client retention rate
+        </p>
 
         <div className="impact-board">
           {STATS.map((stat, i) => (
@@ -176,6 +182,18 @@ export function StatsStrip() {
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 0.75rem;
           align-items: stretch;
+        }
+
+        .impact-board-sr-summary {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border: 0;
         }
 
         .impact-cell {

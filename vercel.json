@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "liminiq.com" }],
+      "destination": "https://www.liminiq.com/:path*",
+      "permanent": true
+    }
+  ]
+}
