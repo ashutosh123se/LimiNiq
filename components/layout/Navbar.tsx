@@ -150,9 +150,9 @@ export function Navbar() {
                             position: 'absolute',
                             top: '100%',
                             left: '50%',
-                            transform: 'translateX(-50%)',
+                            transform: 'translateX(-28%)',
                             paddingTop: '1.25rem',
-                            zIndex: 100,
+                            zIndex: 200,
                           }}
                         >
                           <ServicesMegaMenu onConsultClick={() => router.push('/contact')} />

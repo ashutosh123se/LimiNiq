@@ -149,8 +149,32 @@ body {
     linear-gradient(rgba(59,91,255,0.07) 1px, transparent 1px),
     linear-gradient(90deg, rgba(59,91,255,0.07) 1px, transparent 1px);
   background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 20%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 130% 95% at 50% 50%, black 15%, transparent 98%);
+  -webkit-mask-image: radial-gradient(ellipse 130% 95% at 50% 50%, black 15%, transparent 98%);
+}
+
+/* Soft horizontal edge fade for full-bleed marquees (replaces harsh mask cutoffs) */
+.edge-fade-x {
+  position: relative;
+  overflow: hidden;
+}
+.edge-fade-x::before,
+.edge-fade-x::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(48px, 7vw, 112px);
+  z-index: 2;
+  pointer-events: none;
+}
+.edge-fade-x::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-base), transparent);
+}
+.edge-fade-x::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-base), transparent);
 }
 
 body::after {

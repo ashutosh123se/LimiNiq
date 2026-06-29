@@ -96,13 +96,6 @@ export function HeroSection() {
 
   return (
     <section className="hero-section">
-      <div className="mesh-gradient">
-        <div className="orb-1" />
-        <div className="orb-2" />
-        <div className="orb-3" />
-      </div>
-      <div className="grid-overlay" />
-
       <div className="hero-canvas-wrap">
         <HeroCanvas />
       </div>
@@ -154,7 +147,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="hero-marquee-wrap">
+      <div className="hero-marquee-wrap edge-fade-x">
         <div className="hero-marquee">
           {[...TECH_MARQUEE, ...TECH_MARQUEE].map((item, i) => (
             <span key={`${item}-${i}`} className="hero-marquee-item">
@@ -484,11 +477,21 @@ export function HeroSection() {
           position: relative;
           z-index: 10;
           border-top: 1px solid rgba(255, 255, 255, 0.06);
-          background: rgba(4, 5, 8, 0.6);
+          background: linear-gradient(
+            90deg,
+            rgba(8, 12, 20, 0.92) 0%,
+            rgba(4, 5, 8, 0.55) 12%,
+            rgba(4, 5, 8, 0.55) 88%,
+            rgba(8, 12, 20, 0.92) 100%
+          );
           backdrop-filter: blur(10px);
           padding: 1rem 0;
-          overflow: hidden;
-          mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+        }
+        .hero-marquee-wrap::before {
+          background: linear-gradient(to right, rgba(8, 12, 20, 0.98), transparent);
+        }
+        .hero-marquee-wrap::after {
+          background: linear-gradient(to left, rgba(8, 12, 20, 0.98), transparent);
         }
 
         .hero-marquee {

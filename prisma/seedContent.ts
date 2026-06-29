@@ -1,20 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { PORTFOLIO_PROJECTS } from "../lib/data/portfolioProjects";
+import { TESTIMONIALS } from "../lib/data/testimonials";
 
 const prisma = new PrismaClient();
-
-const TESTIMONIALS = [
-  { name: "Rohan Mehta", company: "TechScale SaaS", role: "CEO", quote: "LIMINIQ rebuilt our platform and organic traffic shot up 420% in 4 months. The team is insanely talented — they think like product builders, not just developers.", rating: 5, service: "Web Dev" },
-  { name: "Priya Sharma", company: "HealthFirst Clinics", role: "Marketing Director", quote: "We rank #1 for 45 high-intent keywords now. Our patient inquiries doubled in 6 months. LIMINIQ's SEO team is exceptional — data-driven and results-obsessed.", rating: 5, service: "SEO" },
-  { name: "Arjun Kapoor", company: "LearnSphere EdTech", role: "Founder", quote: "Our Meta campaigns went from a 1.2x ROAS to 4.8x in just 8 weeks. The level of optimisation and attention to detail is unlike any agency I've worked with.", rating: 5, service: "Digital Marketing" },
-  { name: "Sneha Iyer", company: "PropVault Realty", role: "Co-Founder", quote: "Website speed went from 42 to 98 on PageSpeed, and our lead form conversions tripled. LIMINIQ delivered exactly what they promised, on time.", rating: 5, service: "Web Dev" },
-  { name: "Vikram Singh", company: "LegalEdge LLP", role: "Managing Partner", quote: "Our firm now dominates local search in 3 cities. Revenue from organic search grew 220% year-over-year. Best investment we've made in marketing.", rating: 5, service: "SEO" },
-  { name: "Anika Joshi", company: "CraftBite Foods", role: "Brand Head", quote: "They launched our Instagram commerce strategy and we hit ₹1Cr in online sales in month 3. The team feels like an extension of our internal team.", rating: 5, service: "Digital Marketing" },
-  { name: "Deepak Nair", company: "CloudStack IT", role: "CTO", quote: "LIMINIQ built our entire B2B web app from scratch — clean architecture, flawless UI, and delivered 2 weeks early. Rare to find this level of craft.", rating: 5, service: "Web Dev" },
-  { name: "Meera Pillai", company: "Organic Root", role: "Founder", quote: "We were invisible on Google. 6 months with LIMINIQ and we're ranking for 200+ keywords. Organic orders now make up 65% of our revenue.", rating: 5, service: "SEO" },
-  { name: "Rahul Gupta", company: "QuickFin Loans", role: "VP Marketing", quote: "Our cost per acquisition dropped 58% while lead volume grew 3x. The LIMINIQ team's command of Google Ads is genuinely world-class.", rating: 5, service: "Digital Marketing" },
-  { name: "Tanvi Choudhary", company: "StyleHub Fashion", role: "E-Commerce Head", quote: "The new Shopify store LIMINIQ built loads in under 0.8 seconds and our cart abandonment fell 40%. Revenue per visitor is up 2.4x.", rating: 5, service: "Web Dev" },
-];
 
 const BLOG_POSTS = [
   { title: "The Future of Headless Commerce in 2024", slug: "headless-commerce-2024", excerpt: "Why moving away from monolithic platforms is essential for scaling e-commerce brands.", content: "Full content here...", category: "Web Dev", coverImage: null, author: "LIMINIQ Team", published: true, postType: "ARTICLE" as const, trending: true, tags: ["commerce", "nextjs"] },
@@ -71,8 +59,39 @@ async function main() {
 
   for (const item of TESTIMONIALS) {
     const exists = await prisma.testimonial.findFirst({ where: { name: item.name } });
-    if (!exists) await prisma.testimonial.create({ data: item });
+    if (exists) {
+      await prisma.testimonial.update({
+        where: { id: exists.id },
+        data: {
+          company: item.company,
+          role: item.role,
+          quote: item.quote,
+          rating: item.rating,
+          service: item.service,
+          active: item.active ?? true,
+        },
+      });
+    } else {
+      await prisma.testimonial.create({
+        data: {
+          name: item.name,
+          company: item.company,
+          role: item.role,
+          quote: item.quote,
+          rating: item.rating,
+          service: item.service,
+          avatar: item.avatar ?? null,
+          active: item.active ?? true,
+        },
+      });
+    }
   }
+
+  const activeNames = TESTIMONIALS.map((t) => t.name);
+  await prisma.testimonial.updateMany({
+    where: { name: { notIn: activeNames } },
+    data: { active: false },
+  });
   console.log(`Seeded testimonials.`);
 
   for (const item of BLOG_POSTS) {

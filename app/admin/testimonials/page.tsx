@@ -280,8 +280,8 @@ export default function TestimonialsAdminPage() {
                       <input value={formData.avatar} onChange={e => setFormData({...formData, avatar: e.target.value})} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px", color: "white", outline: "none" }} />
                     </div>
                     <div>
-                      <label style={{ display: "block", marginBottom: "0.5rem", color: "rgba(255,255,255,0.6)", fontSize: "0.85rem" }}>Rating (1-5)</label>
-                      <input type="number" min={1} max={5} required value={formData.rating} onChange={e => setFormData({...formData, rating: Number(e.target.value)})} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px", color: "white", outline: "none" }} />
+                      <label style={{ display: "block", marginBottom: "0.5rem", color: "rgba(255,255,255,0.6)", fontSize: "0.85rem" }}>Rating (4–5, half stars OK)</label>
+                      <input type="number" min={4} max={5} step={0.5} required value={formData.rating} onChange={e => setFormData({...formData, rating: Number(e.target.value)})} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px", color: "white", outline: "none" }} />
                     </div>
                   </div>
 

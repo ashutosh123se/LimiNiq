@@ -144,21 +144,30 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
       <style>{`
         .mega-menu {
           position: relative;
-          width: min(920px, calc(100vw - 2rem));
+          width: min(920px, calc(100vw - 3rem));
           overflow: hidden;
           border-radius: 22px;
           padding: 0;
-          border-color: rgba(255, 255, 255, 0.1) !important;
+          border-color: rgba(255, 255, 255, 0.12) !important;
+          background: rgba(8, 12, 22, 0.98) !important;
+          backdrop-filter: blur(28px) saturate(160%);
+          -webkit-backdrop-filter: blur(28px) saturate(160%);
+          box-shadow:
+            0 28px 90px rgba(0, 0, 0, 0.72),
+            0 0 0 1px rgba(255, 255, 255, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06);
+          isolation: isolate;
         }
 
         .mega-menu-accent-glow {
           position: absolute;
           inset: 0;
           pointer-events: none;
+          z-index: 0;
           background: radial-gradient(
-            ellipse 55% 70% at 85% 40%,
-            color-mix(in srgb, var(--mega-accent) 16%, transparent),
-            transparent 60%
+            ellipse 50% 65% at 92% 42%,
+            color-mix(in srgb, var(--mega-accent) 14%, transparent),
+            transparent 55%
           );
           transition: background 0.35s ease;
         }
@@ -167,7 +176,8 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
           position: absolute;
           inset: 0;
           pointer-events: none;
-          opacity: 0.35;
+          z-index: 0;
+          opacity: 0.22;
           background-image:
             linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
@@ -189,6 +199,9 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
           display: flex;
           flex-direction: column;
           gap: 1rem;
+          position: relative;
+          z-index: 2;
+          background: rgba(6, 9, 18, 0.92);
         }
 
         .mega-menu-head {
@@ -320,6 +333,11 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
           line-height: 1.25;
         }
 
+        .mega-support {
+          position: relative;
+          z-index: 1;
+        }
+
         .mega-support-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -336,7 +354,8 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
           text-decoration: none;
           position: relative;
           overflow: hidden;
-          border: 1px solid transparent;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: rgba(255, 255, 255, 0.04);
           transition: all 0.22s ease;
         }
 
@@ -395,7 +414,7 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
         .mega-support-text em {
           font-style: normal;
           font-size: 0.68rem;
-          color: var(--text-tertiary);
+          color: var(--text-secondary);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -419,10 +438,11 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
         .mega-preview {
           position: relative;
           overflow: hidden;
+          z-index: 2;
           background: linear-gradient(
             165deg,
-            color-mix(in srgb, var(--mega-accent) 12%, rgba(0,0,0,0.35)),
-            rgba(0, 0, 0, 0.45)
+            color-mix(in srgb, var(--mega-accent) 14%, rgba(8, 12, 22, 0.98)),
+            rgba(6, 9, 18, 0.98)
           );
         }
 
@@ -442,15 +462,16 @@ export function ServicesMegaMenu({ onConsultClick }: ServicesMegaMenuProps) {
         .mega-preview-watermark {
           position: absolute;
           right: 0.5rem;
-          bottom: -0.5rem;
+          bottom: 0.25rem;
           font-family: var(--font-heading);
-          font-size: 5rem;
+          font-size: 4rem;
           font-weight: 900;
           line-height: 1;
           letter-spacing: -0.06em;
-          color: color-mix(in srgb, var(--mega-accent) 10%, transparent);
+          color: color-mix(in srgb, var(--mega-accent) 8%, transparent);
           pointer-events: none;
           user-select: none;
+          z-index: 0;
         }
 
         .mega-preview-body {

@@ -193,7 +193,7 @@ model Testimonial {
   company   String
   role      String
   quote     String
-  rating    Int      @default(5)
+  rating    Float    @default(5)
   avatar    String?
   service   String
   active    Boolean  @default(true)

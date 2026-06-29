@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useId } from 'react'
+import { TESTIMONIALS as FALLBACK_TESTIMONIALS_DATA, clampTestimonialRating } from '@/lib/data/testimonials'
 
 interface Testimonial {
   name: string
@@ -39,18 +40,7 @@ const AVATAR_COLORS = [
   '#c5221f',
 ]
 
-const FALLBACK_TESTIMONIALS: Testimonial[] = [
-  { name: 'Rohan Mehta', company: 'TechScale SaaS', role: 'CEO', quote: 'LIMINIQ rebuilt our platform and organic traffic shot up 420% in 4 months. The team is insanely talented — they think like product builders, not just developers.', rating: 5, service: 'Web Dev' },
-  { name: 'Priya Sharma', company: 'HealthFirst Clinics', role: 'Marketing Director', quote: "We rank #1 for 45 high-intent keywords now. Our patient inquiries doubled in 6 months. LIMINIQ's SEO team is exceptional — data-driven and results-obsessed.", rating: 5, service: 'SEO' },
-  { name: 'Arjun Kapoor', company: 'LearnSphere EdTech', role: 'Founder', quote: "Our Meta campaigns went from a 1.2x ROAS to 4.8x in just 8 weeks. The level of optimisation and attention to detail is unlike any agency I've worked with.", rating: 5, service: 'Digital Marketing' },
-  { name: 'Sneha Iyer', company: 'PropVault Realty', role: 'Co-Founder', quote: 'Website speed went from 42 to 98 on PageSpeed, and our lead form conversions tripled. LIMINIQ delivered exactly what they promised, on time.', rating: 5, service: 'Web Dev' },
-  { name: 'Vikram Singh', company: 'LegalEdge LLP', role: 'Managing Partner', quote: "Our firm now dominates local search in 3 cities. Revenue from organic search grew 220% year-over-year. Best investment we've made in marketing.", rating: 5, service: 'SEO' },
-  { name: 'Anika Joshi', company: 'CraftBite Foods', role: 'Brand Head', quote: 'They launched our Instagram commerce strategy and we hit ₹1Cr in online sales in month 3. The team feels like an extension of our internal team.', rating: 5, service: 'Digital Marketing' },
-  { name: 'Deepak Nair', company: 'CloudStack IT', role: 'CTO', quote: 'LIMINIQ built our entire B2B web app from scratch — clean architecture, flawless UI, and delivered 2 weeks early. Rare to find this level of craft.', rating: 5, service: 'Web Dev' },
-  { name: 'Meera Pillai', company: 'Organic Root', role: 'Founder', quote: "We were invisible on Google. 6 months with LIMINIQ and we're ranking for 200+ keywords. Organic orders now make up 65% of our revenue.", rating: 5, service: 'SEO' },
-  { name: 'Rahul Gupta', company: 'QuickFin Loans', role: 'VP Marketing', quote: "Our cost per acquisition dropped 58% while lead volume grew 3x. The LIMINIQ team's command of Google Ads is genuinely world-class.", rating: 5, service: 'Digital Marketing' },
-  { name: 'Tanvi Choudhary', company: 'StyleHub Fashion', role: 'E-Commerce Head', quote: 'The new Shopify store LIMINIQ built loads in under 0.8 seconds and our cart abandonment fell 40%. Revenue per visitor is up 2.4x.', rating: 5, service: 'Web Dev' },
-]
+const FALLBACK_TESTIMONIALS: Testimonial[] = FALLBACK_TESTIMONIALS_DATA
 
 function GoogleMark({ size = 18 }: { size?: number }) {
   return (
@@ -64,16 +54,31 @@ function GoogleMark({ size = 18 }: { size?: number }) {
 }
 
 function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
+  const uid = useId()
+  const clamped = Math.min(5, Math.max(0, rating))
+
   return (
-    <span className="greview-stars" aria-label={`${rating} out of 5 stars`}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-          <path
-            fill={i < rating ? '#FBBC04' : '#dadce0'}
-            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-          />
-        </svg>
-      ))}
+    <span className="greview-stars" aria-label={`${clamped} out of 5 stars`}>
+      {Array.from({ length: 5 }).map((_, i) => {
+        const fill = Math.min(1, Math.max(0, clamped - i))
+        const fillPercent = `${fill * 100}%`
+        const gradId = `gstar-${uid}-${i}`
+
+        return (
+          <svg key={i} width={size} height={size} viewBox="0 0 24 24" aria-hidden>
+            <defs>
+              <linearGradient id={gradId}>
+                <stop offset={fillPercent} stopColor="#FBBC04" />
+                <stop offset={fillPercent} stopColor="#dadce0" />
+              </linearGradient>
+            </defs>
+            <path
+              fill={`url(#${gradId})`}
+              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+            />
+          </svg>
+        )
+      })}
     </span>
   )
 }
@@ -87,8 +92,27 @@ function getAvatarColor(name: string) {
 function enrichTestimonial(t: Testimonial, index: number): Testimonial {
   return {
     ...t,
+    rating: clampTestimonialRating(t.rating),
     reviewedAt: t.reviewedAt || REVIEW_AGO[index % REVIEW_AGO.length],
   }
+}
+
+function mergeTestimonials(api: Testimonial[]): Testimonial[] {
+  if (!api.length) {
+    return FALLBACK_TESTIMONIALS.map(enrichTestimonial)
+  }
+
+  const apiByName = new Map(api.map((t) => [t.name, t]))
+  const merged = FALLBACK_TESTIMONIALS.map((fallback, i) =>
+    enrichTestimonial(apiByName.get(fallback.name) ?? fallback, i)
+  )
+
+  const fallbackNames = new Set(FALLBACK_TESTIMONIALS.map((t) => t.name))
+  const extras = api
+    .filter((t) => !fallbackNames.has(t.name))
+    .map((t, i) => enrichTestimonial(t, merged.length + i))
+
+  return [...merged, ...extras]
 }
 
 function GoogleReviewCard({ testimonial, index }: { testimonial: Testimonial; index: number }) {
@@ -123,7 +147,12 @@ function GoogleReviewCard({ testimonial, index }: { testimonial: Testimonial; in
       <p className="greview-text">{testimonial.quote}</p>
 
       <div className="greview-foot">
-        <span className="greview-role">{testimonial.role}, {testimonial.company}</span>
+        <div className="greview-foot-left">
+          {testimonial.service && (
+            <span className="greview-service">{testimonial.service}</span>
+          )}
+          <span className="greview-role">{testimonial.role}, {testimonial.company}</span>
+        </div>
         <span className="greview-verified">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path d="M9 12l2 2 4-4" stroke="#1a73e8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -145,9 +174,8 @@ export function TestimonialsSection() {
     fetch('/api/testimonials?active=true')
       .then((res) => res.json())
       .then((data: Testimonial[]) => {
-        if (data && data.length > 0) {
-          const enriched = data.map((t, i) => enrichTestimonial(t, i))
-          setTestimonials(enriched.length < 6 ? [...enriched, ...enriched, ...enriched] : enriched)
+        if (Array.isArray(data)) {
+          setTestimonials(mergeTestimonials(data))
         }
       })
       .catch(() => {})
@@ -156,9 +184,10 @@ export function TestimonialsSection() {
   const mid = Math.ceil(testimonials.length / 2)
   const row1 = [...testimonials.slice(0, mid), ...testimonials.slice(0, mid)]
   const row2 = [...testimonials.slice(mid), ...testimonials.slice(mid)]
-  const avgRating = (
+  const avgRatingNum =
     testimonials.reduce((sum, t) => sum + (t.rating || 5), 0) / testimonials.length
-  ).toFixed(1)
+  const avgRating = avgRatingNum.toFixed(1)
+  const summaryStars = Math.round(avgRatingNum * 2) / 2
 
   return (
     <section className="greviews-section section-padding">
@@ -181,7 +210,7 @@ export function TestimonialsSection() {
 
           <div className="greviews-summary glass-card-premium">
             <div className="greviews-summary-score">{avgRating}</div>
-            <StarRating rating={5} size={18} />
+            <StarRating rating={summaryStars} size={18} />
             <p className="greviews-summary-label">Based on {testimonials.length}+ Google reviews</p>
             <a
               href="https://www.google.com/search?q=LIMINIQ+reviews"
@@ -196,7 +225,9 @@ export function TestimonialsSection() {
             </a>
           </div>
         </div>
+      </div>
 
+      <div className="greviews-marquee-zone edge-fade-x">
         <div className="greviews-marquee greviews-marquee--a">
           <div className="greviews-track">
             {row1.map((t, i) => (
@@ -322,10 +353,15 @@ export function TestimonialsSection() {
           gap: 1px;
         }
 
+        .greviews-marquee-zone {
+          position: relative;
+          z-index: 1;
+          width: 100%;
+          margin-top: 0.25rem;
+        }
+
         .greviews-marquee {
           margin-bottom: 1rem;
-          mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
-          -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
         }
 
         .greviews-track {
@@ -429,12 +465,33 @@ export function TestimonialsSection() {
 
         .greview-foot {
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           justify-content: space-between;
           gap: 0.5rem;
           flex-wrap: wrap;
           padding-top: 0.35rem;
           border-top: 1px solid #f1f3f4;
+        }
+
+        .greview-foot-left {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          min-width: 0;
+        }
+
+        .greview-service {
+          display: inline-block;
+          width: fit-content;
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: #1a73e8;
+          background: #e8f0fe;
+          padding: 0.2rem 0.45rem;
+          border-radius: 4px;
         }
 
         .greview-role {

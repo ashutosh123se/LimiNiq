@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { clampTestimonialRating } from "@/lib/data/testimonials";
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         company: body.company,
         role: body.role,
         quote: body.quote,
-        rating: body.rating,
+        rating: body.rating !== undefined ? clampTestimonialRating(body.rating) : undefined,
         avatar: body.avatar,
         service: body.service,
         active: body.active,

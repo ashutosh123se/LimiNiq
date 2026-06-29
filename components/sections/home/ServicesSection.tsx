@@ -644,7 +644,7 @@ export function ServicesSection() {
         }
 
         .secondary-panel {
-          padding: 0.75rem;
+          padding: 0.35rem 0;
           border-radius: 28px;
           overflow: visible;
           width: 100%;
@@ -654,7 +654,7 @@ export function ServicesSection() {
           grid-template-columns: repeat(3, minmax(0, 1fr));
           grid-auto-rows: 1fr;
           align-items: stretch;
-          gap: 0.65rem;
+          gap: 0.5rem;
           width: 100%;
         }
         .secondary-cell-wrap {

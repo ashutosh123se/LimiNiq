@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { clampTestimonialRating } from "@/lib/data/testimonials";
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
         company: body.company,
         role: body.role,
         quote: body.quote,
-        rating: body.rating || 5,
+        rating: clampTestimonialRating(body.rating || 5),
         avatar: body.avatar || null,
         service: body.service,
         active: body.active !== undefined ? body.active : true,
