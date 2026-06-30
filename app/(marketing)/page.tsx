@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { HeroSection } from "@/components/sections/home/HeroSection";
 import { StatsStrip } from "@/components/sections/home/StatsStrip";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { HOME_SEO } from "@/lib/seo/homeMetadata";
 import { HomeCrawlableIntro } from "@/components/seo/HomeCrawlableIntro";
+import { websiteJsonLd } from "@/lib/seo/schema";
 
 const ServicesSection = dynamic(() =>
   import("@/components/sections/home/ServicesSection").then((m) => m.ServicesSection)
@@ -53,6 +55,7 @@ export const metadata: Metadata = buildPageMetadata({
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={websiteJsonLd()} />
       <HeroSection />
       <StatsStrip />
       <ServicesSection />

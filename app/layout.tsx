@@ -74,6 +74,7 @@ export default function RootLayout({
     <html lang="en-IN" suppressHydrationWarning>
       <head>
         <SitewideSchema />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
       </head>
       <body suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} ${syne.variable}`}>
         <SmoothScrollProvider>

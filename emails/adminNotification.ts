@@ -1,3 +1,5 @@
+import { SITE_URL } from "@/lib/site";
+
 export function adminNotificationTemplate(lead: {
   name: string;
   email: string;
@@ -14,7 +16,7 @@ export function adminNotificationTemplate(lead: {
 }): string {
   const scoreColor = lead.score >= 75 ? "#00C8A0" : lead.score >= 50 ? "#FBB034" : "#ef4444";
   const scoreLabel = lead.score >= 75 ? "HOT 🔥" : lead.score >= 50 ? "WARM" : "COLD";
-  const dashboardUrl = `${process.env.NEXTAUTH_URL || "https://liminiq.com"}/admin/leads/${lead.id}`;
+  const dashboardUrl = `${process.env.NEXTAUTH_URL || SITE_URL}/admin/leads/${lead.id}`;
 
   return `<!DOCTYPE html>
 <html lang="en">

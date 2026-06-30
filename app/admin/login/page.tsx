@@ -5,10 +5,12 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
+import { SITE_URL } from "@/lib/site";
+
 function normalizeCallbackUrl(url: string) {
   if (url.startsWith("/") && !url.startsWith("//")) return url;
   try {
-    const parsed = new URL(url, "https://liminiq.com");
+    const parsed = new URL(url, SITE_URL);
     return `${parsed.pathname}${parsed.search}`;
   } catch {
     return "/admin";

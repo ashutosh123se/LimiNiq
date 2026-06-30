@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  trailingSlash: false,
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
@@ -14,6 +15,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "liminiq.com" }],
+        destination: "https://www.liminiq.com/:path*",
+        permanent: true,
+      },
       {
         source: "/contact",
         has: [{ type: "query", key: "service", value: "(?<slug>.*)" }],

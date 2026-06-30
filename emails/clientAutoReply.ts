@@ -1,9 +1,11 @@
+import { SITE_URL } from "@/lib/site";
+
 export function clientAutoReplyTemplate(lead: {
   name: string;
   services: string[];
 }): string {
   const firstName = lead.name.split(" ")[0];
-  const siteUrl = process.env.NEXTAUTH_URL || "https://liminiq.com";
+  const siteUrl = process.env.NEXTAUTH_URL || SITE_URL;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -84,7 +86,7 @@ export function followUpTemplate(data: {
   calendlyLink?: string;
 }): string {
   const firstName = data.name.split(" ")[0];
-  const siteUrl = process.env.NEXTAUTH_URL || "https://liminiq.com";
+  const siteUrl = process.env.NEXTAUTH_URL || SITE_URL;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -122,7 +124,7 @@ export function followUpTemplate(data: {
 
 export function newsletterWelcomeTemplate(data: { name?: string }): string {
   const name = data.name ? data.name.split(" ")[0] : "there";
-  const siteUrl = process.env.NEXTAUTH_URL || "https://liminiq.com";
+  const siteUrl = process.env.NEXTAUTH_URL || SITE_URL;
 
   return `<!DOCTYPE html>
 <html lang="en">

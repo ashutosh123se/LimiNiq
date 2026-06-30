@@ -20,7 +20,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
-    url: SITE_URL,
+    url: absoluteUrl("/"),
     logo: {
       "@type": "ImageObject",
       url: `${SITE_URL}/apple-icon`,
@@ -66,7 +66,7 @@ export function localBusinessJsonLd() {
     "@type": "LocalBusiness",
     "@id": `${SITE_URL}/#localbusiness`,
     name: SITE_NAME,
-    url: SITE_URL,
+    url: absoluteUrl("/"),
     image: `${SITE_URL}/apple-icon`,
     telephone: SITE_CONTACT.phone,
     email: SITE_CONTACT.email,
@@ -89,6 +89,21 @@ export function localBusinessJsonLd() {
       name: "India",
     },
     sameAs: [SITE_SOCIAL.linkedin, SITE_SOCIAL.instagram],
+  };
+}
+
+/** Top-level WebSite JSON-LD for homepage indexing signals. */
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: absoluteUrl("/"),
+    name: SITE_NAME,
+    description:
+      "Custom software, SaaS, and enterprise development company also offering SEO and digital marketing services.",
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    inLanguage: "en-IN",
   };
 }
 
