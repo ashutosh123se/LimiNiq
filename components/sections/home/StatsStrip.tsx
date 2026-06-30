@@ -1,8 +1,6 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import CountUp from 'react-countup'
 import { Briefcase, TrendingUp, HeartHandshake } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -45,19 +43,14 @@ const STATS: {
 function StatCell({
   stat,
   index,
-  isInView,
 }: {
   stat: (typeof STATS)[number]
   index: number
-  isInView: boolean
 }) {
   const Icon = stat.icon
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+    <article
       className={`impact-cell ${index === 1 ? 'impact-cell--center' : ''}`}
       style={{ '--impact-accent': stat.accent } as React.CSSProperties}
     >
@@ -78,47 +71,29 @@ function StatCell({
 
       <div className="impact-cell-value">
         {stat.prefix && <span className="impact-cell-prefix">{stat.prefix}</span>}
-        <span className="impact-cell-number">
-          {isInView ? (
-            <CountUp
-              start={0}
-              end={stat.number}
-              duration={2.2}
-              delay={index * 0.12}
-              useEasing
-              separator=","
-            />
-          ) : (
-            stat.number.toLocaleString('en-IN')
-          )}
-        </span>
+        <span className="impact-cell-number">{stat.number.toLocaleString('en-IN')}</span>
         <span className="impact-cell-suffix">{stat.suffix}</span>
       </div>
 
       <div className="impact-cell-label">{stat.label}</div>
       <div className="impact-cell-sub">{stat.sublabel}</div>
       <div className="impact-cell-bar" />
-    </motion.article>
+    </article>
   )
 }
 
 export function StatsStrip() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
     <section ref={ref} className="impact-strip">
       <div className="impact-strip-grid-bg" aria-hidden />
 
       <div className="section-container impact-strip-inner">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="impact-strip-label"
-        >
+        <div className="impact-strip-label">
           <span className="impact-strip-dot" />
           Live impact telemetry
-        </motion.div>
+        </div>
 
         <p className="impact-board-sr-summary">
           150+ projects delivered since 2019 · $12M+ revenue generated for clients · 98% client retention rate
@@ -126,7 +101,7 @@ export function StatsStrip() {
 
         <div className="impact-board">
           {STATS.map((stat, i) => (
-            <StatCell key={stat.label} stat={stat} index={i} isInView={isInView} />
+            <StatCell key={stat.label} stat={stat} index={i} />
           ))}
         </div>
       </div>

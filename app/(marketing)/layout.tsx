@@ -1,14 +1,11 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ExitIntentPopup } from "@/components/layout/ExitIntentPopup";
-import { FloatingContactBar } from "@/components/layout/FloatingContactBar";
+import { DeferredMarketingChrome } from "@/components/layout/DeferredMarketingChrome";
 import { SiteNap } from "@/components/seo/SiteNap";
-import { PageViewTracker } from "@/components/tracking/PageViewTracker";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <PageViewTracker />
       <div className="mesh-gradient" aria-hidden>
         <div className="orb-1" />
         <div className="orb-2" />
@@ -20,9 +17,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <main>{children}</main>
       <SiteNap />
       <Footer />
-      {/* <WhatsAppButton /> Replaced by FloatingContactBar */}
-      <FloatingContactBar />
-      <ExitIntentPopup />
+      <DeferredMarketingChrome />
     </>
   );
 }

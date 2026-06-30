@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 export default async function middleware(req: NextRequest) {
+  const host = req.headers.get("host")?.split(":")[0];
+  if (host === "liminiq.com") {
+    const url = req.nextUrl.clone();
+    url.protocol = "https:";
+    url.host = "www.liminiq.com";
+    return NextResponse.redirect(url, 308);
+  }
+
   const { pathname } = req.nextUrl;
 
   // Protect all /admin/* routes except /admin/login
@@ -33,5 +41,7 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|icon|apple-icon|images|robots.txt|sitemap.xml|api/og).*)",
+  ],
 };

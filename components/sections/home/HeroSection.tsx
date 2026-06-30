@@ -1,136 +1,36 @@
-'use client'
-
-import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, Code2, TrendingUp, BarChart3 } from 'lucide-react'
-import { MagneticButton } from '@/components/ui/MagneticButton'
-import { ClientErrorBoundary } from '@/components/ui/ClientErrorBoundary'
-
-const HeroCanvas = dynamic(
-  () => import('@/components/three/HeroCanvas').then((m) => m.HeroCanvas),
-  { ssr: false }
-)
-
-const PILLARS = [
-  { icon: Code2, label: 'Software', color: '#7B61FF' },
-  { icon: BarChart3, label: 'Marketing', color: '#0EA5E9' },
-  { icon: TrendingUp, label: 'SEO', color: '#00C8A0' },
-]
+import { HeroActions } from "@/components/sections/home/HeroActions";
+import { HeroVisual } from "@/components/sections/home/HeroVisual";
 
 const TECH_MARQUEE = [
-  'Next.js', 'Node.js', 'PostgreSQL', 'AWS', 'TypeScript', 'React', 'SEO', 'Meta Ads', 'SaaS', 'Docker',
-]
-
-const fade = (delay = 0, x = 0, lite = false) =>
-  lite
-    ? {}
-    : {
-        initial: { opacity: 0, y: 28, x },
-        animate: { opacity: 1, y: 0, x: 0, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay } },
-      }
-
-function HeroBlueprint({ lite = false }: { lite?: boolean }) {
-  return (
-    <div className="hero-blueprint">
-      <div className="hero-blueprint-grid" />
-      <div className="hero-blueprint-ring hero-blueprint-ring--outer" />
-      <div className="hero-blueprint-ring hero-blueprint-ring--inner" />
-
-      {PILLARS.map((pillar, i) => {
-        const angle = (i * 120 - 90) * (Math.PI / 180)
-        const radius = 46
-        return (
-          <motion.div
-            key={pillar.label}
-            className="hero-orbit-node"
-            style={{
-              left: `${50 + radius * Math.cos(angle)}%`,
-              top: `${50 + radius * Math.sin(angle)}%`,
-              borderColor: `${pillar.color}55`,
-              boxShadow: `0 0 20px ${pillar.color}25`,
-            }}
-            initial={lite ? false : { opacity: 0, scale: 0.8 }}
-            animate={lite ? undefined : { opacity: 1, scale: 1 }}
-            transition={lite ? undefined : { delay: 0.6 + i * 0.12, duration: 0.5 }}
-          >
-            <span className="hero-orbit-icon" style={{ color: pillar.color }}>
-              <pillar.icon size={18} strokeWidth={1.5} />
-            </span>
-            <span>{pillar.label}</span>
-          </motion.div>
-        )
-      })}
-
-      <div className="hero-blueprint-core glass-card-premium">
-        <div className="hero-core-label">Delivery Stack</div>
-        <div className="hero-core-flow">
-          <span>Build</span>
-          <span className="hero-core-arrow">→</span>
-          <span>Launch</span>
-          <span className="hero-core-arrow">→</span>
-          <span>Scale</span>
-        </div>
-        <div className="hero-core-code">
-          <span className="hero-code-line"><i>const</i> product = <b>engineer()</b>;</span>
-          <span className="hero-code-line"><i>await</i> product.<b>scale</b>(growth);</span>
-        </div>
-      </div>
-
-      <motion.div
-        className="hero-float-stat hero-float-stat--top"
-        initial={lite ? false : { opacity: 0, y: 16 }}
-        animate={lite ? undefined : { opacity: 1, y: 0 }}
-        transition={lite ? undefined : { delay: 1, duration: 0.6 }}
-      >
-        <span className="hero-float-value">150+</span>
-        <span className="hero-float-label">Projects</span>
-      </motion.div>
-
-      <motion.div
-        className="hero-float-stat hero-float-stat--bottom"
-        initial={lite ? false : { opacity: 0, y: 16 }}
-        animate={lite ? undefined : { opacity: 1, y: 0 }}
-        transition={lite ? undefined : { delay: 1.15, duration: 0.6 }}
-      >
-        <span className="hero-float-value">4.9★</span>
-        <span className="hero-float-label">Rated</span>
-      </motion.div>
-    </div>
-  )
-}
+  "Next.js",
+  "Node.js",
+  "PostgreSQL",
+  "AWS",
+  "TypeScript",
+  "React",
+  "SEO",
+  "Meta Ads",
+  "SaaS",
+  "Docker",
+];
 
 export function HeroSection() {
-  const router = useRouter()
-  const reducedMotion = useReducedMotion()
-  const [lite, setLite] = useState(true)
-
-  useEffect(() => {
-    setLite(reducedMotion || window.matchMedia('(pointer: coarse)').matches)
-  }, [reducedMotion])
-
   return (
     <section className="hero-section">
-      {!lite && (
-        <div className="hero-canvas-wrap">
-          <ClientErrorBoundary>
-            <HeroCanvas />
-          </ClientErrorBoundary>
-        </div>
-      )}
-
-      <div className="hero-watermark" aria-hidden>01</div>
+      <div className="hero-watermark" aria-hidden>
+        01
+      </div>
 
       <div className="section-container hero-shell">
         <div className="hero-grid">
           <div className="hero-copy">
-            <motion.div {...fade(0.1, 0, lite)} className="hero-eyebrow-row">
+            <div className="hero-eyebrow-row">
               <span className="hero-index">01 / Build</span>
               <div className="pill-badge shimmer">
-                <span style={{ color: 'var(--accent-primary)' }}>✦</span> India&apos;s Software-Led Agency
+                <span style={{ color: "var(--accent-primary)" }}>✦</span> India&apos;s Software-Led
+                Agency
               </div>
-            </motion.div>
+            </div>
 
             <h1 className="hero-h1 hero-h1--editorial">
               <span className="hero-h1-line">Custom Software &amp; SaaS</span>
@@ -138,25 +38,17 @@ export function HeroSection() {
               <span className="hero-h1-sub text-gradient">Backed by Data-Driven Marketing</span>
             </h1>
 
-            <motion.p {...fade(0.48, 0, lite)} className="hero-lede">
-              From multi-tenant platforms to growth engines — we architect the product,
-              then own the pipeline that fills it.
-            </motion.p>
+            <p className="hero-lede">
+              From multi-tenant platforms to growth engines — we architect the product, then own the
+              pipeline that fills it.
+            </p>
 
-            <motion.div {...fade(0.58, 0, lite)} className="hero-actions">
-              <MagneticButton className="btn-primary" data-cursor="cta" onClick={() => router.push('/contact')}>
-                Start Your Project
-                <ArrowRight size={16} strokeWidth={2} />
-              </MagneticButton>
-              <MagneticButton className="btn-secondary" data-cursor="link" onClick={() => router.push('/portfolio')}>
-                View Our Work
-              </MagneticButton>
-            </motion.div>
+            <HeroActions />
           </div>
 
-          <motion.div {...fade(0.4, 24, lite)} className="hero-visual-col">
-            <HeroBlueprint lite={lite} />
-          </motion.div>
+          <div className="hero-visual-col hero-visual-col--desktop">
+            <HeroVisual />
+          </div>
         </div>
       </div>
 
@@ -255,18 +147,6 @@ export function HeroSection() {
           margin: 0 0 1.5rem;
         }
 
-        .hero-h1-pre {
-          display: flex;
-          flex-direction: column;
-          gap: 0.08em;
-          font-family: var(--font-heading);
-          font-size: clamp(2rem, 4.2vw, 3.35rem);
-          font-weight: 800;
-          line-height: 1.08;
-          letter-spacing: -0.035em;
-          color: var(--text-primary);
-        }
-
         .hero-h1-line {
           display: block;
           overflow-wrap: normal;
@@ -275,15 +155,6 @@ export function HeroSection() {
 
         .hero-h1-nowrap {
           white-space: nowrap;
-        }
-
-        .hero-h1-highlight {
-          display: inline-block;
-          padding: 0.02em 0.28em;
-          border-radius: 10px;
-          background: linear-gradient(135deg, rgba(59,91,255,0.25), rgba(123,97,255,0.15));
-          border: 1px solid rgba(123, 97, 255, 0.35);
-          box-shadow: 0 0 30px rgba(59, 91, 255, 0.15);
         }
 
         .hero-h1-sub {
@@ -502,12 +373,6 @@ export function HeroSection() {
           backdrop-filter: blur(10px);
           padding: 1rem 0;
         }
-        .hero-marquee-wrap::before {
-          background: linear-gradient(to right, rgba(8, 12, 20, 0.98), transparent);
-        }
-        .hero-marquee-wrap::after {
-          background: linear-gradient(to left, rgba(8, 12, 20, 0.98), transparent);
-        }
 
         .hero-marquee {
           display: flex;
@@ -550,9 +415,6 @@ export function HeroSection() {
           .hero-copy {
             padding-right: 0.5rem;
           }
-          .hero-visual-col {
-            justify-content: center;
-          }
           .hero-blueprint {
             max-width: 520px;
           }
@@ -567,11 +429,10 @@ export function HeroSection() {
             padding-bottom: 2.5rem;
           }
           .hero-watermark {
-            top: 8%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 5rem;
-            opacity: 0.5;
+            display: none;
+          }
+          .hero-visual-col--desktop {
+            display: none !important;
           }
           .hero-copy {
             text-align: center;
@@ -587,18 +448,29 @@ export function HeroSection() {
           .hero-actions {
             justify-content: center;
           }
-          .hero-canvas-wrap {
-            width: 100%;
-            height: 60%;
-            top: auto;
-            bottom: 0;
-            mask-image: linear-gradient(to top, black 20%, transparent 80%);
+        }
+
+        @media (max-width: 640px) {
+          .hero-section {
+            padding-top: 5.5rem;
           }
-          .hero-blueprint {
-            width: min(100%, 340px);
+          .hero-h1-nowrap {
+            white-space: normal;
+          }
+          .hero-marquee-wrap {
+            backdrop-filter: none;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-marquee {
+            animation: none;
+          }
+          .hero-blueprint-ring {
+            animation: none;
           }
         }
       `}</style>
     </section>
-  )
+  );
 }

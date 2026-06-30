@@ -25,8 +25,15 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false)
   const [mobileServicesExpanded, setMobileServicesExpanded] = useState(false)
+  const [skipIntroMotion, setSkipIntroMotion] = useState(true)
   const pathname = usePathname()
   const router = useRouter()
+
+  useEffect(() => {
+    const coarse = window.matchMedia('(pointer: coarse)').matches
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    setSkipIntroMotion(coarse || reduced || window.innerWidth < 960)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -44,9 +51,9 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
+        initial={skipIntroMotion ? false : { y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={skipIntroMotion ? { duration: 0 } : { duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         style={{
           position: 'fixed',
           top: 0,
