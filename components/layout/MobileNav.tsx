@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Phone, X } from "lucide-react";
-import { NAV_LINKS, MEGA_MENU, WHATSAPP_URL } from "@/data/navigation";
+import { NAV_LINKS, MEGA_MENU, WHATSAPP_URL, type NavLink } from "@/data/navigation";
 import { SITE_CONTACT } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { revealVariants, staggerFast } from "@/lib/motion";
@@ -23,19 +23,98 @@ interface MobileNavProps {
   onClose: () => void;
 }
 
+function SubAccordion({
+  link,
+  open,
+  onToggle,
+  onClose,
+}: {
+  link: NavLink;
+  open: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="border-b border-border-subtle/60">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between py-4 text-left text-[1.35rem] font-semibold text-text-primary"
+        aria-expanded={open}
+      >
+        {link.label}
+        <ChevronDown className={cn("h-5 w-5 text-text-muted transition-transform", open && "rotate-180")} />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="space-y-1 pb-4 pl-1">
+              {link.mega &&
+                MEGA_MENU.columns.map((col) => (
+                  <div key={col.title} className="mb-3">
+                    <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-text-muted">
+                      {col.title}
+                    </p>
+                    {col.items.map((item) => (
+                      <Link
+                        key={`${item.href}-${item.label}`}
+                        href={item.href}
+                        onClick={onClose}
+                        className="block rounded-lg px-2 py-2 text-sm text-text-secondary hover:bg-white/5 hover:text-accent"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                ))}
+              {link.dropdown?.items.map((item) => (
+                <Link
+                  key={`${item.href}-${item.label}`}
+                  href={item.href}
+                  onClick={onClose}
+                  className="block rounded-lg px-2 py-2.5 text-sm text-text-secondary hover:bg-white/5 hover:text-accent"
+                >
+                  <span className="font-medium text-text-primary">{item.label}</span>
+                  {item.description && (
+                    <span className="mt-0.5 block text-xs text-text-muted">{item.description}</span>
+                  )}
+                </Link>
+              ))}
+              {(link.dropdown?.footer || link.mega) && (
+                <Link
+                  href={link.dropdown?.footer?.href ?? "/services"}
+                  onClick={onClose}
+                  className="mt-2 inline-flex px-2 text-sm font-semibold text-accent"
+                >
+                  {link.dropdown?.footer?.label ?? "All services →"}
+                </Link>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function MobileNav({ open, onClose }: MobileNavProps) {
   const pathname = usePathname();
-  const [servicesOpen, setServicesOpen] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
 
   useEffect(() => {
     onClose();
-    setServicesOpen(false);
-    // Only react to route changes, not to identity changes of onClose.
+    setOpenAccordion(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   useEffect(() => {
-    if (!open) setServicesOpen(false);
+    if (!open) setOpenAccordion(null);
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
@@ -48,11 +127,10 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
         <>
           <motion.div
             key="mobile-nav-backdrop"
-            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm xl:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
             onClick={onClose}
             aria-hidden
           />
@@ -61,21 +139,21 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"
-            className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-bg-secondary shadow-2xl shadow-black/50 lg:hidden"
+            className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-bg-secondary shadow-2xl xl:hidden"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-subtle px-5">
-              <span className="font-[family-name:var(--font-heading)] text-lg font-extrabold tracking-tight text-text-primary">
+              <span className="font-[family-name:var(--font-heading)] text-lg font-extrabold text-text-primary">
                 LIMINIQ
               </span>
               <button
                 type="button"
                 aria-label="Close menu"
                 onClick={onClose}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-text-primary transition-colors hover:border-accent/40 hover:text-accent"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle"
               >
                 <X size={18} />
               </button>
@@ -85,98 +163,32 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
               variants={staggerFast}
               initial="hidden"
               animate="visible"
-              className="flex-1 overflow-y-auto px-5 py-4"
+              className="flex-1 overflow-y-auto px-5 py-2"
             >
               {NAV_LINKS.map((link) => {
-                const isMega = "mega" in link && link.mega;
-                const isActive = pathname === link.href;
-
-                if (isMega) {
+                const hasSub = Boolean(link.mega || link.dropdown);
+                if (hasSub) {
                   return (
-                    <motion.div
-                      key={link.href}
-                      variants={revealVariants}
-                      className="border-b border-border-subtle/60"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setServicesOpen((v) => !v)}
-                        aria-expanded={servicesOpen}
-                        className="flex w-full items-center justify-between py-3.5 text-left"
-                      >
-                        <span
-                          className={cn(
-                            "text-lg font-semibold",
-                            isActive ? "text-accent" : "text-text-primary"
-                          )}
-                        >
-                          {link.label}
-                        </span>
-                        <ChevronDown
-                          size={18}
-                          className={cn(
-                            "text-text-muted transition-transform duration-200",
-                            servicesOpen && "rotate-180 text-accent"
-                          )}
-                        />
-                      </button>
-                      <AnimatePresence initial={false}>
-                        {servicesOpen && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25, ease: "easeInOut" }}
-                            className="overflow-hidden"
-                          >
-                            <div className="flex flex-col gap-5 pb-5 pl-1 pt-1">
-                              {MEGA_MENU.columns.map((column) => (
-                                <div key={column.title}>
-                                  <p className="mb-2 font-[family-name:var(--font-mono)] text-[11px] font-semibold uppercase tracking-widest text-text-muted">
-                                    {column.title}
-                                  </p>
-                                  <ul className="flex flex-col gap-2.5">
-                                    {column.items.map((item) => (
-                                      <li key={item.href}>
-                                        <Link
-                                          href={item.href}
-                                          onClick={onClose}
-                                          className="text-sm text-text-secondary transition-colors hover:text-text-primary"
-                                        >
-                                          {item.label}
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              ))}
-                              <Link
-                                href={MEGA_MENU.footerCta.href}
-                                onClick={onClose}
-                                className="text-sm font-semibold text-accent"
-                              >
-                                {MEGA_MENU.footerCta.label} →
-                              </Link>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                    <motion.div key={link.href} variants={revealVariants}>
+                      <SubAccordion
+                        link={link}
+                        open={openAccordion === link.href}
+                        onToggle={() =>
+                          setOpenAccordion(openAccordion === link.href ? null : link.href)
+                        }
+                        onClose={onClose}
+                      />
                     </motion.div>
                   );
                 }
-
                 return (
-                  <motion.div
-                    key={link.href}
-                    variants={revealVariants}
-                    className="border-b border-border-subtle/60"
-                  >
+                  <motion.div key={link.href} variants={revealVariants}>
                     <Link
                       href={link.href}
                       onClick={onClose}
                       className={cn(
-                        "block py-3.5 text-lg font-semibold",
-                        isActive ? "text-accent" : "text-text-primary"
+                        "block border-b border-border-subtle/60 py-4 text-[1.35rem] font-semibold",
+                        pathname === link.href ? "text-accent" : "text-text-primary"
                       )}
                     >
                       {link.label}
@@ -186,30 +198,22 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
               })}
             </motion.nav>
 
-            <div className="flex shrink-0 flex-col gap-3 border-t border-border-subtle px-5 py-5">
-              <div className="flex items-center gap-3">
-                <a
-                  href={`tel:${SITE_CONTACT.phoneTel}`}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border-subtle py-3 text-sm font-medium text-text-secondary transition-colors hover:border-accent/40 hover:text-text-primary"
-                >
-                  <Phone size={16} />
-                  Call
-                </a>
-                <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex flex-1 items-center justify-center gap-2 rounded-full border border-[#25D366]/30 py-3 text-sm font-medium text-[#25D366] transition-colors hover:bg-[#25D366]/10"
-                >
-                  <WhatsAppIcon className="h-4 w-4" />
-                  WhatsApp
-                </a>
-              </div>
-              <Link
-                href="/contact#audit"
-                onClick={onClose}
-                className="btn-primary w-full justify-center"
+            <div className="shrink-0 space-y-3 border-t border-border-subtle p-5">
+              <a
+                href={`tel:${SITE_CONTACT.phoneTel}`}
+                className="flex items-center gap-3 rounded-xl border border-border-subtle px-4 py-3 text-sm text-text-secondary"
               >
+                <Phone size={16} /> {SITE_CONTACT.phone}
+              </a>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-xl border border-[#25D366]/30 bg-[#25D366]/10 px-4 py-3 text-sm text-[#25D366]"
+              >
+                <WhatsAppIcon className="h-4 w-4" /> WhatsApp us
+              </a>
+              <Link href="/contact#audit" onClick={onClose} className="btn-primary w-full justify-center">
                 Get Free Audit
               </Link>
             </div>

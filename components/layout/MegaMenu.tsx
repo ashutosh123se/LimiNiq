@@ -20,29 +20,37 @@ interface MegaMenuProps {
 export function MegaMenu({ onNavigate, className }: MegaMenuProps) {
   return (
     <div
-      className={`w-[860px] max-w-[92vw] overflow-hidden rounded-2xl border border-border-subtle bg-bg-secondary/98 shadow-2xl shadow-black/60 backdrop-blur-xl ${className ?? ""}`}
+      className={`w-[920px] max-w-[94vw] overflow-hidden rounded-2xl border border-border-subtle bg-bg-secondary/98 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl ${className ?? ""}`}
     >
-      <div className="grid grid-cols-4 gap-6 p-8">
+      <div
+        className="h-px w-full"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(108,92,231,0.6), rgba(34,211,238,0.5), transparent)",
+        }}
+      />
+      <div className="grid grid-cols-4 gap-5 p-7">
         {MEGA_MENU.columns.map((column) => (
           <div key={column.title} className="min-w-0">
-            <h4 className="mb-4 font-[family-name:var(--font-mono)] text-[11px] font-semibold uppercase tracking-widest text-text-muted">
+            <h4 className="mb-3 font-[family-name:var(--font-mono)] text-[10px] font-semibold uppercase tracking-[0.16em] text-signal">
               {column.title}
             </h4>
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col gap-0.5">
               {column.items.map((item) => {
                 const Icon = getIcon(item.icon);
                 return (
-                  <li key={item.href}>
+                  <li key={`${item.href}-${item.label}`}>
                     <Link
                       href={item.href}
                       onClick={onNavigate}
-                      className="group -mx-2 flex items-start gap-2.5 rounded-lg px-2 py-2 text-sm text-text-secondary transition-colors hover:bg-white/5 hover:text-text-primary"
+                      className="group -mx-2 flex items-start gap-2.5 rounded-xl px-2 py-2.5 text-sm text-text-secondary transition-all hover:bg-accent/10 hover:text-text-primary"
                     >
-                      <Icon
-                        size={16}
-                        className="mt-0.5 shrink-0 text-accent transition-transform group-hover:scale-110"
-                      />
-                      <span className="leading-snug">{item.label}</span>
+                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-white/[0.03] text-accent transition-transform group-hover:scale-110 group-hover:border-accent/40">
+                        <Icon size={14} />
+                      </span>
+                      <span className="leading-snug group-hover:underline group-hover:decoration-accent/50 group-hover:underline-offset-4">
+                        {item.label}
+                      </span>
                     </Link>
                   </li>
                 );

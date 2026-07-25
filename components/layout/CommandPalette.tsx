@@ -31,17 +31,21 @@ interface PaletteItem {
 
 /** Hardcoded blog post titles (DB-backed blog has no static export to import from). */
 const BLOG_POSTS = [
-  { title: "Core Web Vitals 2025: The Complete Developer's Playbook", slug: "core-web-vitals-2025-guide" },
-  { title: "Entity SEO: Why Google's Knowledge Graph Is Your Biggest Ranking Lever", slug: "seo-entity-building-strategy" },
-  { title: "The Future of Headless Commerce in 2024", slug: "headless-commerce-2024" },
-  { title: "Maximizing Meta Ads ROAS with AI Creatives", slug: "meta-ads-ai-creatives" },
+  { title: "Core Web Vitals 2025: The Complete Developer's Playbook", slug: "core-web-vitals-2025" },
+  { title: "Entity SEO: Why Google's Knowledge Graph Is Your Biggest Ranking Lever", slug: "entity-seo-knowledge-graph" },
+  { title: "Why Your Website Isn't Ranking on AI Search Engines", slug: "why-website-not-ranking-ai-search" },
+  { title: "Headless Commerce in 2026: When It's Worth the Migration", slug: "headless-commerce-2026" },
 ];
 
 const QUICK_PAGES = [
   { title: "Home", href: "/" },
+  { title: "Services", href: "/services" },
   { title: "Portfolio", href: "/portfolio" },
+  { title: "Industries", href: "/industries" },
+  { title: "Tools", href: "/tools" },
   { title: "Pricing", href: "/pricing" },
   { title: "About", href: "/about" },
+  { title: "Careers", href: "/careers" },
   { title: "Blog", href: "/blog" },
   { title: "Contact", href: "/contact" },
 ];

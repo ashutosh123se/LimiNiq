@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, Phone } from "lucide-react";
-import { NAV_LINKS, WHATSAPP_URL } from "@/data/navigation";
+import { NAV_LINKS, WHATSAPP_URL, type NavLink } from "@/data/navigation";
 import { SITE_CONTACT } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { MegaMenu } from "./MegaMenu";
+import { NavDropdown } from "./NavDropdown";
 import { MobileNav } from "./MobileNav";
 
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -19,10 +20,14 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
+function hasSubnav(link: NavLink) {
+  return Boolean(link.mega || link.dropdown);
+}
+
 export function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [megaOpen, setMegaOpen] = useState(false);
+  const [openKey, setOpenKey] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -34,7 +39,7 @@ export function Nav() {
   }, []);
 
   useEffect(() => {
-    setMegaOpen(false);
+    setOpenKey(null);
     setMobileOpen(false);
   }, [pathname]);
 
@@ -44,101 +49,179 @@ export function Nav() {
     };
   }, []);
 
-  const openMega = () => {
+  const openMenu = (key: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    setMegaOpen(true);
+    setOpenKey(key);
   };
 
-  const scheduleCloseMega = () => {
+  const scheduleClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setMegaOpen(false), 200);
+    closeTimer.current = setTimeout(() => setOpenKey(null), 180);
   };
 
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 h-16 lg:h-20",
-        "border-b transition-colors duration-300",
+        "border-b transition-all duration-300",
         scrolled
-          ? "border-border-subtle bg-bg-primary/80 backdrop-blur-xl"
+          ? "border-border-subtle bg-bg-primary/85 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl"
           : "border-transparent bg-transparent"
       )}
     >
-      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between px-5 lg:px-10">
+      {/* subtle top glow line */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(108,92,231,0.55), rgba(34,211,238,0.45), transparent)",
+        }}
+        aria-hidden
+      />
+
+      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-4 px-5 lg:px-10">
         <Link
           href="/"
-          className="font-[family-name:var(--font-heading)] text-xl font-extrabold tracking-tight text-text-primary transition-opacity hover:opacity-80 lg:text-2xl"
+          className="group relative font-[family-name:var(--font-heading)] text-xl font-extrabold tracking-tight text-text-primary lg:text-2xl"
         >
           LIMINIQ
+          <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-accent to-signal transition-all duration-300 group-hover:w-full" />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
           {NAV_LINKS.map((link) => {
-            const isMega = "mega" in link && link.mega;
+            const key = link.href;
+            const isOpen = openKey === key;
             const isActive =
               pathname === link.href ||
               (link.href !== "/" && pathname?.startsWith(`${link.href}/`));
+            const sub = hasSubnav(link);
 
-            if (isMega) {
+            if (!sub) {
+              return (
+                <Link
+                  key={key}
+                  href={link.href}
+                  className={cn(
+                    "rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors",
+                    isActive ? "text-accent" : "text-text-secondary hover:text-text-primary"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            }
+
+            return (
+              <div
+                key={key}
+                className="relative"
+                onMouseEnter={() => openMenu(key)}
+                onMouseLeave={scheduleClose}
+                onFocus={() => openMenu(key)}
+              >
+                <Link
+                  href={link.href}
+                  onClick={() => setOpenKey(null)}
+                  aria-expanded={isOpen}
+                  aria-haspopup="true"
+                  className={cn(
+                    "flex items-center gap-1 rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors",
+                    isActive || isOpen
+                      ? "text-accent"
+                      : "text-text-secondary hover:text-text-primary"
+                  )}
+                >
+                  {link.label}
+                  <ChevronDown
+                    size={13}
+                    className={cn("transition-transform duration-200", isOpen && "rotate-180")}
+                  />
+                </Link>
+
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                      className={cn(
+                        "absolute top-full pt-3",
+                        link.mega ? "left-1/2 -translate-x-1/2" : "left-0"
+                      )}
+                    >
+                      {link.mega ? (
+                        <MegaMenu onNavigate={() => setOpenKey(null)} />
+                      ) : link.dropdown ? (
+                        <NavDropdown
+                          title={link.dropdown.title}
+                          items={[...link.dropdown.items]}
+                          footer={link.dropdown.footer}
+                          onNavigate={() => setOpenKey(null)}
+                        />
+                      ) : null}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </nav>
+
+        {/* Compact nav for lg–xl when full nav is hidden */}
+        <nav className="hidden items-center gap-0.5 lg:flex xl:hidden" aria-label="Primary compact">
+          {NAV_LINKS.filter((l) => ["Services", "Work", "Tools", "Pricing"].includes(l.label)).map(
+            (link) => {
+              const key = `compact-${link.href}`;
+              const isOpen = openKey === key;
+              const isActive =
+                pathname === link.href ||
+                (link.href !== "/" && pathname?.startsWith(`${link.href}/`));
               return (
                 <div
-                  key={link.href}
+                  key={key}
                   className="relative"
-                  onMouseEnter={openMega}
-                  onMouseLeave={scheduleCloseMega}
+                  onMouseEnter={() => openMenu(key)}
+                  onMouseLeave={scheduleClose}
                 >
                   <Link
                     href={link.href}
-                    onClick={() => setMegaOpen(false)}
-                    aria-expanded={megaOpen}
                     className={cn(
-                      "flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                      isActive
-                        ? "text-accent"
-                        : "text-text-secondary hover:text-text-primary"
+                      "flex items-center gap-1 rounded-full px-3 py-2 text-[13px] font-medium",
+                      isActive || isOpen ? "text-accent" : "text-text-secondary"
                     )}
                   >
                     {link.label}
-                    <ChevronDown
-                      size={14}
-                      className={cn(
-                        "transition-transform duration-200",
-                        megaOpen && "rotate-180"
-                      )}
-                    />
+                    {hasSubnav(link) && (
+                      <ChevronDown size={12} className={cn(isOpen && "rotate-180")} />
+                    )}
                   </Link>
                   <AnimatePresence>
-                    {megaOpen && (
+                    {isOpen && hasSubnav(link) && (
                       <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.18, ease: "easeOut" }}
-                        className="absolute left-1/2 top-full -translate-x-1/2 pt-3"
+                        className="absolute left-0 top-full z-50 pt-3"
                       >
-                        <MegaMenu onNavigate={() => setMegaOpen(false)} />
+                        {link.mega ? (
+                          <MegaMenu onNavigate={() => setOpenKey(null)} />
+                        ) : link.dropdown ? (
+                          <NavDropdown
+                            title={link.dropdown.title}
+                            items={[...link.dropdown.items]}
+                            footer={link.dropdown.footer}
+                            onNavigate={() => setOpenKey(null)}
+                          />
+                        ) : null}
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
               );
             }
-
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "text-accent"
-                    : "text-text-secondary hover:text-text-primary"
-                )}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
+          )}
         </nav>
 
         <div className="flex items-center gap-2 lg:gap-3">
@@ -147,7 +230,7 @@ export function Nav() {
             className="hidden items-center gap-2 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary lg:flex"
           >
             <Phone size={15} />
-            {SITE_CONTACT.phone}
+            <span className="hidden xl:inline">{SITE_CONTACT.phone}</span>
           </a>
 
           <a
@@ -155,14 +238,14 @@ export function Nav() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Chat on WhatsApp"
-            className="hidden h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-text-secondary transition-colors hover:border-[#25D366]/50 hover:text-[#25D366] lg:flex"
+            className="hidden h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-text-secondary transition-all hover:border-[#25D366]/50 hover:text-[#25D366] hover:shadow-[0_0_20px_rgba(37,211,102,0.25)] lg:flex"
           >
             <WhatsAppIcon className="h-4 w-4" />
           </a>
 
           <Link
             href="/contact#audit"
-            className="btn-primary hidden text-sm lg:inline-flex"
+            className="btn-primary hidden !px-5 !py-2.5 text-sm lg:inline-flex"
           >
             Get Free Audit
           </Link>
@@ -171,7 +254,7 @@ export function Nav() {
             type="button"
             aria-label="Open menu"
             onClick={() => setMobileOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle text-text-primary transition-colors hover:border-accent/40 hover:text-accent lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle text-text-primary transition-colors hover:border-accent/40 hover:text-accent xl:hidden"
           >
             <Menu size={20} />
           </button>

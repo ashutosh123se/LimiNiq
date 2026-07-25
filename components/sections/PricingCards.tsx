@@ -51,9 +51,10 @@ export function PricingCards() {
             return (
               <motion.div
                 key={tier.id}
+                id={tier.id}
                 variants={revealVariants}
                 className={cn(
-                  "relative flex flex-col gap-5 overflow-hidden p-6",
+                  "relative flex flex-col gap-5 overflow-hidden p-6 scroll-mt-28",
                   isFeatured ? "glass-card-premium border-[var(--border-hover)]" : "glass-card"
                 )}
               >

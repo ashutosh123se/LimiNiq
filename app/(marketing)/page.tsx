@@ -38,15 +38,25 @@ export default function HomePage() {
     <>
       <JsonLd data={websiteJsonLd()} />
       <Hero />
-      <DisciplinesList />
+      <div className="section-band">
+        <DisciplinesList />
+      </div>
       <ProcessPipeline />
-      <AuditTool />
+      <div className="section-band">
+        <AuditTool />
+      </div>
       <CaseStudyGrid />
-      <TestimonialMarquee />
+      <div className="section-band">
+        <TestimonialMarquee />
+      </div>
       <PricingCards />
-      <BlogTeaser />
+      <div className="section-band">
+        <BlogTeaser />
+      </div>
       <TextMarquee />
-      <TeamPreview />
+      <div className="section-band">
+        <TeamPreview />
+      </div>
       <FinalCTA />
     </>
   );
