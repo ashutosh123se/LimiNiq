@@ -1,61 +1,194 @@
-import { Metadata } from "next";
-import { PricingSection } from "@/components/sections/home/PricingSection";
-import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
-import { ShieldCheck, UserCheck, Zap, RefreshCw } from "lucide-react";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import Link from "next/link";
+import { ArrowRight, ShieldCheck, FileCheck2, Clock, Handshake } from "lucide-react";
+import { PageHero } from "@/components/sections/PageHero";
+import { PricingCards } from "@/components/sections/PricingCards";
+import { FinalCTA } from "@/components/sections/FinalCTA";
+import { FAQAccordion } from "@/components/sections/services/FAQAccordion";
+import { PRICING_TIERS } from "@/data/pricing";
+import { faqsForPage } from "@/data/faqs";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Pricing & Starting Rates",
   description:
-    "Starting rates for custom software (from ₹75,000), web projects, SEO (from ₹14,999), and digital marketing. Transparent pricing — tailored quote after a free discovery call.",
+    "Starting rates for custom software (from ₹75,000), web projects (from ₹24,999), SEO (from ₹14,999/mo), and digital marketing (from ₹19,999/mo). Transparent pricing — final quote after a free discovery call.",
   path: "/pricing",
 });
 
-const TRUST_POINTS = [
-  { icon: <ShieldCheck size={24} />, title: "Transparent Pricing", desc: "No hidden fees or surprise invoices. Ever." },
-  { icon: <RefreshCw size={24} />, title: "No Vendor Lock-in", desc: "You own 100% of the code and assets." },
-  { icon: <Zap size={24} />, title: "Results Guaranteed", desc: "Built for speed, conversion, and ranking." },
-  { icon: <UserCheck size={24} />, title: "Dedicated Team", desc: "Direct access to engineers and strategists." },
+const COMPARISON_ROWS: { label: string; render: (tier: (typeof PRICING_TIERS)[number]) => ReactNode }[] = [
+  {
+    label: "Deliverables",
+    render: (tier) => (
+      <ul className="flex flex-col gap-1.5 text-left">
+        {tier.deliverables.map((d) => (
+          <li key={d} className="flex items-start gap-1.5 text-xs text-text-secondary sm:text-sm">
+            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />
+            {d}
+          </li>
+        ))}
+      </ul>
+    ),
+  },
+  {
+    label: "Timeline",
+    render: (tier) => <span className="text-sm text-text-secondary">{tier.timeline}</span>,
+  },
+  {
+    label: "Revisions",
+    render: (tier) => <span className="text-sm text-text-secondary">{tier.revisions}</span>,
+  },
+  {
+    label: "Support",
+    render: (tier) => <span className="text-sm text-text-secondary">{tier.support}</span>,
+  },
+];
+
+const TRUST_CHIPS = [
+  { icon: ShieldCheck, label: "No hidden fees" },
+  { icon: FileCheck2, label: "Scoped in writing" },
+  { icon: Clock, label: "Fixed delivery windows" },
+  { icon: Handshake, label: "Cancel anytime on retainers" },
 ];
 
 export default function PricingPage() {
-  return (
-    <div style={{ paddingTop: "5rem", background: "var(--bg-primary)" }}>
-      
-      {/* Hero & Pricing Wrapper */}
-      <div style={{ position: "relative" }}>
-        {/* Background glow behind header */}
-        <div style={{ position: "absolute", top: "10%", left: "50%", transform: "translateX(-50%)", width: 600, height: 600, background: "rgba(59, 91, 255, 0.05)", borderRadius: "50%", filter: "blur(100px)", zIndex: 0, pointerEvents: "none" }} />
-        
-        {/* The CMS-driven Pricing Section Component */}
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <PricingSection showFAQ={true} />
-        </div>
-      </div>
+  const faqs = faqsForPage("pricing");
 
-      {/* Why LIMINIQ? Trust Strip */}
-      <section style={{ borderTop: "1px solid var(--border-subtle)", borderBottom: "1px solid var(--border-subtle)", background: "rgba(255,255,255,0.01)" }}>
+  return (
+    <div className="pricing-page">
+      <PageHero
+        eyebrow="Pricing"
+        title={
+          <>
+            Straightforward pricing,
+            <br />
+            <span className="text-gradient">zero surprises.</span>
+          </>
+        }
+        description="Every engagement starts with a free discovery call. What you see below is where the conversation starts — your final quote is scoped in writing before any work begins."
+      >
+        <Link href="/contact" className="btn-primary">
+          Request Custom Quote <ArrowRight size={16} />
+        </Link>
+        <Link href="/services" className="btn-secondary">
+          See what&apos;s included
+        </Link>
+      </PageHero>
+
+      <PricingCards />
+
+      {/* Comparison table */}
+      <section className="section-padding pricing-compare-section">
         <div className="section-container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
-            {TRUST_POINTS.map((point, i) => (
-              <div key={i} style={{ padding: "3rem 2rem", borderRight: i !== TRUST_POINTS.length - 1 ? "1px solid var(--border-subtle)" : "none", display: "flex", flexDirection: "column", gap: "1rem" }} className="trust-block">
-                <div style={{ color: "var(--accent-primary)" }}>{point.icon}</div>
-                <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)" }}>{point.title}</h3>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>{point.desc}</p>
-              </div>
+          <div className="mx-auto mb-10 max-w-2xl text-center">
+            <span className="pill-badge mb-4 inline-flex">
+              <span className="text-[var(--signal)]">✦</span> Side by side
+            </span>
+            <h2 className="font-heading text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight tracking-tight text-text-primary">
+              What each tier <span className="heading-accent">actually includes</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-text-secondary">
+              Deliverables, delivery windows, revisions, and support — laid out plainly so there&apos;s no guessing.
+            </p>
+          </div>
+
+          <div className="pricing-compare-scroll">
+            <table className="pricing-compare-table">
+              <thead>
+                <tr>
+                  <th className="pricing-compare-row-label" />
+                  {PRICING_TIERS.map((tier) => (
+                    <th key={tier.id}>
+                      <div className="flex flex-col gap-1">
+                        <span className="font-heading text-sm font-bold text-text-primary">{tier.label}</span>
+                        <span className="text-xs font-semibold text-accent">
+                          From {tier.priceFrom} / {tier.unit}
+                        </span>
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARISON_ROWS.map((row) => (
+                  <tr key={row.label}>
+                    <td className="pricing-compare-row-label">{row.label}</td>
+                    {PRICING_TIERS.map((tier) => (
+                      <td key={tier.id}>{row.render(tier)}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            {TRUST_CHIPS.map((chip) => (
+              <span
+                key={chip.label}
+                className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-white/[0.03] px-4 py-2 text-xs font-medium text-text-secondary"
+              >
+                <chip.icon size={14} className="text-[var(--signal)]" />
+                {chip.label}
+              </span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <div style={{ padding: "4rem 0" }} />
-      <LeadCTASection />
+      {faqs.length > 0 && (
+        <section className="section-padding section-container pricing-faq">
+          <FAQAccordion items={faqs} title="Pricing Questions" />
+        </section>
+      )}
+
+      <FinalCTA />
 
       <style>{`
-        @media (max-width: 768px) {
-          .trust-block { border-right: none !important; border-bottom: 1px solid var(--border-subtle); }
-          .trust-block:last-child { border-bottom: none; }
+        .pricing-page {
+          background: var(--bg-primary);
+          overflow-x: clip;
+        }
+        .pricing-compare-section {
+          padding-top: 0;
+        }
+        .pricing-compare-scroll {
+          overflow-x: auto;
+          border-radius: 20px;
+          border: 1px solid var(--border-subtle);
+        }
+        .pricing-compare-table {
+          width: 100%;
+          min-width: 720px;
+          border-collapse: collapse;
+          background: var(--bg-elevated);
+        }
+        .pricing-compare-table th,
+        .pricing-compare-table td {
+          padding: 1.1rem 1.25rem;
+          border-bottom: 1px solid var(--border-subtle);
+          vertical-align: top;
+          text-align: center;
+        }
+        .pricing-compare-table thead th {
+          text-align: center;
+          background: rgba(255, 255, 255, 0.02);
+        }
+        .pricing-compare-table tbody tr:last-child td {
+          border-bottom: none;
+        }
+        .pricing-compare-row-label {
+          text-align: left !important;
+          font-family: var(--font-heading);
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          white-space: nowrap;
+          background: rgba(255, 255, 255, 0.015);
+        }
+        .pricing-faq {
+          padding-top: 0;
         }
       `}</style>
     </div>

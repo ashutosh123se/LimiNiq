@@ -1,61 +1,82 @@
-import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
-import { BlogPollWidget } from "@/components/sections/blog/BlogPollWidget";
-import { TrendingTopicsBar } from "@/components/sections/blog/TrendingTopicsBar";
-import { JsonLd } from "@/components/seo/JsonLd";
+import type { Metadata } from "next";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeft, Calendar, User, Eye, Flame } from "lucide-react";
-import type { PollOption } from "@/lib/data/blogEngagement";
+import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { ArrowLeft, Calendar, User, Clock } from "lucide-react";
+import { AuthorCard } from "@/components/sections/blog/AuthorCard";
+import { TableOfContents } from "@/components/sections/blog/TableOfContents";
+import { RelatedPosts } from "@/components/sections/blog/RelatedPosts";
+import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { prisma } from "@/lib/prisma";
+import { extractHeadings, getAllMdxPosts, slugifyHeading } from "@/lib/blog/mdx";
+import { getAllUnifiedPosts, getRelatedPosts, getUnifiedPostBySlug } from "@/lib/blog/posts";
+import { gradientForTopic } from "@/lib/blog/theme";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/schema";
-import type { Metadata } from "next";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  try {
-    const post = await prisma.blogPost.findUnique({ where: { slug } });
-    if (!post) return { title: "Post Not Found" };
+type Params = Promise<{ slug: string }>;
 
-    return buildPageMetadata({
-      title: post.metaTitle || post.title,
-      description: post.metaDesc || post.excerpt || `Read ${post.title} on the LIMINIQ blog.`,
-      path: `/blog/${slug}`,
-      ogImage: post.ogImage || post.coverImage || "/api/og",
-    });
-  } catch {
-    return buildPageMetadata({
-      title: "Blog Post",
-      description: "Insights on software, SEO, and digital marketing from LIMINIQ.",
-      path: `/blog/${slug}`,
-    });
+function extractText(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(extractText).join("");
+  if (node && typeof node === "object" && "props" in node) {
+    return extractText((node as { props?: { children?: ReactNode } }).props?.children);
   }
+  return "";
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  let post;
+const mdxComponents = {
+  h2: (props: ComponentPropsWithoutRef<"h2">) => {
+    const id = slugifyHeading(extractText(props.children));
+    return <h2 id={id} {...props} />;
+  },
+};
 
-  try {
-    post = await prisma.blogPost.findUnique({ where: { slug } });
-    if (post) {
-      await prisma.blogPost.update({ where: { id: post.id }, data: { views: { increment: 1 } } });
-    }
-  } catch {
-    post = null;
+export function generateStaticParams() {
+  return getAllMdxPosts().map((post) => ({ slug: post.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug } = await params;
+  const resolved = await getUnifiedPostBySlug(slug);
+  if (!resolved) return { title: "Post Not Found" };
+
+  const { post } = resolved;
+  return buildPageMetadata({
+    title: post.metaTitle || post.title,
+    description: post.metaDesc || post.excerpt,
+    path: `/blog/${slug}`,
+    ogImage: post.ogImage || post.image || "/api/og",
+  });
+}
+
+export default async function BlogPostPage({ params }: { params: Params }) {
+  const { slug } = await params;
+  const resolved = await getUnifiedPostBySlug(slug);
+  if (!resolved) return notFound();
+
+  const { post, source, db, mdx } = resolved;
+
+  if (source === "db" && db) {
+    prisma.blogPost.update({ where: { id: db.id }, data: { views: { increment: 1 } } }).catch(() => {});
   }
 
-  if (!post) return notFound();
+  const rawContent = source === "mdx" && mdx ? mdx.content : db?.content ?? "";
+  const headings = extractHeadings(rawContent);
 
-  const isPoll = post.postType === "POLL";
-  const pollOptions = (post.pollOptions as PollOption[] | null) ?? [];
+  const allPosts = await getAllUnifiedPosts();
+  const related = getRelatedPosts(allPosts, post, 3);
+
+  const formattedDate = post.publishedAt.toLocaleDateString("en-IN", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   return (
-    <article style={{ background: "var(--bg-primary)", minHeight: "100vh" }}>
+    <article className="blog-post">
       <JsonLd
         data={articleSchema({
           title: post.title,
@@ -64,7 +85,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           author: post.author,
           publishedAt: post.publishedAt,
           updatedAt: post.updatedAt,
-          image: post.ogImage || post.coverImage,
+          image: post.ogImage || post.image,
         })}
       />
       <JsonLd
@@ -76,87 +97,221 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       />
 
       <header
+        className="blog-post-header"
         style={{
-          padding: isPoll ? "8rem 0 3rem" : "10rem 0 6rem",
-          background: post.coverImage
-            ? `linear-gradient(to bottom, rgba(10,15,44,0.7), var(--bg-primary)), url(${post.coverImage}) center/cover`
-            : "var(--bg-secondary)",
-          borderBottom: "1px solid var(--border-subtle)",
+          background: post.image
+            ? `linear-gradient(to bottom, rgba(5,6,10,0.75), var(--bg-primary)), url(${post.image}) center/cover`
+            : `linear-gradient(to bottom, rgba(5,6,10,0.55), var(--bg-primary)), ${gradientForTopic(post.topic)}`,
         }}
       >
         <div className="section-container">
-          <Link href="/blog" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--text-tertiary)", textDecoration: "none", fontFamily: "var(--font-heading)", fontWeight: 600, marginBottom: "2rem" }} className="hover-brighten">
-            <ArrowLeft size={16} /> Back to Lab
+          <Link href="/blog" className="blog-post-back">
+            <ArrowLeft size={16} /> Back to Blog
           </Link>
 
-          <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-            <span className="pill-badge" style={{ background: "rgba(59,91,255,0.1)", color: "var(--accent-blue)", borderColor: "rgba(59,91,255,0.2)" }}>
-              {isPoll ? "Community Poll" : post.category}
+          <span className="pill-badge blog-post-topic">{post.topic}</span>
+
+          <h1 className="blog-post-title">{post.title}</h1>
+          <p className="blog-post-excerpt">{post.excerpt}</p>
+
+          <div className="blog-post-meta">
+            <span>
+              <User size={15} /> {post.author}
             </span>
-            {post.trending && (
-              <span className="pill-badge" style={{ background: "rgba(239,68,68,0.12)", color: "#fca5a5", borderColor: "rgba(239,68,68,0.25)", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                <Flame size={12} /> Trending
-              </span>
-            )}
-          </div>
-
-          <h1 className="text-hero" style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.03em", marginBottom: "1.5rem", maxWidth: 900 }}>
-            {post.title}
-          </h1>
-
-          {!isPoll && (
-            <p style={{ fontSize: "1.1rem", color: "var(--text-secondary)", maxWidth: 720, lineHeight: 1.7, marginBottom: "1.5rem" }}>
-              {post.excerpt}
-            </p>
-          )}
-
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", alignItems: "center", fontSize: "0.95rem", color: "var(--text-secondary)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}><User size={16} /> {post.author}</div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}><Calendar size={16} /> {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("en-IN", { month: "long", day: "numeric", year: "numeric" }) : "Draft"}</div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}><Eye size={16} /> {post.views + 1} views</div>
+            <span>
+              <Calendar size={15} /> {formattedDate}
+            </span>
+            <span>
+              <Clock size={15} /> {post.readingTime}
+            </span>
           </div>
         </div>
       </header>
 
-      <div className="section-container" style={{ padding: "3rem 0 4rem" }}>
-        <div style={{ maxWidth: 760, margin: "0 auto" }}>
-          <TrendingTopicsBar compact />
+      <div className="section-container blog-post-layout">
+        <div className="blog-post-content">
+          <div className="article-prose">
+            {source === "mdx" && mdx ? (
+              <MDXRemote source={mdx.content} components={mdxComponents} />
+            ) : (
+              <div dangerouslySetInnerHTML={{ __html: (db?.content ?? "").replace(/\n/g, "<br/>") }} />
+            )}
+          </div>
 
-          {isPoll ? (
-            <BlogPollWidget
-              postId={post.id}
-              slug={post.slug}
-              title={post.title}
-              excerpt={post.excerpt}
-              options={pollOptions}
-              pollEndsAt={post.pollEndsAt?.toISOString()}
-            />
-          ) : (
-            <>
-              <div
-                className="prose-content"
-                style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", lineHeight: 1.8, color: "var(--text-secondary)" }}
-                dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, "<br/>") }}
-              />
-              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginTop: "2.5rem", paddingTop: "2rem", borderTop: "1px solid var(--border-subtle)" }}>
-                {post.tags.map((tag) => (
-                  <span key={tag} style={{ padding: "6px 14px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 100, fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            </>
+          {post.tags.length > 0 && (
+            <div className="blog-post-tags">
+              {post.tags.map((tag) => (
+                <span key={tag}>#{tag}</span>
+              ))}
+            </div>
           )}
         </div>
+
+        <aside className="blog-post-sidebar">
+          <TableOfContents headings={headings} />
+          <AuthorCard author={post.author} />
+        </aside>
       </div>
+
+      <RelatedPosts posts={related} />
 
       <LeadCTASection />
 
       <style>{`
-        .prose-content h2 { font-family: var(--font-heading); font-size: 2rem; color: white; margin-top: 3rem; margin-bottom: 1.5rem; font-weight: 700; }
-        .prose-content h3 { font-family: var(--font-heading); font-size: 1.5rem; color: white; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600; }
-        .prose-content p { margin-bottom: 1.5rem; }
-        .prose-content a { color: var(--accent-blue); text-decoration: underline; text-underline-offset: 4px; }
+        .blog-post { background: var(--bg-primary); overflow-x: clip; }
+
+        .blog-post-header {
+          padding: 9rem 0 3.5rem;
+          border-bottom: 1px solid var(--border-subtle);
+        }
+        .blog-post-back {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: var(--text-tertiary);
+          text-decoration: none;
+          font-family: var(--font-heading);
+          font-weight: 600;
+          font-size: 0.9rem;
+          margin-bottom: 1.75rem;
+          transition: color 0.2s ease;
+        }
+        .blog-post-back:hover { color: var(--text-primary); }
+        .blog-post-topic {
+          display: inline-flex;
+          margin-bottom: 1.25rem;
+        }
+        .blog-post-title {
+          font-family: var(--font-heading);
+          font-size: clamp(2rem, 4.5vw, 3.25rem);
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          line-height: 1.15;
+          color: var(--text-primary);
+          max-width: 880px;
+          margin: 0 0 1.25rem;
+        }
+        .blog-post-excerpt {
+          font-size: 1.1rem;
+          color: var(--text-secondary);
+          line-height: 1.7;
+          max-width: 720px;
+          margin: 0 0 1.75rem;
+        }
+        .blog-post-meta {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1.75rem;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+        }
+        .blog-post-meta span {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .blog-post-layout {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 3rem;
+          padding: 3.5rem 0;
+        }
+
+        .article-prose {
+          font-family: var(--font-sans);
+          font-size: 1.08rem;
+          line-height: 1.8;
+          color: var(--text-secondary);
+        }
+        .article-prose h2 {
+          font-family: var(--font-heading);
+          font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+          font-weight: 800;
+          color: var(--text-primary);
+          letter-spacing: -0.01em;
+          margin: 2.75rem 0 1.25rem;
+          scroll-margin-top: 6rem;
+        }
+        .article-prose h3 {
+          font-family: var(--font-heading);
+          font-size: 1.3rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          margin: 2rem 0 1rem;
+          scroll-margin-top: 6rem;
+        }
+        .article-prose p { margin: 0 0 1.5rem; }
+        .article-prose ul, .article-prose ol {
+          margin: 0 0 1.5rem;
+          padding-left: 1.4rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .article-prose li { line-height: 1.75; }
+        .article-prose strong { color: var(--text-primary); font-weight: 700; }
+        .article-prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+        .article-prose blockquote {
+          margin: 1.75rem 0;
+          padding: 1rem 1.5rem;
+          border-left: 3px solid var(--accent);
+          background: rgba(255,255,255,0.03);
+          border-radius: 0 12px 12px 0;
+          color: var(--text-primary);
+          font-style: italic;
+        }
+        .article-prose code {
+          font-family: var(--font-mono);
+          font-size: 0.88em;
+          background: rgba(255,255,255,0.06);
+          padding: 0.15em 0.4em;
+          border-radius: 5px;
+          color: var(--signal);
+        }
+        .article-prose pre {
+          margin: 1.75rem 0;
+          padding: 1.25rem 1.5rem;
+          border-radius: 14px;
+          background: #0b0d14;
+          border: 1px solid var(--border-subtle);
+          overflow-x: auto;
+        }
+        .article-prose pre code {
+          background: none;
+          padding: 0;
+          color: var(--text-primary);
+        }
+
+        .blog-post-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-top: 2.5rem;
+          padding-top: 2rem;
+          border-top: 1px solid var(--border-subtle);
+        }
+        .blog-post-tags span {
+          padding: 6px 14px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid var(--border-subtle);
+          border-radius: 100px;
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+        }
+
+        .blog-post-sidebar {
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+        }
+
+        @media (min-width: 960px) {
+          .blog-post-layout {
+            grid-template-columns: 1fr 280px;
+            align-items: start;
+          }
+        }
       `}</style>
     </article>
   );

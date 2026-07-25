@@ -1,39 +1,32 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { Award, Loader2, Mail, MapPin, Phone, ShieldCheck, Star } from "lucide-react";
+import { FOOTER_COMPANY, FOOTER_SERVICES } from "@/data/navigation";
+import { TOOLS } from "@/data/tools";
 import { SITE_CONTACT, SITE_SOCIAL } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
-const FOOTER_LINKS = {
-  services: [
-    { label: "Website & E-commerce", href: "/services/website-ecommerce" },
-    { label: "Mobile App Development", href: "/services/mobile-app-development" },
-    { label: "SaaS Development", href: "/services/custom-software-saas" },
-    { label: "Digital Marketing", href: "/services/digital-marketing" },
-    { label: "SEO Services", href: "/services/seo-search-engine-marketing" },
-    { label: "View All Services", href: "/services" },
-  ],
-  company: [
-    { label: "About", href: "/about" },
-    { label: "Blog", href: "/blog" },
-    { label: "Portfolio", href: "/portfolio" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "Privacy Policy", href: "/privacy-policy" },
-    { label: "Terms of Service", href: "/terms-of-service" },
-  ],
-};
+const FEATURED_TOOLS = TOOLS.slice(0, 5);
+
+const TRUST_BADGES = [
+  { icon: Award, label: "150+ Projects Delivered" },
+  { icon: Star, label: "4.9/5 Average Client Rating" },
+  { icon: ShieldCheck, label: "NDA-Protected Engagements" },
+  { icon: ShieldCheck, label: "Secure, GDPR-Aware Delivery" },
+];
 
 const SOCIAL_LINKS = [
   {
     label: "LinkedIn",
     href: SITE_SOCIAL.linkedin,
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-        <rect x="2" y="9" width="4" height="12"/>
-        <circle cx="4" cy="4" r="2"/>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+        <rect x="2" y="9" width="4" height="12" />
+        <circle cx="4" cy="4" r="2" />
       </svg>
     ),
   },
@@ -41,260 +34,43 @@ const SOCIAL_LINKS = [
     label: "Instagram",
     href: SITE_SOCIAL.instagram,
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
       </svg>
     ),
   },
 ];
 
-export function Footer() {
-  const [email, setEmail] = useState("");
-  const [subState, setSubState] = useState<"idle" | "loading" | "success" | "error">("idle");
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setSubState("loading");
-    try {
-      const res = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      setSubState(res.ok ? "success" : "error");
-    } catch {
-      setSubState("error");
-    }
-  };
-
-  return (
-    <footer
-      style={{
-        background: "var(--bg-base)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {/* Grid texture overlay */}
-
-      {/* Gradient fade from page to footer */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 80,
-          background: "linear-gradient(to bottom, var(--bg-primary), transparent)",
-          pointerEvents: "none",
-        }}
-      />
-
-
-      <div className="section-container" style={{ position: "relative", paddingTop: "5rem", paddingBottom: "2rem" }}>
-        {/* Main Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "3rem",
-            paddingBottom: "3rem",
-            borderBottom: "1px solid rgba(255,255,255,0.08)",
-          }}
-        >
-          {/* Column 1 — Brand */}
-          <div style={{ gridColumn: "span 1" }}>
-            <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-              <div style={{ position: 'relative', height: '160px', width: '160px', marginTop: '-40px', marginBottom: '-40px', marginLeft: '-12px' }}>
-                <Image 
-                  src="/images/logo-v2.png" 
-                  alt="LimiNiq Logo" 
-                  fill 
-                  style={{ objectFit: 'contain', objectPosition: 'left center', filter: 'brightness(0) invert(1)' }} 
-                />
-              </div>
-            </Link>
-            <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.65)", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: "1.5rem", maxWidth: 240 }}>
-              Building the digital future, one ambitious brand at a time.
-            </p>
-            <p style={{ fontFamily: "var(--font-heading)", color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
-              Based in India. Building Globally.
-            </p>
-            <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.45)", fontSize: "0.88rem", lineHeight: 1.6, marginBottom: "1rem" }}>
-              <a href={`mailto:${SITE_CONTACT.email}`} style={{ color: "rgba(255,255,255,0.65)", textDecoration: "none" }}>{SITE_CONTACT.email}</a>
-              <span style={{ margin: "0 0.5rem", opacity: 0.35 }}>·</span>
-              <a href={`tel:${SITE_CONTACT.phoneTel}`} style={{ color: "rgba(255,255,255,0.65)", textDecoration: "none" }}>{SITE_CONTACT.phone}</a>
-            </p>
-            {/* Social links */}
-            <div style={{ display: "flex", gap: "0.75rem" }}>
-              {SOCIAL_LINKS.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: 10,
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "rgba(255,255,255,0.55)",
-                    transition: "all 0.2s ease",
-                    textDecoration: "none",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(59,91,255,0.25)";
-                    (e.currentTarget as HTMLElement).style.color = "white";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(59,91,255,0.4)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)";
-                    (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.55)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)";
-                  }}
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 2 — Services */}
-          <FooterColumn title="Services" links={FOOTER_LINKS.services} />
-
-          {/* Column 3 — Company */}
-          <FooterColumn title="Company" links={FOOTER_LINKS.company} />
-
-          {/* Column 4 — Newsletter */}
-          <div>
-            <h4 style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: "0.95rem", color: "white", marginBottom: "0.75rem" }}>
-              Stay in the Loop
-            </h4>
-            <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", lineHeight: 1.6, marginBottom: "1rem" }}>
-              Get weekly insights on SEO, web dev, and digital growth.
-            </p>
-
-            {subState === "success" ? (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{
-                  background: "rgba(0,200,160,0.12)",
-                  border: "1px solid rgba(0,200,160,0.25)",
-                  borderRadius: 10,
-                  padding: "0.75rem 1rem",
-                  color: "var(--accent-teal)",
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "0.85rem",
-                }}
-              >
-                ✓ You&apos;re subscribed! Welcome aboard.
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubscribe} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                  style={{
-                    background: "rgba(255,255,255,0.07)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: 10,
-                    padding: "0.7rem 1rem",
-                    color: "white",
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.9rem",
-                    outline: "none",
-                    transition: "border-color 0.2s",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(59,91,255,0.5)")}
-                  onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.12)")}
-                />
-                <button
-                  type="submit"
-                  disabled={subState === "loading"}
-                  className="btn-primary btn-sm"
-                  style={{ justifyContent: "center" }}
-                >
-                  {subState === "loading" ? "Subscribing..." : "Subscribe →"}
-                </button>
-                {subState === "error" && (
-                  <p style={{ color: "#f87171", fontSize: "0.8rem", fontFamily: "var(--font-heading)" }}>
-                    Something went wrong. Try again.
-                  </p>
-                )}
-              </form>
-            )}
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "1rem",
-            paddingTop: "1.5rem",
-          }}
-        >
-          <p style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.5)", fontSize: "0.88rem", margin: 0 }}>
-            © {new Date().getFullYear()} LIMINIQ. All rights reserved.
-          </p>
-          <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-            <Link href="/privacy-policy" style={{ fontFamily: "var(--font-heading)", color: "rgba(255,255,255,0.5)", fontSize: "0.88rem", textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.5)")}
-            >
-              Privacy
-            </Link>
-            <Link href="/terms-of-service" style={{ fontFamily: "var(--font-heading)", color: "rgba(255,255,255,0.5)", fontSize: "0.88rem", textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.5)")}
-            >
-              Terms
-            </Link>
-            <span style={{ fontFamily: "var(--font-sans)", color: "rgba(255,255,255,0.4)", fontSize: "0.88rem" }}>
-              Made with ⚡ by LIMINIQ
-            </span>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { label: string; href: string }[];
+}) {
   return (
     <div>
-      <h4 style={{ fontFamily: "var(--font-heading)", fontWeight: 600, fontSize: "0.95rem", color: "white", marginBottom: "1rem" }}>
+      <h4 className="mb-4 font-[family-name:var(--font-heading)] text-sm font-bold text-text-primary">
         {title}
       </h4>
-      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+      <ul className="flex flex-col gap-3">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              style={{
-                fontFamily: "var(--font-sans)",
-                color: "rgba(255,255,255,0.6)",
-                fontSize: "0.92rem",
-                textDecoration: "none",
-                transition: "color 0.2s",
-              }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.9)")}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.6)")}
+              className="text-sm text-text-secondary transition-colors hover:text-text-primary"
             >
               {link.label}
             </Link>
@@ -302,5 +78,200 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
         ))}
       </ul>
     </div>
+  );
+}
+
+function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setStatus("success");
+      setEmail("");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <motion.p
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-xl border border-accent/25 bg-accent/10 px-4 py-3 text-sm font-medium text-text-primary"
+      >
+        You&apos;re subscribed. Welcome to LIMINIQ.
+      </motion.p>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      <div className="flex items-center gap-2 rounded-full border border-border-subtle bg-white/[0.03] pl-4 pr-1.5 py-1.5 transition-colors focus-within:border-accent/50">
+        <Mail size={15} className="shrink-0 text-text-muted" />
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@company.com"
+          className="min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-muted"
+        />
+        <button
+          type="submit"
+          disabled={status === "loading"}
+          className="flex shrink-0 items-center justify-center rounded-full bg-accent px-4 py-2 text-xs font-semibold text-white transition-transform hover:scale-[1.03] disabled:opacity-70"
+        >
+          {status === "loading" ? <Loader2 size={14} className="animate-spin" /> : "Subscribe"}
+        </button>
+      </div>
+      {status === "error" && (
+        <p className="text-xs text-red-400">Something went wrong. Please try again.</p>
+      )}
+    </form>
+  );
+}
+
+export function Footer() {
+  const year = new Date().getFullYear();
+
+  return (
+    <footer id="site-footer" className="relative border-t border-border-subtle bg-bg-primary">
+      <div className="mx-auto max-w-[1440px] px-5 pb-10 pt-16 lg:px-10 lg:pt-20">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-12">
+          {/* Brand */}
+          <div className="col-span-2 sm:col-span-3 lg:col-span-4">
+            <Link
+              href="/"
+              className="font-[family-name:var(--font-heading)] text-2xl font-extrabold tracking-tight text-text-primary"
+            >
+              LIMINIQ
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
+              Software, web, and growth marketing engineered for ambitious brands — built for
+              production, not pitch decks.
+            </p>
+            <div className="mt-5 flex flex-col gap-2.5">
+              <a
+                href={`mailto:${SITE_CONTACT.email}`}
+                className="flex items-center gap-2.5 text-sm text-text-secondary transition-colors hover:text-text-primary"
+              >
+                <Mail size={15} className="text-accent" />
+                {SITE_CONTACT.email}
+              </a>
+              <a
+                href={`tel:${SITE_CONTACT.phoneTel}`}
+                className="flex items-center gap-2.5 text-sm text-text-secondary transition-colors hover:text-text-primary"
+              >
+                <Phone size={15} className="text-accent" />
+                {SITE_CONTACT.phone}
+              </a>
+            </div>
+            <div className="mt-6 flex gap-2.5">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-text-secondary transition-colors hover:border-accent/50 hover:text-accent"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="col-span-1 sm:col-span-1 lg:col-span-2">
+            <FooterColumn title="Services" links={FOOTER_SERVICES} />
+          </div>
+
+          <div className="col-span-1 sm:col-span-1 lg:col-span-2">
+            <FooterColumn title="Company" links={FOOTER_COMPANY} />
+          </div>
+
+          <div className="col-span-1 sm:col-span-1 lg:col-span-2">
+            <h4 className="mb-4 font-[family-name:var(--font-heading)] text-sm font-bold text-text-primary">
+              Tools
+            </h4>
+            <ul className="flex flex-col gap-3">
+              {FEATURED_TOOLS.map((tool) => (
+                <li key={tool.slug}>
+                  <Link
+                    href={`/tools/${tool.slug}`}
+                    className="text-sm text-text-secondary transition-colors hover:text-text-primary"
+                  >
+                    {tool.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/tools"
+                  className="text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
+                >
+                  All Tools →
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Location + Newsletter */}
+          <div className="col-span-2 sm:col-span-3 lg:col-span-2">
+            <h4 className="mb-4 font-[family-name:var(--font-heading)] text-sm font-bold text-text-primary">
+              Based In
+            </h4>
+            <p className="mb-6 flex items-start gap-2.5 text-sm text-text-secondary">
+              <MapPin size={15} className="mt-0.5 shrink-0 text-accent" />
+              {SITE_CONTACT.addressDisplay}
+            </p>
+            <h4 className="mb-3 font-[family-name:var(--font-heading)] text-sm font-bold text-text-primary">
+              Stay in the loop
+            </h4>
+            <NewsletterForm />
+          </div>
+        </div>
+
+        {/* Trust badges */}
+        <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-4 border-y border-border-subtle py-6">
+          {TRUST_BADGES.map((badge) => (
+            <div key={badge.label} className="flex items-center gap-2 text-xs font-medium text-text-secondary">
+              <badge.icon size={16} className="text-accent" />
+              {badge.label}
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-6 flex flex-col-reverse items-center gap-4 sm:flex-row sm:justify-between">
+          <p className="text-sm text-text-muted">© {year} LIMINIQ. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <Link
+              href="/privacy-policy"
+              className={cn("text-sm text-text-muted transition-colors hover:text-text-secondary")}
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms-of-service"
+              className={cn("text-sm text-text-muted transition-colors hover:text-text-secondary")}
+            >
+              Terms
+            </Link>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 }

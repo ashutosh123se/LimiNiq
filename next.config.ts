@@ -15,12 +15,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Apex domain -> www (canonical host)
       {
         source: "/:path*",
         has: [{ type: "host", value: "liminiq.com" }],
         destination: "https://www.liminiq.com/:path*",
         permanent: true,
       },
+      // Friendly query-param URLs -> canonical path-based URLs
       {
         source: "/contact",
         has: [{ type: "query", key: "service", value: "(?<slug>.*)" }],
@@ -39,6 +41,20 @@ const nextConfig: NextConfig = {
         destination: "/blog/category/:slug",
         permanent: true,
       },
+      // Legacy / friendly aliases for continuity (rebuild — old paths still linked externally)
+      { source: "/service", destination: "/services", permanent: true },
+      { source: "/service/:slug*", destination: "/services/:slug*", permanent: true },
+      { source: "/work", destination: "/portfolio", permanent: true },
+      { source: "/our-work", destination: "/portfolio", permanent: true },
+      { source: "/case-studies", destination: "/portfolio", permanent: true },
+      { source: "/get-started", destination: "/contact", permanent: true },
+      { source: "/get-a-quote", destination: "/contact", permanent: true },
+      { source: "/request-a-quote", destination: "/contact", permanent: true },
+      { source: "/pricing-plans", destination: "/pricing", permanent: true },
+      { source: "/about-us", destination: "/about", permanent: true },
+      { source: "/privacy", destination: "/privacy-policy", permanent: true },
+      { source: "/terms", destination: "/terms-of-service", permanent: true },
+      { source: "/tos", destination: "/terms-of-service", permanent: true },
     ];
   },
   async headers() {

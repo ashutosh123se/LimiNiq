@@ -1,27 +1,31 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono, Syne } from "next/font/google";
-import Script from "next/script";
+import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
-import { DeferredClientChrome } from "@/components/layout/DeferredClientChrome";
 import { SmoothScrollProvider } from "@/app/providers/SmoothScrollProvider";
 import { SitewideSchema } from "@/components/seo/SitewideSchema";
+import { CookieGatedAnalytics } from "@/components/layout/CookieGatedAnalytics";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { HOME_SEO } from "@/lib/seo/homeMetadata";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  weight: ["500", "700"],
+  display: "swap",
+});
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  display: "swap",
-});
-const syne = Syne({
-  subsets: ["latin"],
-  variable: "--font-heading",
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -29,7 +33,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#040508",
+  themeColor: "#05060A",
 };
 
 export const metadata: Metadata = {
@@ -65,40 +69,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IN" suppressHydrationWarning>
       <head>
         <SitewideSchema />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
       </head>
-      <body suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} ${syne.variable}`}>
+      <body
+        suppressHydrationWarning
+        className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      >
         <SmoothScrollProvider>
-          <Providers>
-            <DeferredClientChrome />
-            {children}
-          </Providers>
+          <Providers>{children}</Providers>
         </SmoothScrollProvider>
-        {process.env.NEXT_PUBLIC_GA_ID ? (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="lazyOnload"
-            />
-            <Script id="google-analytics" strategy="lazyOnload">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { page_path: window.location.pathname });
-              `}
-            </Script>
-          </>
-        ) : null}
+        <CookieGatedAnalytics />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

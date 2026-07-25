@@ -1,22 +1,36 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { BlogListing } from "@/components/sections/blog/BlogListing";
+import { PageHero } from "@/components/sections/PageHero";
+import { BlogCard } from "@/components/sections/blog/BlogCard";
+import { BlogNewsletter } from "@/components/sections/blog/BlogNewsletter";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
-import { FALLBACK_TRENDING_TOPICS } from "@/lib/data/blogEngagement";
-import { blogTopicPath, getTopicBySlug, isBlogTopicSlug, topicToCategory } from "@/lib/blogRoutes";
+import { getAllUnifiedPosts, getTopics, type UnifiedPost } from "@/lib/blog/posts";
+import { slugifyHeading } from "@/lib/blog/mdx";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
-type Props = { params: Promise<{ slug: string }> };
+type Params = Promise<{ slug: string }>;
 
-export function generateStaticParams() {
-  return FALLBACK_TRENDING_TOPICS.map((t) => ({ slug: t.slug }));
+interface ResolvedTopic {
+  topic: string;
+  posts: UnifiedPost[];
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+async function resolveTopic(slug: string): Promise<ResolvedTopic | null> {
+  const posts = await getAllUnifiedPosts();
+  const topic = getTopics(posts).find((t) => slugifyHeading(t) === slug);
+  if (!topic) return null;
+  return { topic, posts: posts.filter((post) => post.topic === topic) };
+}
+
+export async function generateStaticParams() {
+  const posts = await getAllUnifiedPosts();
+  return getTopics(posts).map((topic) => ({ slug: slugifyHeading(topic) }));
+}
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const topic = getTopicBySlug(slug);
-  if (!topic) {
+  const resolved = await resolveTopic(slug);
+  if (!resolved) {
     return buildPageMetadata({
       title: "Insights & Strategy Blog",
       description: "LIMINIQ blog.",
@@ -25,53 +39,46 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return buildPageMetadata({
-    title: `${topic.label} — Blog`,
-    description: topic.description ?? `Trending topic: ${topic.label}. Read related insights from LIMINIQ.`,
-    path: blogTopicPath(slug),
+    title: `${resolved.topic} — Blog`,
+    description: `Articles on ${resolved.topic} from the LIMINIQ engineering, SEO, and marketing team.`,
+    path: `/blog/topic/${slug}`,
   });
 }
 
-export default async function BlogTopicPage({ params }: Props) {
+export default async function BlogTopicPage({ params }: { params: Params }) {
   const { slug } = await params;
-  if (!isBlogTopicSlug(slug)) notFound();
+  const resolved = await resolveTopic(slug);
+  if (!resolved) notFound();
 
-  const topic = getTopicBySlug(slug)!;
-  const category = topicToCategory(slug);
+  const { topic, posts } = resolved;
 
   return (
-    <div style={{ paddingTop: "5rem", background: "var(--bg-primary)" }}>
-      <section style={{ padding: "6rem 0 4rem", position: "relative" }}>
-        <div className="section-container">
-          <div style={{ marginBottom: "3rem" }}>
-            <div className="pill-badge" style={{ marginBottom: "1.5rem", display: "inline-flex" }}>
-              <span style={{ color: "var(--accent-primary)" }}>{topic.emoji ?? "✦"}</span> Trending
-            </div>
-            <h1 className="text-hero" style={{ letterSpacing: "-0.04em" }}>
-              {topic.label}
-            </h1>
-            {topic.description && (
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "1.1rem",
-                  color: "var(--text-secondary)",
-                  marginTop: "1rem",
-                  maxWidth: 600,
-                }}
-              >
-                {topic.description}
-              </p>
-            )}
-          </div>
+    <div className="blog-index">
+      <PageHero
+        eyebrow="Topic"
+        title={<>{topic}</>}
+        description={`${posts.length} article${posts.length === 1 ? "" : "s"} on ${topic.toLowerCase()}.`}
+      />
 
-          <Suspense fallback={<div style={{ color: "var(--text-secondary)" }}>Loading articles...</div>}>
-            <BlogListing initialCategory={category} />
-          </Suspense>
-        </div>
+      <section className="section-container blog-index-section">
+        {posts.length === 0 ? (
+          <p style={{ color: "var(--text-secondary)" }}>No articles in this topic yet. Check back soon.</p>
+        ) : (
+          <div className="blog-grid">
+            {posts.map((post) => (
+              <BlogCard key={post.slug} post={post} />
+            ))}
+          </div>
+        )}
       </section>
 
-      <div style={{ padding: "4rem 0" }} />
+      <BlogNewsletter />
       <LeadCTASection />
+
+      <style>{`
+        .blog-index { background: var(--bg-primary); overflow-x: clip; }
+        .blog-index-section { padding-top: 0; padding-bottom: 2rem; }
+      `}</style>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Contact Us",
   description:
-    "Get in touch with LIMINIQ for custom software, SaaS, web development, SEO, or digital marketing. Free discovery call — tailored quote within 24 hours.",
+    "Let's build something worth shipping. Get in touch with LIMINIQ for custom software, SaaS, web development, SEO, or digital marketing — tailored quote within 24 hours.",
   path: "/contact",
 });
 

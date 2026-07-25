@@ -1,277 +1,222 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import { SERVICES } from "@/lib/data/services";
-import { TIER_1_SLUGS } from "@/lib/data/serviceExtensions";
-import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
 import { ArrowUpRight } from "lucide-react";
+import { PageHero } from "@/components/sections/PageHero";
+import { FinalCTA } from "@/components/sections/FinalCTA";
+import { FAQAccordion } from "@/components/sections/services/FAQAccordion";
+import { SERVICES, type Service } from "@/data/services";
+import { faqsForPage } from "@/data/faqs";
+import { getIcon } from "@/lib/icons";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Our Services",
   description:
-    "Nine delivery disciplines under one team: custom software & SaaS, digital marketing, SEO, web development, mobile apps, UI/UX, creative, content, and AI/cloud solutions.",
+    "Custom software & SaaS, websites & e-commerce, mobile apps, UI/UX & branding, plus SEO, digital marketing, content, and AI/automation/cloud solutions — all under one delivery team.",
   path: "/services",
 });
 
+const CATEGORIES: Service["category"][] = [
+  "Software & SaaS",
+  "Web & Commerce",
+  "Mobile & Design",
+  "Marketing & Growth",
+];
+
 export default function ServicesPage() {
-  const tier1 = TIER_1_SLUGS.map((slug) => SERVICES.find((s) => s.slug === slug)).filter(Boolean) as typeof SERVICES;
-  const tier2 = SERVICES.filter((s) => !TIER_1_SLUGS.includes(s.slug as (typeof TIER_1_SLUGS)[number]));
+  const faqs = faqsForPage("services");
 
   return (
     <div className="svc-index">
-      <section className="svc-index-hero">
-        <div className="svc-index-glow" />
-        <div className="section-container svc-index-hero-inner">
-          <div className="pill-badge shimmer">
-            <span style={{ color: "var(--accent-primary)" }}>✦</span> Capability deck
-          </div>
-          <h1 className="section-h2 svc-index-title">
-            Nine disciplines.
-            <span className="text-gradient"> One delivery team.</span>
-          </h1>
-          <p className="svc-index-lede">
-            From custom software and SaaS to SEO and performance marketing — engineered to scale your product and your pipeline.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Capability deck"
+        title={
+          <>
+            Services engineered
+            <br />
+            <span className="text-gradient">to move the needle.</span>
+          </>
+        }
+        description="From custom software and SaaS to SEO and performance marketing — every discipline is delivered by one senior team, with transparent pricing and no agency bloat."
+      >
+        <Link href="/contact" className="btn-primary">
+          Book a free consultation
+        </Link>
+        <Link href="/pricing" className="btn-secondary">
+          View pricing
+        </Link>
+      </PageHero>
 
-      <section className="section-padding section-container">
-        <div className="svc-index-label">Core pillars</div>
-        <div className="svc-index-pillars">
-          {tier1.map((service, i) => (
-            <Link
-              key={service.slug}
-              href={`/services/${service.slug}`}
-              className="svc-index-pillar glass-card-premium"
-              style={{ "--svc-color": service.color } as React.CSSProperties}
-            >
-              <span className="svc-index-num">{String(i + 1).padStart(2, "0")}</span>
-              <div className="svc-index-pillar-icon">{service.icon}</div>
-              <h2>{service.shortTitle}</h2>
-              <p>{service.subtitle}</p>
-              <span className="svc-index-link">
-                Explore <ArrowUpRight size={15} />
-              </span>
-              <div className="svc-index-pillar-cover">
-                {service.coverImage && (
-                  <Image src={service.coverImage} alt="" fill sizes="400px" style={{ objectFit: "cover" }} />
-                )}
-                <div className="svc-index-pillar-cover-fade" />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {CATEGORIES.map((category) => {
+        const services = SERVICES.filter((s) => s.category === category);
+        if (!services.length) return null;
 
-      <section className="section-padding section-container svc-index-support-wrap">
-        <div className="svc-index-label">Supporting craft</div>
-        <div className="svc-index-support">
-          {tier2.map((service) => (
-            <Link
-              key={service.slug}
-              href={`/services/${service.slug}`}
-              className="svc-index-support-card glass-card"
-              style={{ "--svc-color": service.color } as React.CSSProperties}
-            >
-              <span className="svc-index-support-accent" />
-              <div className="svc-index-support-icon">{service.icon}</div>
-              <div>
-                <strong>{service.shortTitle}</strong>
-                <em>{service.features[0]}</em>
-              </div>
-              <ArrowUpRight size={16} className="svc-index-support-arrow" />
-            </Link>
-          ))}
-        </div>
-      </section>
+        return (
+          <section key={category} className="section-container svc-index-category">
+            <div className="svc-index-label">{category}</div>
+            <div className="svc-index-grid">
+              {services.map((service) => {
+                const Icon = getIcon(service.icon);
+                return (
+                  <Link
+                    key={service.slug}
+                    href={`/services/${service.slug}`}
+                    className="svc-index-card glass-card-premium"
+                  >
+                    <div className="svc-index-card-icon">
+                      <Icon size={22} strokeWidth={1.6} />
+                    </div>
 
-      <LeadCTASection />
+                    {service.isCorePillar && <span className="svc-index-core-tag">Core</span>}
+
+                    <h2 className="svc-index-card-title">{service.name}</h2>
+                    <p className="svc-index-card-tagline">{service.tagline}</p>
+
+                    <div className="svc-index-card-footer">
+                      {service.priceFrom ? (
+                        <span className="svc-index-card-price">
+                          From {service.priceFrom.amount}
+                          <em> / {service.priceFrom.unit}</em>
+                        </span>
+                      ) : (
+                        <span className="svc-index-card-price svc-index-card-price--quote">Custom quote</span>
+                      )}
+                      <span className="svc-index-card-link">
+                        Learn more <ArrowUpRight size={14} />
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
+
+      {faqs.length > 0 && (
+        <section className="section-padding section-container svc-index-faq">
+          <FAQAccordion items={faqs} />
+        </section>
+      )}
+
+      <FinalCTA />
 
       <style>{`
         .svc-index {
-          padding-top: 5rem;
+          padding-top: 0;
           background: var(--bg-primary);
           overflow-x: clip;
         }
-        .svc-index-hero {
-          position: relative;
-          padding: clamp(3rem, 7vw, 5rem) 0 2rem;
-          overflow: hidden;
-        }
-        .svc-index-glow {
-          position: absolute;
-          width: 500px; height: 300px;
-          top: 0; left: 50%;
-          transform: translateX(-50%);
-          background: radial-gradient(ellipse, rgba(59,91,255,0.15), transparent 70%);
-          pointer-events: none;
-        }
-        .svc-index-hero-inner {
-          position: relative;
-          text-align: center;
-          max-width: 720px;
-        }
-        .svc-index-title { margin: 1rem 0; }
-        .svc-index-lede {
-          font-size: 1.05rem;
-          color: var(--text-secondary);
-          line-height: 1.65;
-          margin: 0;
+        .svc-index-category {
+          padding-bottom: clamp(2.5rem, 5vw, 4rem);
         }
         .svc-index-label {
           font-family: var(--font-mono);
-          font-size: 0.65rem;
+          font-size: 0.68rem;
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
           color: var(--text-tertiary);
-          margin-bottom: 1rem;
+          margin-bottom: 1.1rem;
         }
-        .svc-index-pillars {
+        .svc-index-grid {
           display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
           gap: 1rem;
         }
-        .svc-index-pillar {
+        .svc-index-card {
           position: relative;
           padding: 1.5rem;
-          border-radius: 22px;
+          border-radius: 20px;
           text-decoration: none;
-          overflow: hidden;
-          min-height: 280px;
           display: flex;
           flex-direction: column;
-          border-color: color-mix(in srgb, var(--svc-color) 20%, rgba(255,255,255,0.08)) !important;
+          gap: 0.6rem;
+          min-height: 220px;
           transition: transform 0.25s ease, border-color 0.25s ease;
         }
-        .svc-index-pillar:hover {
+        .svc-index-card:hover {
           transform: translateY(-4px);
-          border-color: color-mix(in srgb, var(--svc-color) 40%, rgba(255,255,255,0.1)) !important;
+          border-color: var(--border-hover, var(--accent));
         }
-        .svc-index-num {
-          font-family: var(--font-mono);
-          font-size: 0.62rem;
-          font-weight: 700;
-          color: var(--svc-color);
-          letter-spacing: 0.08em;
-        }
-        .svc-index-pillar-icon {
-          width: 44px; height: 44px;
+        .svc-index-card-icon {
+          width: 46px;
+          height: 46px;
           border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 0.75rem 0;
-          color: var(--svc-color);
-          background: color-mix(in srgb, var(--svc-color) 12%, transparent);
-          border: 1px solid color-mix(in srgb, var(--svc-color) 28%, transparent);
+          color: var(--accent);
+          background: var(--accent-muted);
+          border: 1px solid var(--border-subtle);
+          margin-bottom: 0.25rem;
         }
-        .svc-index-pillar h2 {
+        .svc-index-core-tag {
+          position: absolute;
+          top: 1.4rem;
+          right: 1.4rem;
+          font-family: var(--font-mono);
+          font-size: 0.6rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--accent);
+          padding: 3px 8px;
+          border-radius: 100px;
+          background: var(--accent-muted);
+          border: 1px solid var(--border-subtle);
+        }
+        .svc-index-card-title {
           font-family: var(--font-heading);
           font-size: 1.15rem;
           font-weight: 800;
           color: var(--text-primary);
-          margin: 0 0 0.5rem;
+          margin: 0;
+          line-height: 1.3;
         }
-        .svc-index-pillar p {
+        .svc-index-card-tagline {
           font-size: 0.88rem;
           color: var(--text-secondary);
           line-height: 1.55;
-          margin: 0 0 1rem;
+          margin: 0;
           flex: 1;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
         }
-        .svc-index-link {
+        .svc-index-card-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.75rem;
+          padding-top: 0.85rem;
+          margin-top: 0.35rem;
+          border-top: 1px dashed var(--border-subtle);
+        }
+        .svc-index-card-price {
+          font-family: var(--font-heading);
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+        .svc-index-card-price em {
+          font-style: normal;
+          font-weight: 500;
+          color: var(--text-tertiary);
+        }
+        .svc-index-card-price--quote {
+          color: var(--text-tertiary);
+          font-weight: 600;
+        }
+        .svc-index-card-link {
           display: inline-flex;
           align-items: center;
           gap: 0.3rem;
           font-family: var(--font-heading);
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 700;
-          color: var(--svc-color);
+          color: var(--accent);
+          white-space: nowrap;
         }
-        .svc-index-pillar-cover {
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-          opacity: 0.18;
-        }
-        .svc-index-pillar-cover-fade {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(160deg, var(--bg-primary) 20%, transparent 70%);
-        }
-        .svc-index-support-wrap { padding-top: 0; }
-        .svc-index-support {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 0.65rem;
-        }
-        .svc-index-support-card {
-          display: grid;
-          grid-template-columns: auto 1fr auto;
-          align-items: center;
-          gap: 0.75rem;
-          padding: 0.85rem 1rem;
-          border-radius: 14px;
-          text-decoration: none;
-          position: relative;
-          overflow: hidden;
-          transition: all 0.22s ease;
-        }
-        .svc-index-support-card:hover {
-          border-color: color-mix(in srgb, var(--svc-color) 30%, rgba(255,255,255,0.08));
-          background: color-mix(in srgb, var(--svc-color) 6%, rgba(255,255,255,0.03));
-        }
-        .svc-index-support-accent {
-          position: absolute;
-          left: 0; top: 18%; bottom: 18%;
-          width: 3px;
-          border-radius: 4px;
-          background: var(--svc-color);
-          opacity: 0;
-          transition: opacity 0.22s ease;
-        }
-        .svc-index-support-card:hover .svc-index-support-accent { opacity: 1; }
-        .svc-index-support-icon {
-          width: 34px; height: 34px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--svc-color);
-          background: color-mix(in srgb, var(--svc-color) 12%, transparent);
-        }
-        .svc-index-support-card strong {
-          display: block;
-          font-family: var(--font-heading);
-          font-size: 0.88rem;
-          font-weight: 700;
-          color: var(--text-primary);
-        }
-        .svc-index-support-card em {
-          font-style: normal;
-          font-size: 0.72rem;
-          color: var(--text-tertiary);
-        }
-        .svc-index-support-arrow {
-          color: var(--text-tertiary);
-          transition: all 0.22s ease;
-        }
-        .svc-index-support-card:hover .svc-index-support-arrow {
-          color: var(--svc-color);
-          transform: translate(2px, -2px);
-        }
-        @media (max-width: 960px) {
-          .svc-index-pillars { grid-template-columns: 1fr; }
-          .svc-index-support { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        }
-        @media (max-width: 560px) {
-          .svc-index-support { grid-template-columns: 1fr; }
+        .svc-index-faq {
+          padding-top: 0;
         }
       `}</style>
     </div>

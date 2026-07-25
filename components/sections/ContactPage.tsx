@@ -1,50 +1,40 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
-import { CONTACT_SERVICE_SLUG_MAP } from "@/lib/contactServices";
+import { Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle2 } from "lucide-react";
+import { SERVICES } from "@/data/services";
 import { SITE_CONTACT } from "@/lib/site";
+import { WHATSAPP_URL } from "@/data/navigation";
+import { isContactServiceSlug } from "@/lib/contactServices";
+
+const AUDIT_SERVICE_SLUG = "website-ecommerce";
+
+const BUDGETS = ["Under ₹10K", "₹10K–₹30K", "₹30K–₹75K", "₹75K–₹2L", "₹2L+", "Not sure yet"];
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
-  company: z.string().optional(),
-  website: z.string().optional(),
-  services: z.array(z.string()).min(1, "Please select at least one service"),
+  service: z.string().min(1, "Please select a service"),
   budget: z.string().min(1, "Please select a budget"),
-  timeline: z.string().min(1, "Please select a timeline"),
-  source: z.string().optional(),
-  message: z.string().min(20, "Please tell us more about your project (min 20 characters)"),
-  honeypot: z.string().max(0, "Bot detected"),
+  message: z.string().min(20, "Please tell us a bit more about your project (min 20 characters)"),
+  honeypot: z.string().max(0, "Bot detected").optional(),
 });
 
 type FormData = z.infer<typeof schema>;
 
-const SERVICES = [
-  "Custom Software & SaaS",
-  "Website Development",
-  "SEO",
-  "Digital Marketing",
-];
-
-const SERVICE_SLUG_MAP = CONTACT_SERVICE_SLUG_MAP;
-
-const BUDGETS = [
-  "Under ₹50K",
-  "₹50K–₹2L",
-  "₹2L–₹8L",
-  "₹8L–₹20L",
-  "₹20L+",
-  "Not sure yet",
-];
-const TIMELINES = ["ASAP", "Within 1 month", "1–3 months", "3–6 months", "Flexible"];
-const SOURCES = ["Google Search", "Social Media", "Referral", "Linkedin", "Instagram", "Other"];
+function WhatsAppIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+  );
+}
 
 export function ContactPage({ initialServiceSlug }: { initialServiceSlug?: string } = {}) {
   return (
@@ -61,50 +51,42 @@ function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string 
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { services: [], honeypot: "" },
+    defaultValues: { service: "", budget: "", honeypot: "" },
   });
 
-  const selectedServices = watch("services") || [];
-
   useEffect(() => {
-    const slug = initialServiceSlug ?? searchParams.get("service");
-    if (!slug) return;
-    const mapped = SERVICE_SLUG_MAP[slug];
-    if (mapped) {
-      setValue("services", [mapped]);
+    // 1. Explicit prop (from /contact/service/[slug]) or ?service= query param.
+    const querySlug = initialServiceSlug ?? searchParams.get("service");
+    if (querySlug && isContactServiceSlug(querySlug)) {
+      setValue("service", querySlug);
+      return;
+    }
+    // 2. #audit hash — the "Get Free Audit" CTA used across Nav/Mobile/Sticky bar.
+    if (typeof window !== "undefined" && window.location.hash === "#audit") {
+      setValue("service", AUDIT_SERVICE_SLUG);
     }
   }, [initialServiceSlug, searchParams, setValue]);
 
-  const toggleService = (service: string) => {
-    const current = selectedServices;
-    const updated = current.includes(service)
-      ? current.filter((s) => s !== service)
-      : [...current, service];
-    setValue("services", updated);
-  };
-
   const onSubmit = async (data: FormData) => {
     setSubmitState("loading");
+    const service = SERVICES.find((s) => s.slug === data.service);
     try {
-      const res = await fetch("/api/leads", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.name,
           email: data.email,
           phone: data.phone,
-          company: data.company,
-          website: data.website,
-          services: data.services,
+          service: service?.name ?? data.service,
           budget: data.budget,
-          timeline: data.timeline,
-          source: data.source,
           message: data.message,
+          honeypot: data.honeypot,
+          source: "contact_page",
           page_url: typeof window !== "undefined" ? window.location.href : "",
         }),
       });
@@ -115,360 +97,444 @@ function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string 
   };
 
   const CONTACT_INFO = [
-    { icon: <Mail size={20} />, label: "Email", value: SITE_CONTACT.email, href: `mailto:${SITE_CONTACT.email}` },
-    { icon: <Phone size={20} />, label: "Phone", value: SITE_CONTACT.phoneDisplay, href: `tel:${SITE_CONTACT.phoneTel}` },
+    { icon: <Mail size={18} />, label: "Email", value: SITE_CONTACT.email, href: `mailto:${SITE_CONTACT.email}` },
+    { icon: <Phone size={18} />, label: "Phone", value: SITE_CONTACT.phone, href: `tel:${SITE_CONTACT.phoneTel}` },
     {
-      icon: <MapPin size={20} />,
-      label: "Location",
-      value: `${SITE_CONTACT.streetAddress}, ${SITE_CONTACT.addressLocality}, ${SITE_CONTACT.postalCode}`,
+      icon: <MapPin size={18} />,
+      label: "Address",
+      value: `${SITE_CONTACT.streetAddress}, ${SITE_CONTACT.addressLocality} ${SITE_CONTACT.postalCode}`,
       href: `https://maps.google.com/?q=${encodeURIComponent(SITE_CONTACT.mapsQuery)}`,
     },
-    { icon: <Clock size={20} />, label: "Hours", value: "Mon–Sat, 9am–7pm", href: "#" },
   ];
 
   return (
-    <div style={{ paddingTop: "5rem", background: "var(--bg-primary)" }}>
+    <div className="contact-page">
       {/* Hero */}
-      <div style={{ padding: "6rem 0 2rem", position: "relative", overflow: "hidden" }}>
-        <div className="section-container" style={{ position: "relative", textAlign: "center" }}>
-          <div className="pill-badge" style={{ display: "inline-flex", marginBottom: "1.5rem" }}>
-            <span style={{ color: "var(--accent-primary)" }}>✦</span> Get in Touch
-          </div>
-          <h1 className="text-hero" style={{ letterSpacing: "-0.04em", marginBottom: "1rem" }}>
-            Let&apos;s Build <span style={{ color: "var(--text-secondary)" }}>Something</span>
+      <section className="contact-hero">
+        <div className="contact-hero-glow" aria-hidden />
+        <div className="section-container contact-hero-inner">
+          <span className="pill-badge shimmer mb-6 inline-flex">
+            <span className="text-[var(--signal)]">✦</span> Get in Touch
+          </span>
+          <h1 className="contact-hero-title">
+            Let&apos;s build something <span className="text-gradient">worth shipping.</span>
           </h1>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", color: "var(--text-secondary)", maxWidth: 500, margin: "0 auto", lineHeight: 1.6 }}>
-            Tell us about your project and we&apos;ll get back to you within 24 hours with a tailored growth plan.
+          <p className="contact-hero-desc">
+            Tell us about your project and we&apos;ll get back to you within 24 hours with a tailored plan —
+            no generic pitch decks, no pressure.
           </p>
+          <span className="contact-hero-badge">
+            <Clock size={13} /> We reply within 24 hours
+          </span>
         </div>
-      </div>
+      </section>
 
       {/* Main content */}
-      <div className="section-container section-padding" style={{ paddingBottom: "8rem" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "4rem" }} className="contact-grid">
-          
-          {/* Left column — info tiles */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-            {/* Contact details Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {CONTACT_INFO.map((c) => (
-                <a
-                  key={c.label}
-                  href={c.href}
-                  className="glass-card contact-tile group"
-                  style={{ textDecoration: "none", padding: "1.5rem", borderRadius: 16, display: "flex", flexDirection: "column", gap: "1.5rem" }}
-                >
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-secondary)" }} className="tile-icon">
-                    {c.icon}
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.8rem", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.25rem" }}>{c.label}</div>
-                    <div style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--text-primary)", fontWeight: 500, wordBreak: "break-word" }}>{c.value}</div>
-                  </div>
-                </a>
-              ))}
-            </div>
-
-            {/* Social links */}
-            <div className="glass-card" style={{ padding: "2rem", borderRadius: 16 }}>
-              <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "1.5rem" }}>Follow Our Journey</h3>
-              <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                {[
-                  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>, href: "https://www.linkedin.com/company/124623896/admin/dashboard/", color: "#0077b5" },
-                  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>, href: "https://www.instagram.com/liminiq_com?igsh=bm1xM28yM2JzZGhv", color: "#e1306c" },
-                ].map((s, i) => (
-                  <a
-                    key={i}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-btn group"
-                    style={{ textDecoration: "none", width: 48, height: 48, borderRadius: "50%", background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-secondary)", transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", position: "relative", overflow: "hidden" }}
-                  >
-                    <span style={{ position: "relative", zIndex: 1, display: "flex" }} className="social-icon-wrapper">{s.icon}</span>
-                    <div className="social-bg" style={{ position: "absolute", inset: 0, background: s.color, opacity: 0, transition: "opacity 0.3s" }} />
+      <div className="section-container contact-body">
+        <div className="contact-grid">
+          {/* Sidebar */}
+          <div className="contact-sidebar">
+            <div className="glass-card contact-sidebar-card">
+              <h3 className="contact-sidebar-title">Contact details</h3>
+              <div className="flex flex-col gap-3">
+                {CONTACT_INFO.map((c) => (
+                  <a key={c.label} href={c.href} className="contact-info-row">
+                    <span className="contact-info-icon">{c.icon}</span>
+                    <span>
+                      <span className="contact-info-label">{c.label}</span>
+                      <span className="contact-info-value">{c.value}</span>
+                    </span>
                   </a>
                 ))}
               </div>
+
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="contact-whatsapp-btn">
+                <WhatsAppIcon className="h-4 w-4" />
+                Chat on WhatsApp
+              </a>
             </div>
 
-            {/* Map Block */}
-            <div
-              className="glass-card"
-              style={{
-                height: 250,
-                borderRadius: 16,
-                position: "relative",
-                overflow: "hidden"
-              }}
-            >
-              <iframe 
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(SITE_CONTACT.mapsQuery)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                width="100%" 
-                height="100%" 
+            <div className="glass-card contact-map-card">
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(SITE_CONTACT.mapsQuery)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                width="100%"
+                height="100%"
                 style={{ border: 0, filter: "grayscale(100%) opacity(70%)" }}
-                allowFullScreen={false} 
-                loading="lazy" 
+                allowFullScreen={false}
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
+                title="LIMINIQ office — Paschim Vihar, Delhi"
+              />
             </div>
           </div>
 
-          {/* Right column — form */}
-          <div style={{ position: "relative" }}>
-            {/* Background Ambient Glow */}
-            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "120%", height: "120%", background: "radial-gradient(circle, rgba(109,40,217,0.15) 0%, transparent 60%)", pointerEvents: "none", zIndex: 0, filter: "blur(60px)" }} />
-            
-            <div style={{ position: "relative", zIndex: 1, height: "100%" }}>
+          {/* Form */}
+          <div className="contact-form-wrap">
             {submitState === "success" ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="glass-card"
-                style={{ padding: "4rem", textAlign: "center", borderRadius: 24, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}
+                className="glass-card-premium contact-success"
               >
-                <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(16, 185, 129, 0.1)", color: "#10b981", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <div className="contact-success-icon">
+                  <CheckCircle2 size={30} />
                 </div>
-                <h3 style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "2rem", color: "var(--text-primary)", marginBottom: "1rem" }}>
-                  Brief Received!
-                </h3>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "1.1rem", color: "var(--text-secondary)", lineHeight: 1.7, maxWidth: 400 }}>
-                  Thank you for reaching out. Our team will review your brief and get back to you within 24 hours with a tailored proposal.
+                <h3 className="contact-success-title">Brief received!</h3>
+                <p className="contact-success-desc">
+                  Thank you for reaching out. Our team will review your brief and get back to you within 24
+                  hours with a tailored proposal.
                 </p>
               </motion.div>
             ) : (
               <motion.form
                 onSubmit={handleSubmit(onSubmit)}
-                className="glass-card form-container"
-                style={{ padding: "3rem", display: "flex", flexDirection: "column", gap: "1.5rem", borderRadius: 24, position: "relative" }}
+                className="glass-card-premium contact-form"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
               >
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "linear-gradient(90deg, var(--accent-primary), #3b82f6)", borderRadius: "24px 24px 0 0" }} />
-                <h2 style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1.5rem", color: "var(--text-primary)", marginBottom: "0.5rem" }}>
-                  Project Brief
-                </h2>
+                <div className="contact-form-top-bar" />
+                <h2 className="contact-form-title">Project Brief</h2>
 
-                {/* Honeypot */}
                 <input {...register("honeypot")} style={{ display: "none" }} tabIndex={-1} aria-hidden="true" />
 
-                {/* Name + Email */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row">
+                <div className="contact-form-row">
                   <div>
                     <label className="form-label">Full Name *</label>
-                    <input {...register("name")} className="form-input premium-input" placeholder="Arjun Mehta" />
+                    <input {...register("name")} className="form-input" placeholder="Arjun Mehta" />
                     {errors.name && <span className="form-error">{errors.name.message}</span>}
                   </div>
                   <div>
                     <label className="form-label">Email Address *</label>
-                    <input {...register("email")} type="email" className="form-input premium-input" placeholder="you@company.com" />
+                    <input {...register("email")} type="email" className="form-input" placeholder="you@company.com" />
                     {errors.email && <span className="form-error">{errors.email.message}</span>}
                   </div>
                 </div>
 
-                {/* Phone + Company */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row">
-                  <div>
-                    <label className="form-label">Phone Number</label>
-                    <input {...register("phone")} className="form-input premium-input" placeholder="+91 98765 43210" />
-                  </div>
-                  <div>
-                    <label className="form-label">Company / Website URL</label>
-                    <input {...register("company")} className="form-input premium-input" placeholder="liminiq.com" />
-                  </div>
+                <div>
+                  <label className="form-label">Phone Number</label>
+                  <input {...register("phone")} className="form-input" placeholder="+91 98765 43210" />
                 </div>
 
-                {/* Services checkboxes */}
-                <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
-                  <label className="form-label">Services Interested In *</label>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.75rem" }}>
-                    {SERVICES.map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        onClick={() => toggleService(s)}
-                        style={{
-                          fontFamily: "var(--font-heading)",
-                          fontSize: "0.85rem",
-                          fontWeight: 500,
-                          padding: "10px 18px",
-                          borderRadius: 30,
-                          border: selectedServices.includes(s) ? "1px solid var(--accent-primary)" : "1px solid var(--border-subtle)",
-                          background: selectedServices.includes(s) ? "rgba(109, 40, 217, 0.1)" : "var(--bg-surface)",
-                          color: selectedServices.includes(s) ? "var(--text-primary)" : "var(--text-secondary)",
-                          cursor: "pointer",
-                          transition: "all 0.2s",
-                        }}
-                        className="service-pill"
-                      >
-                        {selectedServices.includes(s) ? "✓ " : ""}{s}
-                      </button>
-                    ))}
+                <div className="contact-form-row">
+                  <div>
+                    <label className="form-label">Service *</label>
+                    <select {...register("service")} className="form-input contact-select">
+                      <option value="">Select a service</option>
+                      {SERVICES.map((s) => (
+                        <option key={s.slug} value={s.slug}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.service && <span className="form-error">{errors.service.message}</span>}
                   </div>
-                  {errors.services && <span className="form-error" style={{ marginTop: "0.5rem", display: "block" }}>{errors.services.message}</span>}
-                </div>
-
-                {/* Budget + Timeline */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row">
                   <div>
                     <label className="form-label">Project Budget *</label>
-                    <div className="select-wrapper">
-                      <select {...register("budget")} className="form-input premium-input" style={{ cursor: "pointer", appearance: "none" }}>
-                        <option value="">Select budget</option>
-                        {BUDGETS.map((b) => <option key={b} value={b}>{b}</option>)}
-                      </select>
-                    </div>
+                    <select {...register("budget")} className="form-input contact-select">
+                      <option value="">Select budget</option>
+                      {BUDGETS.map((b) => (
+                        <option key={b} value={b}>
+                          {b}
+                        </option>
+                      ))}
+                    </select>
                     {errors.budget && <span className="form-error">{errors.budget.message}</span>}
-                  </div>
-                  <div>
-                    <label className="form-label">Timeline *</label>
-                    <div className="select-wrapper">
-                      <select {...register("timeline")} className="form-input premium-input" style={{ cursor: "pointer", appearance: "none" }}>
-                        <option value="">Select timeline</option>
-                        {TIMELINES.map((t) => <option key={t} value={t}>{t}</option>)}
-                      </select>
-                    </div>
-                    {errors.timeline && <span className="form-error">{errors.timeline.message}</span>}
                   </div>
                 </div>
 
-                {/* Message */}
-                <div style={{ marginTop: "0.5rem" }}>
+                <div>
                   <label className="form-label">Tell us about your project *</label>
                   <textarea
                     {...register("message")}
                     rows={4}
-                    className="form-input premium-input"
+                    className="form-input"
                     placeholder="Describe your goals, current challenges, and what success looks like..."
                     style={{ resize: "vertical", paddingTop: "1rem" }}
                   />
                   {errors.message && <span className="form-error">{errors.message.message}</span>}
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={submitState === "loading"}
-                  className="btn-primary submit-btn"
-                  style={{ 
-                    justifyContent: "center", 
-                    padding: "16px", 
-                    fontSize: "1.05rem", 
-                    marginTop: "1rem",
-                    background: "linear-gradient(135deg, var(--accent-primary), #3b82f6)",
-                    border: "none",
-                    boxShadow: "0 10px 25px -5px rgba(109, 40, 217, 0.4)",
-                    transition: "all 0.3s ease"
-                  }}
-                >
+                <button type="submit" disabled={submitState === "loading"} className="btn-primary contact-submit-btn">
                   {submitState === "loading" ? (
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "white", borderRadius: "50%", animation: "spin 0.8s linear infinite", display: "inline-block" }} />
+                    <span className="contact-spinner-row">
+                      <span className="contact-spinner" />
                       Submitting...
                     </span>
                   ) : (
-                    <>Submit Project Brief <ArrowRight size={18} /></>
+                    <>
+                      Submit Project Brief <ArrowRight size={18} />
+                    </>
                   )}
                 </button>
 
                 {submitState === "error" && (
-                  <p className="form-error" style={{ textAlign: "center", marginTop: "0.5rem" }}>
-                    Something went wrong. Please try again or email us directly.
+                  <p className="form-error contact-form-error-text">
+                    Something went wrong. Please try again or email us directly at {SITE_CONTACT.email}.
                   </p>
                 )}
               </motion.form>
             )}
-            </div>
           </div>
         </div>
       </div>
 
       <style>{`
-        @media (min-width: 900px) {
-          .contact-grid { grid-template-columns: 0.8fr 1.2fr !important; }
+        .contact-page {
+          background: var(--bg-primary);
+          overflow-x: clip;
         }
-        @media (max-width: 768px) {
-          .form-row { grid-template-columns: 1fr !important; }
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .form-container {
-          box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5) !important;
-          background: var(--glass-1) !important;
-          backdrop-filter: blur(24px) saturate(160%) !important;
-          border: 1px solid var(--glass-border) !important;
-        }
-        .premium-input {
-          background: rgba(255,255,255,0.03) !important;
-          border: 1px solid rgba(255,255,255,0.1) !important;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-          color: var(--text-primary) !important;
-        }
-        .premium-input option {
-          background-color: var(--bg-surface) !important;
-          color: var(--text-primary) !important;
-        }
-        .premium-input:focus {
-          background: rgba(255,255,255,0.08) !important;
-          border-color: var(--accent-primary) !important;
-          box-shadow: 0 0 0 4px rgba(59,91,255,0.15), inset 0 0 0 1px var(--accent-primary) !important;
-          transform: translateY(-1px);
-        }
-        .contact-tile {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        }
-        .contact-tile:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(109, 40, 217, 0.1) !important;
-          border-color: rgba(109, 40, 217, 0.3) !important;
-          background: rgba(20,20,30,0.8) !important;
-        }
-        .contact-tile:hover .tile-icon {
-          color: white !important;
-          background: var(--accent-primary) !important;
-          border-color: var(--accent-primary) !important;
-          transform: scale(1.1);
-          box-shadow: 0 0 15px rgba(109, 40, 217, 0.5);
-        }
-        .tile-icon {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        }
-        .social-btn:hover {
-          border-color: transparent !important;
-          transform: translateY(-3px);
-          box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        .social-btn:hover .social-bg {
-          opacity: 1 !important;
-        }
-        .social-btn:hover .social-icon-wrapper {
-          color: white !important;
-        }
-        .service-pill {
+        .contact-hero {
           position: relative;
+          padding: 8rem 0 3rem;
           overflow: hidden;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
-        .service-pill:hover {
-          border-color: var(--accent-primary) !important;
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(109, 40, 217, 0.15);
+        .contact-hero-glow {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 560px;
+          height: 320px;
+          background: radial-gradient(ellipse, var(--accent-muted), transparent 70%);
+          pointer-events: none;
         }
-        .submit-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 15px 30px -5px rgba(109, 40, 217, 0.6) !important;
-          filter: brightness(1.1);
+        .contact-hero-inner {
+          position: relative;
+          z-index: 1;
+          text-align: center;
+          max-width: 720px;
         }
-        .select-wrapper {
+        .contact-hero-title {
+          font-family: var(--font-heading);
+          font-size: clamp(2.1rem, 5vw, 3.25rem);
+          font-weight: 800;
+          line-height: 1.12;
+          letter-spacing: -0.03em;
+          color: var(--text-primary);
+          margin: 0 0 1.1rem;
+        }
+        .contact-hero-desc {
+          font-size: 1.08rem;
+          color: var(--text-secondary);
+          line-height: 1.7;
+          max-width: 560px;
+          margin: 0 auto;
+        }
+        .contact-hero-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          margin-top: 1.5rem;
+          padding: 0.4rem 0.9rem;
+          border-radius: 100px;
+          font-size: 0.78rem;
+          font-weight: 600;
+          color: var(--success);
+          background: rgba(34, 197, 94, 0.1);
+          border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+        .contact-body {
+          padding-bottom: clamp(4rem, 8vw, 7rem);
+        }
+        .contact-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        @media (min-width: 900px) {
+          .contact-grid { grid-template-columns: 0.85fr 1.15fr; gap: 2.5rem; align-items: start; }
+        }
+        .contact-sidebar {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .contact-sidebar-card {
+          padding: 1.75rem;
+          border-radius: 20px;
+        }
+        .contact-sidebar-title {
+          font-family: var(--font-heading);
+          font-size: 1rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          margin: 0 0 1.25rem;
+        }
+        .contact-info-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.85rem;
+          text-decoration: none;
+          padding: 0.6rem 0;
+          border-bottom: 1px solid var(--border-subtle);
+          transition: transform 0.2s ease;
+        }
+        .contact-info-row:last-child { border-bottom: none; }
+        .contact-info-row:hover { transform: translateX(2px); }
+        .contact-info-icon {
+          flex-shrink: 0;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          background: var(--accent-muted);
+          color: var(--accent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .contact-info-label {
+          display: block;
+          font-family: var(--font-heading);
+          font-size: 0.68rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: var(--text-tertiary);
+          margin-bottom: 0.15rem;
+        }
+        .contact-info-value {
+          display: block;
+          font-size: 0.92rem;
+          font-weight: 500;
+          color: var(--text-primary);
+          line-height: 1.5;
+          word-break: break-word;
+        }
+        .contact-whatsapp-btn {
+          margin-top: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border-radius: 100px;
+          background: linear-gradient(135deg, #25d366, #128c7e);
+          color: #fff;
+          font-family: var(--font-heading);
+          font-size: 0.85rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: transform 0.2s ease;
+        }
+        .contact-whatsapp-btn:hover { transform: scale(1.02); }
+        .contact-map-card {
+          height: 220px;
+          border-radius: 20px;
+          overflow: hidden;
+        }
+        .contact-form-wrap {
           position: relative;
         }
-        .select-wrapper::after {
-          content: "▼";
+        .contact-success {
+          padding: 3.5rem 2.5rem;
+          text-align: center;
+          border-radius: 24px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-height: 100%;
+          justify-content: center;
+        }
+        .contact-success-icon {
+          width: 68px;
+          height: 68px;
+          border-radius: 50%;
+          background: rgba(34, 197, 94, 0.1);
+          color: var(--success);
+          border: 1px solid rgba(34, 197, 94, 0.25);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1.5rem;
+        }
+        .contact-success-title {
+          font-family: var(--font-heading);
+          font-weight: 800;
+          font-size: 1.75rem;
+          color: var(--text-primary);
+          margin: 0 0 0.85rem;
+        }
+        .contact-success-desc {
+          font-size: 1rem;
+          color: var(--text-secondary);
+          line-height: 1.7;
+          max-width: 400px;
+          margin: 0;
+        }
+        .contact-form {
+          padding: 2.25rem;
+          border-radius: 24px;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+        }
+        .contact-form-top-bar {
           position: absolute;
-          right: 1rem;
-          top: 50%;
-          transform: translateY(-50%);
-          font-size: 0.7rem;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: var(--gradient-signature);
+          border-radius: 24px 24px 0 0;
+        }
+        .contact-form-title {
+          font-family: var(--font-heading);
+          font-weight: 700;
+          font-size: 1.4rem;
+          color: var(--text-primary);
+          margin: 0.25rem 0 0.25rem;
+        }
+        .contact-form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+        }
+        .contact-select { cursor: pointer; }
+        .form-label {
+          display: block;
+          font-family: var(--font-heading);
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
           color: var(--text-tertiary);
-          pointer-events: none;
+          margin-bottom: 0.5rem;
+        }
+        .form-error {
+          display: block;
+          font-size: 0.78rem;
+          color: #f87171;
+          margin-top: 0.4rem;
+        }
+        .contact-submit-btn {
+          justify-content: center;
+          padding: 15px;
+          font-size: 1rem;
+          margin-top: 0.5rem;
+        }
+        .contact-spinner-row {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .contact-spinner {
+          width: 16px;
+          height: 16px;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-top-color: #fff;
+          border-radius: 50%;
+          display: inline-block;
+          animation: contact-spin 0.8s linear infinite;
+        }
+        .contact-form-error-text {
+          text-align: center;
+          margin-top: 0.25rem;
+        }
+        @keyframes contact-spin { to { transform: rotate(360deg); } }
+        @media (max-width: 640px) {
+          .contact-form-row { grid-template-columns: 1fr; }
         }
       `}</style>
     </div>

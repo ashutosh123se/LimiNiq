@@ -1,6 +1,6 @@
-import { Navbar } from "@/components/layout/Navbar";
+import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
-import { DeferredMarketingChrome } from "@/components/layout/DeferredMarketingChrome";
+import { MarketingChrome } from "@/components/layout/MarketingChrome";
 import { SiteNap } from "@/components/seo/SiteNap";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
@@ -13,11 +13,11 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
         <div className="orb-4" />
       </div>
       <div className="grid-overlay" aria-hidden />
-      <Navbar />
-      <main>{children}</main>
+      <Nav />
+      <main className="relative z-10">{children}</main>
       <SiteNap />
       <Footer />
-      <DeferredMarketingChrome />
+      <MarketingChrome />
     </>
   );
 }

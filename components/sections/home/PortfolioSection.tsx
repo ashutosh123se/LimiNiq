@@ -275,15 +275,15 @@ export function PortfolioSection({
 
           <div className="work-filters">
             {PORTFOLIO_FILTERS.map((f) => (
-              <button
-                key={f}
+            <button
+              key={f}
                 type="button"
-                onClick={() => setActiveFilter(f)}
+              onClick={() => setActiveFilter(f)}
                 className={`work-filter ${activeFilter === f ? "work-filter--active" : ""}`}
-              >
-                {f}
-              </button>
-            ))}
+            >
+              {f}
+            </button>
+          ))}
           </div>
         </motion.div>
 
@@ -325,21 +325,21 @@ export function PortfolioSection({
                 style={{ gridColumn: 3, gridRow: tileRows }}
               />
             )}
-          </div>
+                </div>
         ) : null}
 
         {!hideViewAll && !showAll && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
             transition={{ delay: 0.35 }}
             className="work-footer-cta"
-          >
-            <Link href="/portfolio" className="btn-secondary">
+        >
+          <Link href="/portfolio" className="btn-secondary">
               View Full Delivery Archive
               <ArrowUpRight size={18} style={{ marginLeft: 6, verticalAlign: "middle" }} />
-            </Link>
-          </motion.div>
+          </Link>
+        </motion.div>
         )}
       </div>
 

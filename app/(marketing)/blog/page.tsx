@@ -1,8 +1,13 @@
-import { Metadata } from "next";
-import { Suspense } from "react";
-import { BlogListing } from "@/components/sections/blog/BlogListing";
+import type { Metadata } from "next";
+import { PageHero } from "@/components/sections/PageHero";
+import { FeaturedPost } from "@/components/sections/blog/FeaturedPost";
+import { BlogGrid } from "@/components/sections/blog/BlogGrid";
+import { BlogNewsletter } from "@/components/sections/blog/BlogNewsletter";
 import { LeadCTASection } from "@/components/sections/home/LeadCTASection";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getAllUnifiedPosts, getTopics } from "@/lib/blog/posts";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbSchema } from "@/lib/seo/schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
@@ -13,43 +18,48 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function BlogPage() {
-  return (
-    <div style={{ paddingTop: "5rem", background: "var(--bg-primary)" }}>
-      <section style={{ padding: "6rem 0 4rem", position: "relative" }}>
-        <div className="section-container">
-          <div style={{ marginBottom: "3rem" }}>
-            <div className="pill-badge" style={{ marginBottom: "1.5rem", display: "inline-flex" }}>
-              <span style={{ color: "var(--accent-primary)" }}>✦</span> Insights
-            </div>
-            <h1 className="text-hero" style={{ letterSpacing: "-0.04em" }}>
-              The Growth <span style={{ color: "var(--text-secondary)" }}>Playbook</span>
-            </h1>
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "1.1rem",
-                color: "var(--text-secondary)",
-                marginTop: "1rem",
-                maxWidth: 600,
-              }}
-            >
-              Software engineering, SEO, and marketing strategy — filter by topic below.
-            </p>
-          </div>
+export default async function BlogPage() {
+  const posts = await getAllUnifiedPosts();
+  const [featured, ...rest] = posts;
+  const topics = getTopics(posts);
 
-          <Suspense fallback={<div style={{ color: "var(--text-secondary)" }}>Loading articles...</div>}>
-            <BlogListing />
-          </Suspense>
-        </div>
+  return (
+    <div className="blog-index">
+      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Blog", path: "/blog" }])} />
+
+      <PageHero
+        eyebrow="Insights"
+        title={
+          <>
+            The Growth <span className="text-gradient">Playbook</span>
+          </>
+        }
+        description="Software engineering, SEO, and marketing strategy — written by the team that ships the work."
+      />
+
+      <section className="section-container blog-index-section">
+        {featured && <FeaturedPost post={featured} />}
+
+        {rest.length > 0 ? (
+          <BlogGrid posts={rest} topics={topics} />
+        ) : (
+          <p style={{ color: "var(--text-secondary)" }}>More articles coming soon.</p>
+        )}
       </section>
 
-      <div style={{ padding: "4rem 0" }} />
+      <BlogNewsletter />
 
       <LeadCTASection />
 
       <style>{`
-        .hover-brighten:hover { background: rgba(255,255,255,0.08) !important; color: white !important; }
+        .blog-index {
+          background: var(--bg-primary);
+          overflow-x: clip;
+        }
+        .blog-index-section {
+          padding-top: 0;
+          padding-bottom: 2rem;
+        }
       `}</style>
     </div>
   );
