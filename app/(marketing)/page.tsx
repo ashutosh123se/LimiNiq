@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
-import { TrustTicker } from "@/components/sections/TrustTicker";
+import { TheLeads } from "@/components/sections/TheLeads";
 import { DisciplinesList } from "@/components/sections/DisciplinesList";
 import { CaseStudyGrid } from "@/components/sections/CaseStudyGrid";
 import { ProcessPipeline } from "@/components/sections/ProcessPipeline";
@@ -40,7 +40,7 @@ export default function HomePage() {
     <>
       <JsonLd data={websiteJsonLd()} />
       <Hero />
-      <TrustTicker />
+      <TheLeads />
       <DisciplinesList />
       <CaseStudyGrid />
       <ProcessPipeline />

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -40,27 +40,43 @@ const ACTS = [
   },
 ];
 
+const STAGES = [
+  {
+    title: "The marketing page",
+    body: "A SaaS landing page from kickoff to conversion lift — wireframe to hi-fi, A/B reveal at the end.",
+  },
+  {
+    title: "The product",
+    body: "Custom software or multi-tenant SaaS — architecture to sprint shipping to a production URL.",
+  },
+  {
+    title: "The growth engine",
+    body: "SEO + paid + CRO after launch — analytics live, tests running, pipeline compounding.",
+  },
+];
+
 export function ProcessPipeline() {
   const [active, setActive] = useState(0);
 
   return (
     <section className="section-padding relative overflow-hidden bg-white">
-      <div className="section-container relative z-10">
+      <div className="section-container">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="mb-14 max-w-2xl"
+          className="mb-12 max-w-2xl"
         >
           <motion.p variants={revealVariants} className="section-number mb-3">
-            § 05 · the process
+            § 05 the <em className="font-[family-name:var(--font-display)] not-italic italic">process</em>
           </motion.p>
           <motion.h2
             variants={revealVariants}
-            className="font-[family-name:var(--font-heading)] text-[clamp(1.9rem,4.2vw,3.2rem)] font-bold leading-tight tracking-tight text-text-primary"
+            className="font-[family-name:var(--font-heading)] text-[clamp(2.2rem,5vw,3.75rem)] font-extrabold leading-[1.05] tracking-[-0.035em] text-text-primary"
           >
-            Three services.{" "}
+            Three services.
+            <br />
             <span className="heading-accent">One system.</span>
           </motion.h2>
           <motion.p variants={revealVariants} className="mt-4 text-text-secondary">
@@ -69,71 +85,81 @@ export function ProcessPipeline() {
           </motion.p>
         </motion.div>
 
-        <div className="mb-8 flex flex-wrap gap-2 border-b border-border-subtle pb-4">
+        {/* Horizontal funnel strip — DH style */}
+        <div className="mb-10 flex gap-2 overflow-x-auto pb-2">
           {ACTS.map((act, i) => (
             <button
               key={act.id}
               type="button"
               onClick={() => setActive(i)}
               className={cn(
-                "rounded-full px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider transition-colors",
+                "min-w-[140px] flex-1 rounded-2xl border px-4 py-4 text-left transition-all",
                 active === i
-                  ? "bg-accent text-white"
-                  : "bg-bg-secondary text-text-secondary hover:text-text-primary"
+                  ? "border-accent bg-accent text-white shadow-[0_12px_32px_rgba(29,78,216,0.25)]"
+                  : "border-border-subtle bg-bg-secondary text-text-secondary hover:border-border-strong"
               )}
             >
-              § {act.id} {act.title}
+              <span
+                className={cn(
+                  "font-mono text-[10px] uppercase tracking-wider",
+                  active === i ? "text-white/70" : "text-accent"
+                )}
+              >
+                § {act.id}
+              </span>
+              <span className="mt-1 block font-[family-name:var(--font-heading)] text-lg font-bold">
+                {act.title}
+              </span>
             </button>
           ))}
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className="space-y-3">
-            {ACTS.map((act, i) => (
-              <button
-                key={act.id}
-                type="button"
-                onClick={() => setActive(i)}
-                className={cn(
-                  "w-full rounded-2xl border px-5 py-5 text-left transition-all",
-                  active === i
-                    ? "border-accent bg-accent-muted shadow-sm"
-                    : "border-border-subtle bg-white hover:border-border-strong"
-                )}
-              >
-                <span className="font-mono text-xs text-accent">§ {act.id}</span>
-                <h3 className="mt-1 font-[family-name:var(--font-heading)] text-xl font-bold text-text-primary">
-                  {act.title}
-                </h3>
-                <p className="mt-1 text-sm text-text-secondary">
-                  {act.line}{" "}
-                  <span className="font-[family-name:var(--font-display)] italic text-accent">
-                    {act.italic}
-                  </span>
-                </p>
-              </button>
-            ))}
-          </div>
-
-          <div className="flex flex-col justify-center rounded-3xl border border-border-subtle bg-bg-secondary p-8 lg:p-12">
-            <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="mb-12 rounded-[1.75rem] border border-border-subtle bg-[#EFF6FF] p-8 lg:p-12"
+          >
+            <p className="font-mono text-xs uppercase tracking-wider text-accent">
               Act {ACTS[active].id} · {ACTS[active].title}
             </p>
-            <h3 className="mb-4 font-[family-name:var(--font-heading)] text-3xl font-bold text-text-primary">
-              {ACTS[active].title}
+            <h3 className="mt-3 font-[family-name:var(--font-heading)] text-3xl font-extrabold text-text-primary lg:text-4xl">
+              {ACTS[active].line}
             </h3>
-            <p className="mb-2 text-lg text-text-secondary">{ACTS[active].line}</p>
-            <p className="mb-8 font-[family-name:var(--font-display)] text-xl italic text-accent">
+            <p className="mt-3 font-[family-name:var(--font-display)] text-xl italic text-accent lg:text-2xl">
               {ACTS[active].italic}
             </p>
-            <p className="mb-8 text-sm text-text-muted">
-              Predictable cadence, unpredictable craft — clients always know which act they&apos;re
-              in, and what the next one looks like.
-            </p>
-            <Link href="/contact" className="btn-primary w-fit text-sm">
-              See how we&apos;d ship yours <ArrowUpRight size={16} />
-            </Link>
-          </div>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {STAGES.map((stage) => (
+            <div
+              key={stage.title}
+              className="rounded-2xl border border-border-subtle bg-bg-secondary p-6"
+            >
+              <h4 className="font-[family-name:var(--font-heading)] text-lg font-bold text-text-primary">
+                {stage.title.split(" ").slice(0, 2).join(" ")}{" "}
+                <em className="font-[family-name:var(--font-display)] not-italic italic text-accent">
+                  {stage.title.split(" ").slice(2).join(" ")}
+                </em>
+              </h4>
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">{stage.body}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
+          <p className="text-sm text-text-muted">
+            <em className="text-accent">same five acts</em>, different stage · predictable cadence,
+            unpredictable craft
+          </p>
+          <Link href="/contact" className="btn-primary text-sm">
+            See how we&apos;d ship yours <ArrowUpRight size={16} />
+          </Link>
         </div>
       </div>
     </section>

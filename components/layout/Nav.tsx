@@ -82,13 +82,14 @@ export function Nav() {
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-4 px-5 lg:px-10">
         <Link
           href="/"
-          className="group relative font-[family-name:var(--font-heading)] text-xl font-extrabold tracking-tight text-text-primary lg:text-2xl"
+          className="group flex flex-col leading-none"
         >
-          <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-            LIMINIQ · Est 2019
+          <span className="hidden font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-accent sm:block">
+            LIMINIQ · EST 2019
           </span>
-          LIMINIQ
-          <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-accent transition-all duration-300 group-hover:w-full" />
+          <span className="font-[family-name:var(--font-heading)] text-xl font-extrabold tracking-tight text-text-primary lg:text-[1.35rem]">
+            LIMINIQ
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
@@ -247,10 +248,10 @@ export function Nav() {
           </a>
 
           <Link
-            href="/contact#audit"
+            href="/contact"
             className="btn-primary hidden !px-5 !py-2.5 text-sm lg:inline-flex"
           >
-            Get Free Audit
+            Book a Call
           </Link>
 
           <button
