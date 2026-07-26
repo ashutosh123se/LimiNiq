@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
@@ -89,6 +90,16 @@ export function CaseStudyGrid() {
 
   return (
     <section className="section-padding relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+        <Image
+          src="/images/atmosphere/case-glow.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-25"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-primary/85 to-bg-primary" />
+      </div>
       <div className="section-container relative z-10">
         <motion.div
           variants={staggerContainer}
@@ -98,15 +109,19 @@ export function CaseStudyGrid() {
           className="mb-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end"
         >
           <div>
-            <motion.span variants={revealVariants} className="pill-badge mb-4 inline-flex">
-              <span className="text-[var(--signal)]">§04</span> Selected Work
-            </motion.span>
+            <motion.p variants={revealVariants} className="section-number mb-3">
+              § 04 · case studies
+            </motion.p>
             <motion.h2
               variants={revealVariants}
               className="font-heading text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
             >
-              Products We&apos;ve <span className="heading-accent">Shipped</span>
+              Brands we&apos;ve{" "}
+              <span className="heading-accent italic">scaled</span>
             </motion.h2>
+            <motion.p variants={revealVariants} className="mt-3 max-w-md text-text-secondary">
+              Real products shipped for production — software, web, and growth.
+            </motion.p>
           </div>
 
           <motion.div variants={revealVariants} className="flex flex-wrap gap-2">

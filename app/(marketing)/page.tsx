@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
+import { TrustTicker } from "@/components/sections/TrustTicker";
 import { DisciplinesList } from "@/components/sections/DisciplinesList";
 import { ProcessPipeline } from "@/components/sections/ProcessPipeline";
 import { AuditTool } from "@/components/sections/AuditTool";
@@ -38,6 +39,7 @@ export default function HomePage() {
     <>
       <JsonLd data={websiteJsonLd()} />
       <Hero />
+      <TrustTicker />
       <div className="section-band">
         <DisciplinesList />
       </div>

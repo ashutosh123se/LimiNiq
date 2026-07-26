@@ -216,6 +216,14 @@ export function ProcessPipeline() {
 
   return (
     <section className="section-padding relative overflow-hidden">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-50"
+        style={{
+          background:
+            "radial-gradient(45% 40% at 20% 30%, rgba(108,92,231,0.16), transparent 60%), radial-gradient(40% 35% at 85% 70%, rgba(34,211,238,0.1), transparent 55%)",
+        }}
+        aria-hidden
+      />
       <div className="section-container relative z-10">
         <motion.div
           variants={staggerContainer}
@@ -224,14 +232,15 @@ export function ProcessPipeline() {
           viewport={viewportOnce}
           className="mx-auto mb-14 max-w-2xl text-center"
         >
-          <motion.span variants={revealVariants} className="pill-badge mb-4 inline-flex">
-            <span className="text-[var(--signal)]">§02</span> Delivery Pipeline
-          </motion.span>
+          <motion.p variants={revealVariants} className="section-number mb-3">
+            § 03 · delivery pipeline
+          </motion.p>
           <motion.h2
             variants={revealVariants}
             className="font-heading text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
           >
-            Six Commands. <span className="heading-accent">One Transparent Run.</span>
+            Six commands.{" "}
+            <span className="heading-accent italic">One transparent run.</span>
           </motion.h2>
           <motion.p variants={revealVariants} className="mx-auto mt-4 max-w-xl text-text-secondary">
             From first brief to compounding growth — every phase is visible, versioned, and

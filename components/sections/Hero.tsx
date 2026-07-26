@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowDown, Sparkles, ShieldCheck, Zap } from "lucide-react";
+import { HeroMediaBackground } from "@/components/media/HeroMediaBackground";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { StatCounter } from "@/components/ui/StatCounter";
 import { revealVariants, staggerContainer } from "@/lib/motion";
@@ -58,23 +59,8 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pt-24">
-      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(55% 45% at 12% 18%, rgba(108,92,231,0.38), transparent 60%), radial-gradient(50% 40% at 88% 12%, rgba(34,211,238,0.22), transparent 55%), radial-gradient(80% 55% at 50% 100%, rgba(108,92,231,0.2), transparent 60%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-50"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-            maskImage: "radial-gradient(ellipse 75% 60% at 50% 30%, black, transparent)",
-          }}
-        />
+      <HeroMediaBackground />
+      <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden>
         {!prefersReducedMotion &&
           PARTICLES.map((p) => (
             <span
