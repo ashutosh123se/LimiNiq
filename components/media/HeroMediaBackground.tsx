@@ -1,35 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { NetworkVideoCanvas } from "@/components/media/NetworkVideoCanvas";
 
-/** Light hero media: soft poster + optional MP4 + blue network canvas */
+/**
+ * Static hero atmosphere — no perpetual canvas rAF (was O(n²) link drawing every frame).
+ * Optional MP4 still supported if dropped in /public/videos/hero.mp4.
+ */
 export function HeroMediaBackground() {
-  const [hasVideo, setHasVideo] = useState(false);
-  const [useCanvas, setUseCanvas] = useState(true);
-
-  useEffect(() => {
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      setUseCanvas(false);
-      return;
-    }
-    void fetch("/videos/hero.mp4", { method: "HEAD" })
-      .then((r) => {
-        if (r.ok) {
-          setHasVideo(true);
-          setUseCanvas(false);
-        } else if (coarse) {
-          setUseCanvas(false);
-        }
-      })
-      .catch(() => {
-        if (coarse) setUseCanvas(false);
-      });
-  }, []);
-
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
       <Image
@@ -37,29 +14,18 @@ export function HeroMediaBackground() {
         alt=""
         fill
         priority
-        sizes="100vw"
-        className="object-cover opacity-25 mix-blend-multiply"
+        sizes="(max-width: 1024px) 100vw, 80vw"
+        quality={60}
+        className="object-cover object-center opacity-[0.18]"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-white/85 to-white" />
-
-      {hasVideo && (
-        <video
-          className="absolute inset-0 h-full w-full object-cover opacity-30 mix-blend-multiply"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster="/images/hero/poster.png"
-        >
-          <source src="/videos/hero.webm" type="video/webm" />
-          <source src="/videos/hero.mp4" type="video/mp4" />
-        </video>
-      )}
-
-      {useCanvas && !hasVideo && (
-        <NetworkVideoCanvas className="absolute inset-0 h-full w-full opacity-50" />
-      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-white/90 to-white" />
+      <div
+        className="absolute inset-0 opacity-60"
+        style={{
+          background:
+            "radial-gradient(ellipse 55% 40% at 15% 20%, rgba(29,78,216,0.10), transparent 60%), radial-gradient(ellipse 45% 35% at 85% 15%, rgba(59,130,246,0.08), transparent 55%)",
+        }}
+      />
     </div>
   );
 }

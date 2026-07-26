@@ -2,10 +2,6 @@
 
 import dynamic from "next/dynamic";
 
-const CustomCursor = dynamic(
-  () => import("@/components/layout/CustomCursor").then((m) => m.CustomCursor),
-  { ssr: false }
-);
 const CookieBar = dynamic(
   () => import("@/components/layout/CookieBar").then((m) => m.CookieBar),
   { ssr: false }
@@ -23,11 +19,13 @@ const CommandPalette = dynamic(
   { ssr: false }
 );
 
-/** Client-only chrome shared across marketing pages: cursor, consent, mobile CTA, chat, and ⌘K search. */
+/**
+ * Custom cursor removed — mousemove + MutationObserver rebinding every DOM change
+ * caused heavy desktop jank. Native cursor is fine.
+ */
 export function MarketingChrome() {
   return (
     <>
-      <CustomCursor />
       <CookieBar />
       <StickyMobileCTA />
       <ChatWidget />
