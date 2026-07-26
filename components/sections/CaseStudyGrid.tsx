@@ -1,182 +1,139 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
-import { CASE_STUDIES, type CaseStudy } from "@/data/caseStudies";
+import { getFeaturedCaseStudies } from "@/data/caseStudies";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
-import { cn } from "@/lib/utils";
-
-const FILTERS = ["All", "Software", "Web", "Marketing"] as const;
-type Filter = (typeof FILTERS)[number];
-
-const TOTAL_PROJECTS_DELIVERED = 23;
-
-function CaseStudyCard({ study, index }: { study: CaseStudy; index: number }) {
-  return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 12 }}
-      transition={{ duration: 0.4, delay: Math.min(index * 0.06, 0.3) }}
-      className="glass-card group relative flex flex-col overflow-hidden"
-    >
-      <div className="relative h-48 w-full overflow-hidden border-b border-[var(--border-subtle)]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={study.imageSrc}
-          alt={study.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
-        <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-black/50 px-3 py-1 font-mono text-[0.62rem] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
-          {study.category}
-        </span>
-        <span className="absolute right-3 top-3 font-mono text-[0.65rem] text-white/70">{study.year}</span>
-      </div>
-
-      <div className="flex flex-1 flex-col gap-3 p-6">
-        <h3 className="font-heading text-lg font-bold text-text-primary">{study.title}</h3>
-        <p className="line-clamp-2 text-sm leading-relaxed text-text-secondary">{study.summary}</p>
-
-        <ul className="flex flex-wrap gap-2">
-          {study.tags.slice(0, 3).map((tag) => (
-            <li
-              key={tag}
-              className="rounded-md border border-[var(--border-subtle)] bg-white/[0.03] px-2 py-1 text-[0.68rem] font-medium text-text-secondary"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] pt-4">
-          <div className="flex flex-wrap gap-3">
-            {study.results.slice(0, 2).map((r) => (
-              <div key={r.label}>
-                <span className="block font-heading text-sm font-bold text-[var(--signal)]">{r.value}</span>
-                <span className="block text-[0.62rem] uppercase tracking-wide text-text-muted">{r.label}</span>
-              </div>
-            ))}
-          </div>
-          {study.liveUrl ? (
-            <a
-              href={study.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-heading text-xs font-semibold text-[var(--accent)] transition-transform hover:translate-x-0.5"
-            >
-              Visit <ExternalLink size={13} />
-            </a>
-          ) : (
-            <span className="inline-flex items-center gap-1 font-heading text-xs font-semibold text-text-muted">
-              Case study <ArrowUpRight size={13} />
-            </span>
-          )}
-        </div>
-      </div>
-    </motion.article>
-  );
-}
 
 export function CaseStudyGrid() {
-  const [filter, setFilter] = useState<Filter>("All");
-
-  const filtered = filter === "All" ? CASE_STUDIES : CASE_STUDIES.filter((s) => s.category === filter);
-  const moreCount = Math.max(TOTAL_PROJECTS_DELIVERED - CASE_STUDIES.length, 0);
+  const featured = getFeaturedCaseStudies(3);
+  const [primary, ...rest] = featured;
 
   return (
-    <section className="section-padding relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
-        <Image
-          src="/images/atmosphere/case-glow.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover opacity-25"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-primary/85 to-bg-primary" />
-      </div>
+    <section className="section-padding relative overflow-hidden bg-bg-secondary">
       <div className="section-container relative z-10">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="mb-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end"
+          className="mb-12"
         >
-          <div>
-            <motion.p variants={revealVariants} className="section-number mb-3">
-              § 04 · case studies
-            </motion.p>
-            <motion.h2
-              variants={revealVariants}
-              className="font-heading text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
+          <motion.p variants={revealVariants} className="section-number mb-3">
+            § 04 · case studies
+          </motion.p>
+          <motion.h2
+            variants={revealVariants}
+            className="max-w-2xl font-[family-name:var(--font-heading)] text-[clamp(1.9rem,4.2vw,3.2rem)] font-bold leading-tight tracking-tight text-text-primary"
+          >
+            Brands we&apos;ve scaled to{" "}
+            <span className="heading-accent">measurable growth.</span>
+          </motion.h2>
+          <motion.p variants={revealVariants} className="mt-3 text-sm text-text-secondary">
+            Selected work · 2023–2026 · <em>three featured</em>
+          </motion.p>
+        </motion.div>
+
+        {primary && (
+          <motion.article
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewportOnce}
+            className="mb-6 overflow-hidden rounded-3xl border border-border-subtle bg-white shadow-sm lg:grid lg:grid-cols-2"
+          >
+            <div className="relative min-h-[240px] border-b border-border-subtle bg-accent-muted lg:min-h-[360px] lg:border-b-0 lg:border-r">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={primary.imageSrc}
+                alt={primary.title}
+                className="h-full w-full object-cover"
+              />
+              <span className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-white">
+                {primary.category} · Featured
+              </span>
+            </div>
+            <div className="flex flex-col justify-center p-8 lg:p-12">
+              <p className="mb-2 font-mono text-xs uppercase tracking-wider text-text-muted">
+                {primary.category} · {primary.year}
+              </p>
+              <h3 className="mb-4 font-[family-name:var(--font-heading)] text-3xl font-bold text-text-primary lg:text-4xl">
+                {primary.title}
+              </h3>
+              <p className="mb-6 text-text-secondary">{primary.summary}</p>
+              <div className="mb-8 flex flex-wrap gap-6">
+                {primary.results.slice(0, 3).map((r) => (
+                  <div key={r.label}>
+                    <div className="font-[family-name:var(--font-heading)] text-xl font-extrabold text-accent">
+                      {r.value}
+                    </div>
+                    <div className="text-xs uppercase tracking-wide text-text-muted">{r.label}</div>
+                  </div>
+                ))}
+              </div>
+              {primary.liveUrl ? (
+                <a
+                  href={primary.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline"
+                >
+                  Visit live <ExternalLink size={14} />
+                </a>
+              ) : (
+                <Link
+                  href={`/portfolio/${primary.slug}`}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline"
+                >
+                  Case study <ArrowUpRight size={14} />
+                </Link>
+              )}
+            </div>
+          </motion.article>
+        )}
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {rest.map((study) => (
+            <motion.article
+              key={study.slug}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={viewportOnce}
+              className="overflow-hidden rounded-2xl border border-border-subtle bg-white shadow-sm"
             >
-              Brands we&apos;ve{" "}
-              <span className="heading-accent italic">scaled</span>
-            </motion.h2>
-            <motion.p variants={revealVariants} className="mt-3 max-w-md text-text-secondary">
-              Real products shipped for production — software, web, and growth.
-            </motion.p>
-          </div>
+              <div className="relative h-44 overflow-hidden border-b border-border-subtle bg-accent-muted">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={study.imageSrc} alt={study.title} className="h-full w-full object-cover" />
+              </div>
+              <div className="p-6">
+                <p className="mb-1 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                  {study.category} · {study.year}
+                </p>
+                <h3 className="mb-2 font-[family-name:var(--font-heading)] text-xl font-bold text-text-primary">
+                  {study.title}
+                </h3>
+                <p className="mb-4 line-clamp-2 text-sm text-text-secondary">{study.summary}</p>
+                <div className="flex flex-wrap gap-4">
+                  {study.results.slice(0, 2).map((r) => (
+                    <div key={r.label}>
+                      <span className="block font-semibold text-accent">{r.value}</span>
+                      <span className="text-[10px] uppercase text-text-muted">{r.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.article>
+          ))}
+        </div>
 
-          <motion.div variants={revealVariants} className="flex flex-wrap gap-2">
-            {FILTERS.map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setFilter(f)}
-                className={cn(
-                  "rounded-full border px-4 py-2 font-heading text-sm font-semibold transition-all",
-                  filter === f
-                    ? "border-transparent bg-[var(--accent)] text-white shadow-[0_4px_20px_rgba(108,92,231,0.35)]"
-                    : "border-[var(--border-subtle)] bg-white/[0.03] text-text-secondary hover:border-[var(--border-hover)] hover:text-text-primary"
-                )}
-              >
-                {f}
-              </button>
-            ))}
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          layout
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          <AnimatePresence mode="popLayout">
-            {filtered.length > 0 ? (
-              filtered.map((study, i) => <CaseStudyCard key={study.slug} study={study} index={i} />)
-            ) : (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="col-span-full py-16 text-center text-text-secondary"
-              >
-                More {filter.toLowerCase()} case studies are on the way — see the full archive below.
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={viewportOnce}
-          className="mt-12 flex flex-col items-center justify-center gap-4 rounded-2xl border border-[var(--border-subtle)] bg-white/[0.02] px-6 py-8 text-center"
-        >
-          <span className="font-heading text-2xl font-extrabold text-gradient">+{moreCount} more</span>
-          <p className="max-w-md text-sm text-text-secondary">
-            Software, web, and marketing builds delivered for production — see the full delivery
-            archive.
-          </p>
+        <div className="mt-10 text-center">
           <Link href="/portfolio" className="btn-secondary">
-            View Full Portfolio <ArrowUpRight size={16} />
+            Explore more brands <ArrowUpRight size={16} />
           </Link>
-        </motion.div>
+          <p className="mt-3 text-sm text-text-muted">
+            Software, web, and marketing builds across India and global clients
+          </p>
+        </div>
       </div>
     </section>
   );

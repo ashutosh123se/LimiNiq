@@ -4,13 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { NetworkVideoCanvas } from "@/components/media/NetworkVideoCanvas";
 
-/**
- * Hero media layer:
- * 1) If /videos/hero.mp4 exists, play muted/looped (Digital Heroes pattern)
- * 2) Else cinematic canvas network loop + AI poster
- *
- * Drop AI clips here: public/videos/hero.mp4 (+ optional hero.webm)
- */
+/** Light hero media: soft poster + optional MP4 + blue network canvas */
 export function HeroMediaBackground() {
   const [hasVideo, setHasVideo] = useState(false);
   const [useCanvas, setUseCanvas] = useState(true);
@@ -22,7 +16,6 @@ export function HeroMediaBackground() {
       setUseCanvas(false);
       return;
     }
-
     void fetch("/videos/hero.mp4", { method: "HEAD" })
       .then((r) => {
         if (r.ok) {
@@ -45,13 +38,13 @@ export function HeroMediaBackground() {
         fill
         priority
         sizes="100vw"
-        className="object-cover opacity-55"
+        className="object-cover opacity-25 mix-blend-multiply"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-bg-primary/55 to-bg-primary" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-white/85 to-white" />
 
       {hasVideo && (
         <video
-          className="absolute inset-0 h-full w-full object-cover opacity-45"
+          className="absolute inset-0 h-full w-full object-cover opacity-30 mix-blend-multiply"
           autoPlay
           muted
           loop
@@ -65,18 +58,8 @@ export function HeroMediaBackground() {
       )}
 
       {useCanvas && !hasVideo && (
-        <NetworkVideoCanvas className="absolute inset-0 h-full w-full opacity-80" />
+        <NetworkVideoCanvas className="absolute inset-0 h-full w-full opacity-50" />
       )}
-
-      <div
-        className="absolute inset-0 opacity-40"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-          maskImage: "radial-gradient(ellipse 70% 55% at 50% 35%, black, transparent)",
-        }}
-      />
     </div>
   );
 }

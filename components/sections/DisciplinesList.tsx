@@ -8,7 +8,6 @@ import { SERVICES } from "@/data/services";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-/** Short discipline label + hover “signal” line — Digital Heroes style. */
 const SIGNAL_META: Record<string, { label: string; signal: string }> = {
   "custom-software-saas": {
     label: "Software",
@@ -56,16 +55,7 @@ export function DisciplinesList() {
   const [active, setActive] = useState<string | null>(SERVICES[0]?.slug ?? null);
 
   return (
-    <section className="section-padding relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-40"
-        style={{
-          background:
-            "radial-gradient(50% 40% at 80% 20%, rgba(108,92,231,0.18), transparent 60%), radial-gradient(40% 35% at 10% 80%, rgba(34,211,238,0.1), transparent 55%)",
-        }}
-        aria-hidden
-      />
-
+    <section className="section-padding relative overflow-hidden bg-white">
       <div className="section-container relative z-10">
         <motion.div
           variants={staggerContainer}
@@ -76,14 +66,14 @@ export function DisciplinesList() {
         >
           <div className="max-w-xl">
             <motion.p variants={revealVariants} className="section-number mb-3">
-              § 02 · our services
+              § 03 · our services
             </motion.p>
             <motion.h2
               variants={revealVariants}
-              className="font-heading text-[clamp(1.9rem,4.2vw,3.2rem)] font-bold leading-[1.08] tracking-tight text-text-primary"
+              className="font-[family-name:var(--font-heading)] text-[clamp(1.9rem,4.2vw,3.4rem)] font-bold leading-[1.08] tracking-tight text-text-primary"
             >
               Built the way{" "}
-              <span className="heading-accent italic">modern teams</span>
+              <span className="heading-accent">modern teams</span>
               <br />
               actually work.
             </motion.h2>
@@ -125,13 +115,13 @@ export function DisciplinesList() {
                   onFocus={() => setActive(service.slug)}
                   className={cn(
                     "group relative flex items-center gap-3 border-b border-border-subtle py-4 transition-colors sm:gap-5 sm:py-5",
-                    isActive ? "border-border-hover" : "hover:border-white/20"
+                    isActive && "bg-accent-muted/40"
                   )}
                 >
                   <span
                     className={cn(
                       "font-mono text-xs transition-colors sm:text-sm",
-                      isActive ? "text-signal" : "text-text-muted"
+                      isActive ? "text-accent" : "text-text-muted"
                     )}
                   >
                     → {num}
@@ -146,7 +136,7 @@ export function DisciplinesList() {
                   </span>
                   <span
                     className={cn(
-                      "min-w-0 flex-1 font-heading text-base font-semibold transition-colors sm:text-xl",
+                      "min-w-0 flex-1 font-[family-name:var(--font-heading)] text-base font-semibold transition-colors sm:text-xl",
                       isActive ? "text-text-primary" : "text-text-secondary"
                     )}
                   >
@@ -156,8 +146,8 @@ export function DisciplinesList() {
                     className={cn(
                       "hidden max-w-[42%] truncate text-right text-sm transition-all duration-300 md:block",
                       isActive
-                        ? "translate-x-0 text-signal opacity-100"
-                        : "translate-x-2 text-text-muted opacity-40"
+                        ? "translate-x-0 text-accent opacity-100"
+                        : "translate-x-2 text-text-muted opacity-50"
                     )}
                   >
                     {meta.signal}
@@ -171,11 +161,9 @@ export function DisciplinesList() {
                         : "text-text-muted opacity-0 group-hover:opacity-60"
                     )}
                   />
-
-                  {/* Active glow bar */}
                   <span
                     className={cn(
-                      "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-accent via-signal to-transparent transition-transform duration-500",
+                      "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-accent to-transparent transition-transform duration-500",
                       isActive ? "scale-x-100" : "scale-x-0"
                     )}
                   />

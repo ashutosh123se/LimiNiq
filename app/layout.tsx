@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Newsreader, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -10,22 +10,23 @@ import { CookieGatedAnalytics } from "@/components/layout/CookieGatedAnalytics";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { HOME_SEO } from "@/lib/seo/homeMetadata";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  weight: ["500", "700"],
-  display: "swap",
-});
-const inter = Inter({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  variable: "--font-display",
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
@@ -33,7 +34,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#05060A",
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
@@ -78,7 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body
         suppressHydrationWarning
-        className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+        className={`${plusJakarta.variable} ${newsreader.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <SmoothScrollProvider>
           <Providers>{children}</Providers>

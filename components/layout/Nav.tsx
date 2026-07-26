@@ -65,8 +65,8 @@ export function Nav() {
         "fixed inset-x-0 top-0 z-50 h-16 lg:h-20",
         "border-b transition-all duration-300",
         scrolled
-          ? "border-border-subtle bg-bg-primary/85 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl"
-          : "border-transparent bg-transparent"
+          ? "border-border-subtle bg-white/90 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+          : "border-transparent bg-white/70 backdrop-blur-md"
       )}
     >
       {/* subtle top glow line */}
@@ -74,7 +74,7 @@ export function Nav() {
         className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(108,92,231,0.55), rgba(34,211,238,0.45), transparent)",
+            "linear-gradient(90deg, transparent, rgba(29,78,216,0.45), rgba(59,130,246,0.35), transparent)",
         }}
         aria-hidden
       />
@@ -84,8 +84,11 @@ export function Nav() {
           href="/"
           className="group relative font-[family-name:var(--font-heading)] text-xl font-extrabold tracking-tight text-text-primary lg:text-2xl"
         >
+          <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+            LIMINIQ · Est 2019
+          </span>
           LIMINIQ
-          <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-accent to-signal transition-all duration-300 group-hover:w-full" />
+          <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-accent transition-all duration-300 group-hover:w-full" />
         </Link>
 
         <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">

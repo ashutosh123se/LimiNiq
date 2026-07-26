@@ -98,7 +98,7 @@ export function TestimonialMarquee() {
 
           <motion.div
             variants={revealVariants}
-            className="mt-6 inline-flex items-center gap-3 rounded-full border border-[var(--border-subtle)] bg-white/[0.03] px-5 py-3"
+            className="mt-6 inline-flex items-center gap-3 rounded-full border border-[var(--border-subtle)] bg-white px-5 py-3"
           >
             <div className="flex items-center gap-1">
               {Array.from({ length: 5 }).map((_, i) => (

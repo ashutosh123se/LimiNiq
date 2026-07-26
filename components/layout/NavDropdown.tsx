@@ -23,7 +23,7 @@ interface NavDropdownProps {
 /** Compact flyout used by Work / Industries / Tools / About / Blog / Pricing. */
 export function NavDropdown({ title, items, footer, onNavigate }: NavDropdownProps) {
   return (
-    <div className="w-[340px] max-w-[92vw] overflow-hidden rounded-2xl border border-border-subtle bg-bg-secondary/98 shadow-2xl shadow-black/60 backdrop-blur-xl">
+    <div className="w-[340px] max-w-[92vw] overflow-hidden rounded-2xl border border-border-subtle bg-white shadow-[0_20px_50px_rgba(15,23,42,0.12)]">
       {title && (
         <div className="border-b border-border-subtle px-5 py-3">
           <p className="font-[family-name:var(--font-mono)] text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">

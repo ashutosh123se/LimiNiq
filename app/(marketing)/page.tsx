@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
 import { TrustTicker } from "@/components/sections/TrustTicker";
 import { DisciplinesList } from "@/components/sections/DisciplinesList";
+import { CaseStudyGrid } from "@/components/sections/CaseStudyGrid";
 import { ProcessPipeline } from "@/components/sections/ProcessPipeline";
 import { AuditTool } from "@/components/sections/AuditTool";
-import { CaseStudyGrid } from "@/components/sections/CaseStudyGrid";
-import { TestimonialMarquee } from "@/components/sections/TestimonialMarquee";
+import { StoryPeople } from "@/components/sections/StoryPeople";
+import { ProofCredentials } from "@/components/sections/ProofCredentials";
 import { PricingCards } from "@/components/sections/PricingCards";
 import { BlogTeaser } from "@/components/sections/BlogTeaser";
-import { TextMarquee } from "@/components/sections/TextMarquee";
-import { TeamPreview } from "@/components/sections/TeamPreview";
+import { HomeFAQ } from "@/components/sections/HomeFAQ";
+import { TestimonialMarquee } from "@/components/sections/TestimonialMarquee";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -40,25 +41,20 @@ export default function HomePage() {
       <JsonLd data={websiteJsonLd()} />
       <Hero />
       <TrustTicker />
-      <div className="section-band">
-        <DisciplinesList />
-      </div>
+      <DisciplinesList />
+      <CaseStudyGrid />
       <ProcessPipeline />
       <div className="section-band">
         <AuditTool />
       </div>
-      <CaseStudyGrid />
+      <StoryPeople />
+      <ProofCredentials />
       <div className="section-band">
         <TestimonialMarquee />
       </div>
       <PricingCards />
-      <div className="section-band">
-        <BlogTeaser />
-      </div>
-      <TextMarquee />
-      <div className="section-band">
-        <TeamPreview />
-      </div>
+      <BlogTeaser />
+      <HomeFAQ />
       <FinalCTA />
     </>
   );

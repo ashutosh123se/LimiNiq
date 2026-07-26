@@ -119,9 +119,9 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-24 right-5 z-40 flex max-h-[75vh] w-[min(380px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border-subtle bg-bg-secondary shadow-2xl shadow-black/50 lg:bottom-28 lg:right-6"
+            className="fixed bottom-24 right-5 z-40 flex max-h-[75vh] w-[min(380px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white shadow-2xl shadow-slate-900/15 lg:bottom-28 lg:right-6"
           >
-            <div className="flex items-center justify-between gap-3 bg-[linear-gradient(135deg,#6c5ce7_0%,#22d3ee_100%)] px-5 py-4">
+            <div className="flex items-center justify-between gap-3 bg-[linear-gradient(135deg,#1d4ed8_0%,#3b82f6_100%)] px-5 py-4">
               <div>
                 <p className="font-[family-name:var(--font-heading)] text-sm font-bold text-white">LIMINIQ Team</p>
                 <p className="flex items-center gap-1.5 text-xs text-white/85">
@@ -174,8 +174,8 @@ export function ChatWidget() {
                 </motion.div>
               ) : (
                 <>
-                  <p className="mb-4 rounded-2xl rounded-tl-sm bg-white/5 px-4 py-3 text-sm leading-relaxed text-text-secondary">
-                    Hi there 👋 What can we help you build? Pick a focus area or just say hello.
+                  <p className="mb-4 rounded-2xl rounded-tl-sm bg-bg-secondary px-4 py-3 text-sm leading-relaxed text-text-secondary">
+                    Hi there — what can we help you build? Pick a focus area or just say hello.
                   </p>
 
                   <div className="mb-5 flex flex-wrap gap-2">

@@ -46,14 +46,14 @@ export function PageHero({ eyebrow, title, description, children }: PageHeroProp
           top: 0;
           left: 50%;
           transform: translateX(-50%);
-          background: radial-gradient(ellipse, var(--accent-muted, rgba(108, 92, 231, 0.16)), transparent 70%);
+          background: radial-gradient(ellipse, var(--accent-muted, rgba(29, 78, 216, 0.12)), transparent 70%);
           pointer-events: none;
         }
         .page-hero-grid-bg {
           position: absolute;
           inset: 0;
-          opacity: 0.2;
-          background-image: radial-gradient(rgba(108, 92, 231, 0.18) 1px, transparent 1px);
+          opacity: 0.35;
+          background-image: radial-gradient(rgba(29, 78, 216, 0.1) 1px, transparent 1px);
           background-size: 28px 28px;
           mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, black, transparent);
           pointer-events: none;

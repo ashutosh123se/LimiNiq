@@ -1,313 +1,141 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-interface PipelineStep {
-  cmd: string;
-  flag: string;
-  title: string;
-  output: string;
-  desc: string;
-}
-
-const STEPS: PipelineStep[] = [
+const ACTS = [
   {
-    cmd: "discover",
-    flag: "--deep-dive",
+    id: "01",
     title: "Discover",
-    output: "goals mapped · audience profiled · competitive landscape audited",
-    desc: "A structured consultation to understand your product vision, users, and market before a single line of code is written.",
+    line: "Brief, audience, voice.",
+    italic: "The story before the design.",
   },
   {
-    cmd: "strategize",
-    flag: "--data-driven",
-    title: "Strategize",
-    output: "KPIs defined · channel mix prioritised · roadmap locked",
-    desc: "A clear execution plan with measurable targets, realistic timelines, and the right mix of build, SEO, and paid channels.",
-  },
-  {
-    cmd: "design",
-    flag: "--conversion-first",
+    id: "02",
     title: "Design",
-    output: "wireframes approved · UI system built · prototypes validated",
-    desc: "UI/UX that balances brand identity with conversion — prototypes tested with real users before development begins.",
+    line: "Wireframes become hi-fidelity.",
+    italic: "Decisions become defendable.",
   },
   {
-    cmd: "build",
-    flag: "--production-grade",
+    id: "03",
     title: "Build",
-    output: "architecture set · sprints shipping · code reviewed & tested",
-    desc: "Agile development with weekly deliverables, rigorous QA, and performance benchmarks baked in from day one.",
+    line: "Components, content, infrastructure.",
+    italic: "Done in green.",
   },
   {
-    cmd: "launch",
-    flag: "--zero-downtime",
+    id: "04",
     title: "Launch",
-    output: "QA passed · deployment live · client team trained",
-    desc: "Coordinated go-live with monitoring, documentation, and handover so your team is confident from day one.",
+    line: "Quiet ship. Loud welcome.",
+    italic: "A live URL with shipped on it.",
   },
   {
-    cmd: "optimize",
-    flag: "--continuous",
+    id: "05",
     title: "Optimize",
-    output: "analytics live · A/B tests running · growth compounding",
-    desc: "Post-launch iteration — analytics, SEO refinement, and campaign optimisation to keep results climbing.",
+    line: "A/B, cohort, ROI.",
+    italic: "Numbers that justify the next sprint.",
   },
 ];
 
-function TerminalPanel({ active }: { active: number }) {
-  const step = STEPS[active];
-  const [typed, setTyped] = useState("");
-
-  useEffect(() => {
-    setTyped("");
-    let i = 0;
-    const id = setInterval(() => {
-      i++;
-      setTyped(step.output.slice(0, i));
-      if (i >= step.output.length) clearInterval(id);
-    }, 16);
-    return () => clearInterval(id);
-  }, [step.output]);
-
-  return (
-    <div className="glass-card-premium overflow-hidden rounded-2xl">
-      <div className="flex items-center gap-3 border-b border-[var(--border-subtle)] bg-black/40 px-5 py-3">
-        <div className="flex gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
-        </div>
-        <span className="flex-1 font-mono text-[0.7rem] text-text-muted">liminiq — delivery.sh</span>
-        <span className="flex items-center gap-1.5 font-mono text-[0.6rem] font-bold uppercase tracking-widest text-[var(--signal)]">
-          <span className="pipeline-live-dot" />
-          running
-        </span>
-      </div>
-
-      <div className="p-5 font-mono sm:p-6">
-        <div className="mb-5 flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-4">
-          <span className="font-bold text-[var(--signal)]">$</span>
-          <span className="font-semibold text-text-primary">liminiq run pipeline</span>
-          <span className="text-[var(--accent)]">--client your-project</span>
-        </div>
-
-        <div className="mb-5 flex flex-col gap-1">
-          {STEPS.map((s, i) => {
-            const isActive = i === active;
-            const isDone = i < active;
-            return (
-              <div
-                key={s.cmd}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
-                  isActive && "bg-[var(--accent-muted)]"
-                )}
-              >
-                <span className="text-[0.68rem] text-text-muted">
-                  [{String(i + 1).padStart(2, "0")}]
-                </span>
-                <span
-                  className={cn(
-                    "flex-1 text-[0.8rem] font-semibold",
-                    isActive ? "text-text-primary" : isDone ? "text-text-muted" : "text-text-secondary"
-                  )}
-                >
-                  {s.cmd} <span className="font-medium text-[var(--accent)]">{s.flag}</span>
-                </span>
-                <span
-                  className={cn(
-                    "text-[0.62rem] font-bold uppercase tracking-wider",
-                    isActive || isDone ? "text-[var(--signal)]" : "text-text-muted"
-                  )}
-                >
-                  {isDone ? "✓ done" : isActive ? "→ running" : "· queued"}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="min-h-[3.5rem] rounded-lg border border-[var(--border-subtle)] bg-black/30 p-3">
-          <span className="mb-1 block text-[0.6rem] font-bold uppercase tracking-widest text-text-muted">
-            stdout ›
-          </span>
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={active}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-[0.8rem] leading-relaxed text-[var(--signal)]"
-            >
-              {typed}
-              <span className="pipeline-cursor">▋</span>
-            </motion.span>
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DetailCard({ step, index }: { step: PipelineStep; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={viewportOnce}
-      transition={{ duration: 0.4 }}
-      className="glass-card relative overflow-hidden p-6 sm:p-8"
-    >
-      <span className="absolute -right-2 -top-4 font-heading text-6xl font-extrabold text-white/[0.04] sm:text-8xl">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <span className="relative mb-2 block font-mono text-xs uppercase tracking-[0.2em] text-[var(--signal)]">
-        Phase {String(index + 1).padStart(2, "0")}
-      </span>
-      <h3 className="relative mb-3 font-heading text-2xl font-bold text-text-primary sm:text-3xl">
-        {step.title}
-      </h3>
-      <p className="relative max-w-md text-sm leading-relaxed text-text-secondary sm:text-base">
-        {step.desc}
-      </p>
-    </motion.div>
-  );
-}
-
 export function ProcessPipeline() {
-  const reducedMotion = useReducedMotion();
   const [active, setActive] = useState(0);
-  const stepRefs = useRef<Array<HTMLDivElement | null>>([]);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || window.innerWidth < 1024) return;
-    if (!("IntersectionObserver" in window)) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let closestIndex = -1;
-        let closestDistance = Infinity;
-        const viewportCenter = window.innerHeight / 2;
-
-        entries.forEach((entry) => {
-          const index = Number(entry.target.getAttribute("data-step-index"));
-          if (!entry.isIntersecting) return;
-          const rect = entry.boundingClientRect;
-          const elementCenter = rect.top + rect.height / 2;
-          const distance = Math.abs(elementCenter - viewportCenter);
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            closestIndex = index;
-          }
-        });
-
-        if (closestIndex >= 0) setActive(closestIndex);
-      },
-      { threshold: 0.15, rootMargin: "-20% 0px -20% 0px" }
-    );
-
-    stepRefs.current.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
 
   return (
-    <section className="section-padding relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-50"
-        style={{
-          background:
-            "radial-gradient(45% 40% at 20% 30%, rgba(108,92,231,0.16), transparent 60%), radial-gradient(40% 35% at 85% 70%, rgba(34,211,238,0.1), transparent 55%)",
-        }}
-        aria-hidden
-      />
+    <section className="section-padding relative overflow-hidden bg-white">
       <div className="section-container relative z-10">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="mx-auto mb-14 max-w-2xl text-center"
+          className="mb-14 max-w-2xl"
         >
           <motion.p variants={revealVariants} className="section-number mb-3">
-            § 03 · delivery pipeline
+            § 05 · the process
           </motion.p>
           <motion.h2
             variants={revealVariants}
-            className="font-heading text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
+            className="font-[family-name:var(--font-heading)] text-[clamp(1.9rem,4.2vw,3.2rem)] font-bold leading-tight tracking-tight text-text-primary"
           >
-            Six commands.{" "}
-            <span className="heading-accent italic">One transparent run.</span>
+            Three services.{" "}
+            <span className="heading-accent">One system.</span>
           </motion.h2>
-          <motion.p variants={revealVariants} className="mx-auto mt-4 max-w-xl text-text-secondary">
-            From first brief to compounding growth — every phase is visible, versioned, and
-            accountable.
+          <motion.p variants={revealVariants} className="mt-4 text-text-secondary">
+            Same five acts. Different stage — whether the deliverable is a page, a product, or a
+            growth engine.
           </motion.p>
         </motion.div>
 
-        {/* Desktop: sticky terminal + scroll-driven step activation */}
-        <div className="hidden gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-          <div className="lg:sticky lg:top-32 lg:h-fit">
-            <TerminalPanel active={active} />
-          </div>
-          <div className="flex flex-col gap-10">
-            {STEPS.map((step, i) => (
-              <div
-                key={step.cmd}
-                ref={(el) => {
-                  stepRefs.current[i] = el;
-                }}
-                data-step-index={i}
-                className="flex min-h-[55vh] flex-col items-stretch justify-center"
-              >
-                <DetailCard step={step} index={i} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile / tablet: vertical stack, no scroll pin */}
-        <div className="flex flex-col gap-6 lg:hidden">
-          <TerminalPanel active={active} />
-          {STEPS.map((step, i) => (
+        <div className="mb-8 flex flex-wrap gap-2 border-b border-border-subtle pb-4">
+          {ACTS.map((act, i) => (
             <button
-              key={step.cmd}
+              key={act.id}
               type="button"
               onClick={() => setActive(i)}
-              className="text-left"
+              className={cn(
+                "rounded-full px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider transition-colors",
+                active === i
+                  ? "bg-accent text-white"
+                  : "bg-bg-secondary text-text-secondary hover:text-text-primary"
+              )}
             >
-              <DetailCard step={step} index={i} />
+              § {act.id} {act.title}
             </button>
           ))}
         </div>
-      </div>
 
-      <style>{`
-        .pipeline-live-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: var(--signal);
-          box-shadow: 0 0 8px var(--signal);
-          ${reducedMotion ? "" : "animation: pipelinePulse 2s ease-in-out infinite;"}
-        }
-        .pipeline-cursor {
-          display: inline-block;
-          margin-left: 2px;
-          color: var(--accent);
-          ${reducedMotion ? "" : "animation: pipelineBlink 1s step-end infinite;"}
-        }
-        @keyframes pipelinePulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-        @keyframes pipelineBlink {
-          50% { opacity: 0; }
-        }
-      `}</style>
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="space-y-3">
+            {ACTS.map((act, i) => (
+              <button
+                key={act.id}
+                type="button"
+                onClick={() => setActive(i)}
+                className={cn(
+                  "w-full rounded-2xl border px-5 py-5 text-left transition-all",
+                  active === i
+                    ? "border-accent bg-accent-muted shadow-sm"
+                    : "border-border-subtle bg-white hover:border-border-strong"
+                )}
+              >
+                <span className="font-mono text-xs text-accent">§ {act.id}</span>
+                <h3 className="mt-1 font-[family-name:var(--font-heading)] text-xl font-bold text-text-primary">
+                  {act.title}
+                </h3>
+                <p className="mt-1 text-sm text-text-secondary">
+                  {act.line}{" "}
+                  <span className="font-[family-name:var(--font-display)] italic text-accent">
+                    {act.italic}
+                  </span>
+                </p>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-col justify-center rounded-3xl border border-border-subtle bg-bg-secondary p-8 lg:p-12">
+            <p className="mb-2 font-mono text-xs uppercase tracking-wider text-accent">
+              Act {ACTS[active].id} · {ACTS[active].title}
+            </p>
+            <h3 className="mb-4 font-[family-name:var(--font-heading)] text-3xl font-bold text-text-primary">
+              {ACTS[active].title}
+            </h3>
+            <p className="mb-2 text-lg text-text-secondary">{ACTS[active].line}</p>
+            <p className="mb-8 font-[family-name:var(--font-display)] text-xl italic text-accent">
+              {ACTS[active].italic}
+            </p>
+            <p className="mb-8 text-sm text-text-muted">
+              Predictable cadence, unpredictable craft — clients always know which act they&apos;re
+              in, and what the next one looks like.
+            </p>
+            <Link href="/contact" className="btn-primary w-fit text-sm">
+              See how we&apos;d ship yours <ArrowUpRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

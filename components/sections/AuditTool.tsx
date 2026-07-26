@@ -191,7 +191,7 @@ export function AuditTool() {
           viewport={viewportOnce}
           className="glass-card-premium mx-auto max-w-3xl overflow-hidden rounded-2xl"
         >
-          <div className="flex items-center gap-3 border-b border-[var(--border-subtle)] bg-black/40 px-5 py-3">
+          <div className="flex items-center gap-3 border-b border-[var(--border-subtle)] bg-bg-secondary px-5 py-3">
             <div className="flex gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
               <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
@@ -231,7 +231,7 @@ export function AuditTool() {
                     Website URL
                   </label>
                   <div className="flex flex-col gap-3 sm:flex-row">
-                    <div className="flex flex-1 items-center rounded-xl border border-[var(--border-subtle)] bg-white/[0.04] transition-colors focus-within:border-[var(--accent)]">
+                    <div className="flex flex-1 items-center rounded-xl border border-[var(--border-subtle)] bg-bg-secondary transition-colors focus-within:border-[var(--accent)]">
                       <span className="pl-4 font-mono text-sm text-text-muted">https://</span>
                       <input
                         id="audit-url"

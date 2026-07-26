@@ -32,7 +32,7 @@ const FEATURED_ARTICLES: FeaturedArticle[] = [
       "LCP, INP, and CLS keep evolving — here's exactly how we get client sites into the green across all three, every time.",
     category: "Web Dev",
     readTime: "8 min",
-    gradient: "linear-gradient(135deg, #6C5CE7, #22D3EE)",
+    gradient: "linear-gradient(135deg, #1D4ED8, #3B82F6)",
   },
   {
     slug: "entity-seo-knowledge-graph-strategy",
@@ -41,7 +41,7 @@ const FEATURED_ARTICLES: FeaturedArticle[] = [
       "Keyword-stuffing is dead. The real 2026 ranking game is entity authority — here's the LIMINIQ framework we use.",
     category: "SEO",
     readTime: "12 min",
-    gradient: "linear-gradient(135deg, #22D3EE, #6C5CE7)",
+    gradient: "linear-gradient(135deg, #2563EB, #60A5FA)",
   },
 ];
 
@@ -200,14 +200,14 @@ export function BlogTeaser() {
           className="mb-8 flex flex-wrap items-end justify-between gap-4"
         >
           <div>
-            <motion.span variants={revealVariants} className="pill-badge mb-4 inline-flex">
-              <span className="text-[var(--signal)]">✦</span> Insights &amp; Engagement
-            </motion.span>
+            <motion.p variants={revealVariants} className="section-number mb-3">
+              § 09 · from the journal
+            </motion.p>
             <motion.h2
               variants={revealVariants}
-              className="font-heading text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
+              className="font-[family-name:var(--font-heading)] text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
             >
-              From the LIMINIQ <span className="heading-accent">Lab</span>
+              Ideas worth <span className="heading-accent">reading.</span>
             </motion.h2>
           </div>
           <motion.div variants={revealVariants}>
@@ -230,7 +230,7 @@ export function BlogTeaser() {
             <Link
               key={chip}
               href={`/blog/topic/${chip.toLowerCase().replace(/\s+/g, "-")}`}
-              className="rounded-full border border-[var(--border-subtle)] bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-[var(--border-hover)] hover:text-text-primary"
+              className="rounded-full border border-[var(--border-subtle)] bg-white px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-[var(--border-hover)] hover:text-text-primary"
             >
               {chip}
             </Link>

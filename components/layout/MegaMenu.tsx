@@ -20,13 +20,13 @@ interface MegaMenuProps {
 export function MegaMenu({ onNavigate, className }: MegaMenuProps) {
   return (
     <div
-      className={`w-[920px] max-w-[94vw] overflow-hidden rounded-2xl border border-border-subtle bg-bg-secondary/98 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl ${className ?? ""}`}
+      className={`w-[920px] max-w-[94vw] overflow-hidden rounded-2xl border border-border-subtle bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)] ${className ?? ""}`}
     >
       <div
         className="h-px w-full"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(108,92,231,0.6), rgba(34,211,238,0.5), transparent)",
+            "linear-gradient(90deg, transparent, rgba(29,78,216,0.5), rgba(59,130,246,0.4), transparent)",
         }}
       />
       <div className="grid grid-cols-4 gap-5 p-7">
@@ -45,7 +45,7 @@ export function MegaMenu({ onNavigate, className }: MegaMenuProps) {
                       onClick={onNavigate}
                       className="group -mx-2 flex items-start gap-2.5 rounded-xl px-2 py-2.5 text-sm text-text-secondary transition-all hover:bg-accent/10 hover:text-text-primary"
                     >
-                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-white/[0.03] text-accent transition-transform group-hover:scale-110 group-hover:border-accent/40">
+                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-bg-secondary text-accent transition-transform group-hover:scale-110 group-hover:border-accent/40">
                         <Icon size={14} />
                       </span>
                       <span className="leading-snug group-hover:underline group-hover:decoration-accent/50 group-hover:underline-offset-4">

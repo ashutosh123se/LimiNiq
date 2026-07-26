@@ -127,7 +127,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
         <>
           <motion.div
             key="mobile-nav-backdrop"
-            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm xl:hidden"
+            className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm xl:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

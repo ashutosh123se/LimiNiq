@@ -136,7 +136,7 @@ export function PortfolioGrid() {
           border-color: transparent;
           background: var(--gradient-signature);
           color: #fff;
-          box-shadow: 0 4px 20px rgba(108, 92, 231, 0.35);
+          box-shadow: 0 4px 20px rgba(29, 78, 216, 0.3);
         }
         .pf-grid {
           display: grid;

@@ -117,7 +117,7 @@ function NewsletterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-      <div className="flex items-center gap-2 rounded-full border border-border-subtle bg-white/[0.03] pl-4 pr-1.5 py-1.5 transition-colors focus-within:border-accent/50">
+      <div className="flex items-center gap-2 rounded-full border border-border-subtle bg-bg-secondary pl-4 pr-1.5 py-1.5 transition-colors focus-within:border-accent/50">
         <Mail size={15} className="shrink-0 text-text-muted" />
         <input
           type="email"
@@ -146,7 +146,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer id="site-footer" className="relative border-t border-border-subtle bg-bg-primary">
+    <footer id="site-footer" className="relative border-t border-border-subtle bg-bg-secondary">
       <div className="mx-auto max-w-[1440px] px-5 pb-10 pt-16 lg:px-10 lg:pt-20">
         <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-12">
           {/* Brand */}

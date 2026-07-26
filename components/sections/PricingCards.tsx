@@ -109,7 +109,7 @@ export function PricingCards() {
             {TRUST_CHIPS.map((chip) => (
               <span
                 key={chip.label}
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-white/[0.03] px-4 py-2 text-xs font-medium text-text-secondary"
+                className="inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-white px-4 py-2 text-xs font-medium text-text-secondary"
               >
                 <chip.icon size={14} className="text-[var(--signal)]" />
                 {chip.label}
