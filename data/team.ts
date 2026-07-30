@@ -10,14 +10,14 @@ export const TEAM: TeamMember[] = [
   {
     name: "Ashutosh Shekhar",
     role: "CEO",
-    photoSrc: "/images/team/ashutosh.jpg",
+    photoSrc: "/images/team/ashutosh.png",
     bio: "Founder and CEO of LIMINIQ. Sets product direction, client strategy, and the standard for delivery quality across software and growth engagements since 2019.",
     quote: "Ship systems that compound — code and pipeline together.",
   },
   {
     name: "Ayush Shekhar",
     role: "Technical Head",
-    photoSrc: "/images/team/ayush.jpg",
+    photoSrc: "/images/team/ayush.png",
     bio: "Leads architecture and engineering for SaaS, web, and cloud builds. Obsessed with clean APIs, performance, and production-grade foundations.",
     quote: "If it isn't maintainable in six months, it isn't done.",
   },
@@ -31,7 +31,7 @@ export const TEAM: TeamMember[] = [
   {
     name: "Aman Kumar",
     role: "Animation Head",
-    photoSrc: "/images/team/aman.jpg",
+    photoSrc: "/images/team/aman.png",
     bio: "Crafts motion, brand animation, and interaction design that make products feel premium without sacrificing performance.",
     quote: "Motion should clarify hierarchy — never distract from it.",
   },

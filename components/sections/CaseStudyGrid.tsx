@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
@@ -21,7 +22,8 @@ export function CaseStudyGrid() {
           className="mb-12 max-w-3xl"
         >
           <motion.p variants={revealVariants} className="section-number mb-3">
-            § 04 case <em className="font-[family-name:var(--font-display)] not-italic italic">studies</em>
+            § 04 case{" "}
+            <em className="font-[family-name:var(--font-display)] not-italic italic">studies</em>
           </motion.p>
           <motion.h2
             variants={revealVariants}
@@ -45,12 +47,15 @@ export function CaseStudyGrid() {
               className="group overflow-hidden rounded-[1.75rem] border border-border-subtle bg-white shadow-sm lg:col-span-7"
             >
               <div className="relative aspect-[16/10] overflow-hidden bg-[#EFF6FF]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={primary.imageSrc}
                   alt={primary.title}
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="object-cover transition duration-700 group-hover:scale-[1.03]"
+                  priority
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
                 <span className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-white">
                   {primary.category} ★ Featured
                 </span>
@@ -102,14 +107,15 @@ export function CaseStudyGrid() {
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={viewportOnce}
-                className="flex flex-1 flex-col overflow-hidden rounded-[1.5rem] border border-border-subtle bg-white shadow-sm sm:flex-row lg:flex-col xl:flex-row"
+                className="group flex flex-1 flex-col overflow-hidden rounded-[1.5rem] border border-border-subtle bg-white shadow-sm sm:flex-row lg:flex-col xl:flex-row"
               >
-                <div className="relative h-40 w-full shrink-0 bg-[#EFF6FF] sm:h-auto sm:w-40 lg:h-40 lg:w-full xl:h-auto xl:w-40">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                <div className="relative h-44 w-full shrink-0 bg-[#EFF6FF] sm:h-auto sm:w-44 lg:h-44 lg:w-full xl:h-auto xl:min-h-[160px] xl:w-44">
+                  <Image
                     src={study!.imageSrc}
                     alt={study!.title}
-                    className="h-full w-full object-cover"
+                    fill
+                    sizes="(max-width: 640px) 100vw, 180px"
+                    className="object-cover transition duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex flex-1 flex-col justify-center p-5">
@@ -119,6 +125,7 @@ export function CaseStudyGrid() {
                   <h3 className="mb-2 font-[family-name:var(--font-heading)] text-xl font-extrabold text-text-primary">
                     {study!.title}
                   </h3>
+                  <p className="mb-3 line-clamp-2 text-sm text-text-secondary">{study!.summary}</p>
                   <div className="mt-auto flex flex-wrap gap-4">
                     {study!.results.slice(0, 2).map((r) => (
                       <div key={r.label}>

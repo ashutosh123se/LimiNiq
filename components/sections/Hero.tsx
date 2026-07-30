@@ -155,7 +155,7 @@ export function Hero() {
                   className="relative h-11 w-11 overflow-hidden rounded-full border-2 border-white bg-accent-muted shadow-sm"
                   title={`${m.name} — ${m.role}`}
                 >
-                  <Image src={m.photoSrc} alt={m.name} fill className="object-cover" sizes="44px" />
+                  <Image src={m.photoSrc} alt={m.name} fill className="object-cover object-top" sizes="44px" />
                 </div>
               ))}
             </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Code2, TrendingUp, ShieldCheck, UserCheck, MapPin, Quote } from "lucide-react";
 import { PageHero } from "@/components/sections/PageHero";
@@ -146,11 +147,14 @@ export default function AboutPage() {
           <div className="ab-team-grid">
             {TEAM.map((member) => (
               <article key={member.name} className="ab-member glass-card-premium">
-                <div className="ab-member-avatar">
-                  {member.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
+                <div className="ab-member-photo">
+                  <Image
+                    src={member.photoSrc}
+                    alt={member.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 25vw"
+                    className="object-cover object-top"
+                  />
                 </div>
                 <h3>{member.name}</h3>
                 <span className="ab-member-role">{member.role}</span>
@@ -328,30 +332,24 @@ export default function AboutPage() {
           gap: 1rem;
         }
         .ab-member {
-          padding: 1.75rem;
+          padding: 0;
           border-radius: 22px;
           text-align: center;
+          overflow: hidden;
         }
-        .ab-member-avatar {
-          width: 68px;
-          height: 68px;
-          margin: 0 auto 1.1rem;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-family: var(--font-heading);
-          font-weight: 800;
-          font-size: 1.15rem;
-          color: #fff;
-          background: var(--gradient-signature);
+        .ab-member-photo {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 5;
+          background: var(--accent-muted);
+          margin-bottom: 0;
         }
         .ab-member h3 {
           font-family: var(--font-heading);
           font-size: 1.1rem;
           font-weight: 800;
           color: var(--text-primary);
-          margin: 0 0 0.3rem;
+          margin: 1.1rem 1rem 0.3rem;
         }
         .ab-member-role {
           display: block;
@@ -362,21 +360,23 @@ export default function AboutPage() {
           text-transform: uppercase;
           color: var(--accent);
           margin-bottom: 0.9rem;
+          padding: 0 1rem;
         }
         .ab-member-bio {
           font-size: 0.88rem;
           color: var(--text-secondary);
           line-height: 1.6;
           margin: 0 0 1rem;
+          padding: 0 1.25rem;
         }
         .ab-member-quote {
-          font-family: var(--font-heading);
+          font-family: var(--font-display);
           font-style: italic;
           font-size: 0.85rem;
           color: var(--text-tertiary);
           line-height: 1.5;
           margin: 0;
-          padding-top: 1rem;
+          padding: 1rem 1.25rem 1.5rem;
           border-top: 1px dashed var(--border-subtle);
         }
 

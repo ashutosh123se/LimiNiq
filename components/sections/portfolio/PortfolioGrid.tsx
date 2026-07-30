@@ -123,7 +123,7 @@ export function PortfolioGrid() {
           padding: 0.55rem 1.2rem;
           border-radius: 100px;
           border: 1px solid var(--border-subtle);
-          background: rgba(255, 255, 255, 0.03);
+          background: #fff;
           color: var(--text-secondary);
           cursor: pointer;
           transition: all 0.22s ease;
@@ -168,9 +168,10 @@ export function PortfolioGrid() {
         }
         .pf-card-media {
           position: relative;
-          height: 190px;
+          height: 210px;
           border-bottom: 1px solid var(--border-subtle);
           overflow: hidden;
+          background: #eff6ff;
         }
         .pf-card-media img {
           width: 100%;
@@ -242,7 +243,7 @@ export function PortfolioGrid() {
           font-weight: 500;
           padding: 4px 9px;
           border-radius: 6px;
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-secondary);
           border: 1px solid var(--border-subtle);
           color: var(--text-secondary);
         }

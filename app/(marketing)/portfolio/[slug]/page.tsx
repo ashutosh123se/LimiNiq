@@ -176,15 +176,16 @@ export default async function CaseStudyPage({ params }: { params: Params }) {
           padding-bottom: clamp(2rem, 4vw, 3rem);
         }
         .cs-hero-frame {
-          padding: 0.5rem;
+          padding: 0;
           overflow: hidden;
           border-radius: 26px;
+          background: #eff6ff;
         }
         .cs-hero-frame img {
           width: 100%;
-          max-height: 480px;
+          aspect-ratio: 16 / 9;
+          max-height: 520px;
           object-fit: cover;
-          border-radius: 20px;
           display: block;
         }
         .cs-meta-row {

@@ -58,7 +58,14 @@ export function StoryPeople() {
             className="overflow-hidden rounded-[1.75rem] border border-border-subtle bg-white shadow-sm lg:col-span-5"
           >
             <div className="relative h-56 bg-accent-muted">
-              <Image src={founder.photoSrc} alt={founder.name} fill className="object-cover" />
+                <Image
+                  src={founder.photoSrc}
+                  alt={founder.name}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover object-top"
+                  priority
+                />
               <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-accent backdrop-blur">
                 leading · 2019 — now
               </span>
@@ -137,7 +144,8 @@ export function StoryPeople() {
                   src={member.photoSrc}
                   alt={member.name}
                   fill
-                  className="object-cover transition duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, 25vw"
+                  className="object-cover object-top transition duration-500 group-hover:scale-105"
                 />
               </div>
               <div className="p-4">
