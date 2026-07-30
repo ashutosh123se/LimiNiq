@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu, Phone } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, ChevronDown, Menu, Phone } from "lucide-react";
 import { NAV_LINKS, WHATSAPP_URL, type NavLink } from "@/data/navigation";
 import { SITE_CONTACT } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -24,15 +25,141 @@ function hasSubnav(link: NavLink) {
   return Boolean(link.mega || link.dropdown);
 }
 
+function isLinkActive(pathname: string | null, href: string) {
+  return pathname === href || (href !== "/" && Boolean(pathname?.startsWith(`${href}/`)));
+}
+
+type ShellTone = "dark" | "light";
+
+function NavItem({
+  link,
+  menuKey,
+  openKey,
+  openMenu,
+  scheduleClose,
+  setOpenKey,
+  pathname,
+  tone,
+  compact,
+}: {
+  link: NavLink;
+  menuKey: string;
+  openKey: string | null;
+  openMenu: (key: string) => void;
+  scheduleClose: () => void;
+  setOpenKey: (key: string | null) => void;
+  pathname: string | null;
+  tone: ShellTone;
+  compact?: boolean;
+}) {
+  const isOpen = openKey === menuKey;
+  const isActive = isLinkActive(pathname, link.href);
+  const sub = hasSubnav(link);
+  const dark = tone === "dark";
+
+  const linkClass = cn(
+    "relative z-[1] flex items-center gap-1 rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors duration-200",
+    compact && "px-3",
+    isActive || isOpen
+      ? dark
+        ? "text-white"
+        : "text-accent"
+      : dark
+        ? "text-white/65 hover:text-white"
+        : "text-text-secondary hover:text-text-primary"
+  );
+
+  if (!sub) {
+    return (
+      <Link href={link.href} className={linkClass}>
+        {(isActive || isOpen) && (
+          <motion.span
+            layoutId={compact ? "nav-pill-compact" : "nav-pill"}
+            className={cn(
+              "absolute inset-0 -z-10 rounded-full",
+              dark ? "bg-white/12 ring-1 ring-white/15" : "bg-accent/10 ring-1 ring-accent/15"
+            )}
+            transition={{ type: "spring", stiffness: 420, damping: 32 }}
+          />
+        )}
+        {link.label}
+      </Link>
+    );
+  }
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => openMenu(menuKey)}
+      onMouseLeave={scheduleClose}
+      onFocus={() => openMenu(menuKey)}
+    >
+      <Link
+        href={link.href}
+        onClick={() => setOpenKey(null)}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+        className={linkClass}
+      >
+        {(isActive || isOpen) && (
+          <motion.span
+            layoutId={compact ? "nav-pill-compact" : "nav-pill"}
+            className={cn(
+              "absolute inset-0 -z-10 rounded-full",
+              dark ? "bg-white/12 ring-1 ring-white/15" : "bg-accent/10 ring-1 ring-accent/15"
+            )}
+            transition={{ type: "spring", stiffness: 420, damping: 32 }}
+          />
+        )}
+        {link.label}
+        <ChevronDown
+          size={compact ? 12 : 13}
+          className={cn("transition-transform duration-200", isOpen && "rotate-180")}
+        />
+      </Link>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+              "absolute top-full z-50 pt-3",
+              link.mega ? "left-1/2 -translate-x-1/2" : "left-0"
+            )}
+          >
+            {link.mega ? (
+              <MegaMenu onNavigate={() => setOpenKey(null)} />
+            ) : link.dropdown ? (
+              <NavDropdown
+                title={link.dropdown.title}
+                items={[...link.dropdown.items]}
+                footer={link.dropdown.footer}
+                onNavigate={() => setOpenKey(null)}
+              />
+            ) : null}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function Nav() {
   const pathname = usePathname();
+  const reduced = useReducedMotion();
   const [scrolled, setScrolled] = useState(false);
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const overHero = pathname === "/" && !scrolled;
+  const tone: ShellTone = overHero ? "dark" : "light";
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -60,210 +187,174 @@ export function Nav() {
   };
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 h-16 lg:h-20",
-        "border-b transition-all duration-300",
-        scrolled
-          ? "border-border-subtle bg-white/90 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl"
-          : "border-transparent bg-white/70 backdrop-blur-md"
-      )}
-    >
-      {/* subtle top glow line */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent, rgba(29,78,216,0.45), rgba(59,130,246,0.35), transparent)",
-        }}
-        aria-hidden
-      />
-
-      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-4 px-5 lg:px-10">
-        <Link
-          href="/"
-          className="group flex flex-col leading-none"
-        >
-          <span className="hidden font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-accent sm:block">
-            LIMINIQ · EST 2019
-          </span>
-          <span className="font-[family-name:var(--font-heading)] text-xl font-extrabold tracking-tight text-text-primary lg:text-[1.35rem]">
-            LIMINIQ
-          </span>
-        </Link>
-
-        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
-          {NAV_LINKS.map((link) => {
-            const key = link.href;
-            const isOpen = openKey === key;
-            const isActive =
-              pathname === link.href ||
-              (link.href !== "/" && pathname?.startsWith(`${link.href}/`));
-            const sub = hasSubnav(link);
-
-            if (!sub) {
-              return (
-                <Link
-                  key={key}
-                  href={link.href}
-                  className={cn(
-                    "rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors",
-                    isActive ? "text-accent" : "text-text-secondary hover:text-text-primary"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              );
-            }
-
-            return (
-              <div
-                key={key}
-                className="relative"
-                onMouseEnter={() => openMenu(key)}
-                onMouseLeave={scheduleClose}
-                onFocus={() => openMenu(key)}
-              >
-                <Link
-                  href={link.href}
-                  onClick={() => setOpenKey(null)}
-                  aria-expanded={isOpen}
-                  aria-haspopup="true"
-                  className={cn(
-                    "flex items-center gap-1 rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors",
-                    isActive || isOpen
-                      ? "text-accent"
-                      : "text-text-secondary hover:text-text-primary"
-                  )}
-                >
-                  {link.label}
-                  <ChevronDown
-                    size={13}
-                    className={cn("transition-transform duration-200", isOpen && "rotate-180")}
-                  />
-                </Link>
-
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                      className={cn(
-                        "absolute top-full pt-3",
-                        link.mega ? "left-1/2 -translate-x-1/2" : "left-0"
-                      )}
-                    >
-                      {link.mega ? (
-                        <MegaMenu onNavigate={() => setOpenKey(null)} />
-                      ) : link.dropdown ? (
-                        <NavDropdown
-                          title={link.dropdown.title}
-                          items={[...link.dropdown.items]}
-                          footer={link.dropdown.footer}
-                          onNavigate={() => setOpenKey(null)}
-                        />
-                      ) : null}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-        </nav>
-
-        {/* Compact nav for lg–xl when full nav is hidden */}
-        <nav className="hidden items-center gap-0.5 lg:flex xl:hidden" aria-label="Primary compact">
-          {NAV_LINKS.filter((l) => ["Services", "Work", "Tools", "Pricing"].includes(l.label)).map(
-            (link) => {
-              const key = `compact-${link.href}`;
-              const isOpen = openKey === key;
-              const isActive =
-                pathname === link.href ||
-                (link.href !== "/" && pathname?.startsWith(`${link.href}/`));
-              return (
-                <div
-                  key={key}
-                  className="relative"
-                  onMouseEnter={() => openMenu(key)}
-                  onMouseLeave={scheduleClose}
-                >
-                  <Link
-                    href={link.href}
-                    className={cn(
-                      "flex items-center gap-1 rounded-full px-3 py-2 text-[13px] font-medium",
-                      isActive || isOpen ? "text-accent" : "text-text-secondary"
-                    )}
-                  >
-                    {link.label}
-                    {hasSubnav(link) && (
-                      <ChevronDown size={12} className={cn(isOpen && "rotate-180")} />
-                    )}
-                  </Link>
-                  <AnimatePresence>
-                    {isOpen && hasSubnav(link) && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        className="absolute left-0 top-full z-50 pt-3"
-                      >
-                        {link.mega ? (
-                          <MegaMenu onNavigate={() => setOpenKey(null)} />
-                        ) : link.dropdown ? (
-                          <NavDropdown
-                            title={link.dropdown.title}
-                            items={[...link.dropdown.items]}
-                            footer={link.dropdown.footer}
-                            onNavigate={() => setOpenKey(null)}
-                          />
-                        ) : null}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            }
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      <motion.div
+        initial={reduced ? false : { y: -28, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        className="pointer-events-auto mx-auto max-w-[1440px] px-3 pt-3 lg:px-6 lg:pt-4"
+      >
+        <div
+          className={cn(
+            "relative flex h-14 items-center justify-between gap-3 rounded-2xl border px-3 transition-all duration-500 lg:h-[3.75rem] lg:gap-4 lg:px-4",
+            overHero
+              ? "border-white/12 bg-[#0B1F3A]/55 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
+              : scrolled
+                ? "border-border-subtle bg-white/85 shadow-[0_16px_50px_rgba(15,23,42,0.12)] backdrop-blur-2xl"
+                : "border-border-subtle/80 bg-white/75 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-xl"
           )}
-        </nav>
-
-        <div className="flex items-center gap-2 lg:gap-3">
-          <a
-            href={`tel:${SITE_CONTACT.phoneTel}`}
-            className="hidden items-center gap-2 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary lg:flex"
+        >
+          {/* Sweep highlight */}
+          <div
+            className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl"
+            aria-hidden
           >
-            <Phone size={15} />
-            <span className="hidden xl:inline">{SITE_CONTACT.phone}</span>
-          </a>
-
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Chat on WhatsApp"
-            className="hidden h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-text-secondary transition-all hover:border-[#25D366]/50 hover:text-[#25D366] hover:shadow-[0_0_20px_rgba(37,211,102,0.25)] lg:flex"
-          >
-            <WhatsAppIcon className="h-4 w-4" />
-          </a>
+            <div
+              className={cn(
+                "absolute inset-x-0 top-0 h-px",
+                overHero
+                  ? "bg-gradient-to-r from-transparent via-blue-300/50 to-transparent"
+                  : "bg-gradient-to-r from-transparent via-accent/40 to-transparent"
+              )}
+            />
+            <motion.div
+              className={cn(
+                "absolute -left-1/3 top-0 h-full w-1/3 skew-x-12",
+                overHero
+                  ? "bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                  : "bg-gradient-to-r from-transparent via-accent/8 to-transparent"
+              )}
+              animate={reduced ? undefined : { x: ["0%", "280%"] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 3 }}
+            />
+          </div>
 
           <Link
-            href="/contact"
-            className="btn-primary hidden !px-5 !py-2.5 text-sm lg:inline-flex"
+            href="/"
+            className="group relative z-[1] flex shrink-0 items-center pl-0.5"
+            aria-label="LIMINIQ home"
           >
-            Book a Call
+            <Image
+              src={overHero ? "/images/logo-nav.png" : "/images/logo-nav-dark.png"}
+              alt="LIMINIQ"
+              width={560}
+              height={180}
+              priority
+              className="h-9 w-auto object-contain object-left transition-transform duration-300 group-hover:scale-[1.03] sm:h-10 lg:h-11"
+            />
           </Link>
 
-          <button
-            type="button"
-            aria-label="Open menu"
-            onClick={() => setMobileOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle text-text-primary transition-colors hover:border-accent/40 hover:text-accent xl:hidden"
+          <nav
+            className="relative z-[1] hidden items-center gap-0.5 xl:flex"
+            aria-label="Primary"
           >
-            <Menu size={20} />
-          </button>
+            {NAV_LINKS.map((link) => (
+              <NavItem
+                key={link.href}
+                link={link}
+                menuKey={link.href}
+                openKey={openKey}
+                openMenu={openMenu}
+                scheduleClose={scheduleClose}
+                setOpenKey={setOpenKey}
+                pathname={pathname}
+                tone={tone}
+              />
+            ))}
+          </nav>
+
+          <nav
+            className="relative z-[1] hidden items-center gap-0.5 lg:flex xl:hidden"
+            aria-label="Primary compact"
+          >
+            {NAV_LINKS.filter((l) =>
+              ["Services", "Work", "Tools", "Pricing"].includes(l.label)
+            ).map((link) => (
+              <NavItem
+                key={`compact-${link.href}`}
+                link={link}
+                menuKey={`compact-${link.href}`}
+                openKey={openKey}
+                openMenu={openMenu}
+                scheduleClose={scheduleClose}
+                setOpenKey={setOpenKey}
+                pathname={pathname}
+                tone={tone}
+                compact
+              />
+            ))}
+          </nav>
+
+          <div className="relative z-[1] flex items-center gap-1.5 lg:gap-2.5">
+            <a
+              href={`tel:${SITE_CONTACT.phoneTel}`}
+              className={cn(
+                "hidden items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors lg:flex",
+                overHero
+                  ? "text-white/70 hover:bg-white/10 hover:text-white"
+                  : "text-text-secondary hover:bg-accent/5 hover:text-text-primary"
+              )}
+            >
+              <Phone size={15} />
+              <span className="hidden xl:inline">{SITE_CONTACT.phone}</span>
+            </a>
+
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Chat on WhatsApp"
+              className={cn(
+                "hidden h-9 w-9 items-center justify-center rounded-full border transition-all lg:flex",
+                overHero
+                  ? "border-white/15 text-white/75 hover:border-[#25D366]/60 hover:bg-[#25D366]/15 hover:text-[#25D366]"
+                  : "border-border-subtle text-text-secondary hover:border-[#25D366]/50 hover:text-[#25D366] hover:shadow-[0_0_20px_rgba(37,211,102,0.25)]"
+              )}
+            >
+              <WhatsAppIcon className="h-4 w-4" />
+            </a>
+
+            <Link
+              href="/contact"
+              className={cn(
+                "group relative hidden overflow-hidden rounded-full px-5 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.03] active:scale-[0.98] lg:inline-flex",
+                overHero
+                  ? "bg-white text-[#0B1F3A] hover:bg-blue-50"
+                  : "bg-accent text-white shadow-[0_10px_28px_rgba(29,78,216,0.35)] hover:bg-accent-hover"
+              )}
+            >
+              {!overHero && !reduced && (
+                <motion.span
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent"
+                  animate={{ x: ["-120%", "120%"] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", repeatDelay: 2.5 }}
+                />
+              )}
+              <span className="relative flex items-center gap-1.5">
+                Book a Call
+                <ArrowUpRight
+                  size={14}
+                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </span>
+            </Link>
+
+            <button
+              type="button"
+              aria-label="Open menu"
+              onClick={() => setMobileOpen(true)}
+              className={cn(
+                "flex h-10 w-10 items-center justify-center rounded-full border transition-colors xl:hidden",
+                overHero
+                  ? "border-white/20 text-white hover:bg-white/10"
+                  : "border-border-subtle text-text-primary hover:border-accent/40 hover:text-accent"
+              )}
+            >
+              <Menu size={20} />
+            </button>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
     </header>

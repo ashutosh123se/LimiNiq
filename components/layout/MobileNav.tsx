@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -146,9 +147,15 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-subtle px-5">
-              <span className="font-[family-name:var(--font-heading)] text-lg font-extrabold text-text-primary">
-                LIMINIQ
-              </span>
+              <Link href="/" onClick={onClose} aria-label="LIMINIQ home">
+                <Image
+                  src="/images/logo-nav-dark.png"
+                  alt="LIMINIQ"
+                  width={560}
+                  height={180}
+                  className="h-9 w-auto object-contain object-left"
+                />
+              </Link>
               <button
                 type="button"
                 aria-label="Close menu"

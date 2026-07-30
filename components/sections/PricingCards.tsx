@@ -58,13 +58,17 @@ export function PricingCards() {
                   isFeatured ? "glass-card-premium border-[var(--border-hover)]" : "glass-card"
                 )}
               >
-                {isFeatured && (
-                  <span className="pill-badge absolute right-4 top-4 !bg-[var(--accent)] !text-white">
-                    Popular
-                  </span>
-                )}
                 <div>
-                  <h3 className="font-heading text-lg font-bold text-text-primary">{tier.label}</h3>
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="min-w-0 flex-1 font-heading text-lg font-bold leading-snug text-text-primary">
+                      {tier.label}
+                    </h3>
+                    {isFeatured && (
+                      <span className="shrink-0 rounded-full bg-[var(--accent)] px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white">
+                        Popular
+                      </span>
+                    )}
+                  </div>
                   <div className="mt-3 flex items-baseline gap-1.5">
                     <span className="font-heading text-2xl font-extrabold text-gradient">
                       {tier.priceFrom}
