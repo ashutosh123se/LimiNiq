@@ -43,13 +43,18 @@ export function TheLeads() {
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-4 lg:gap-10">
           {LEADS.map((lead) => (
             <div key={lead.label} className="border-t border-border-subtle pt-6">
-              <div className="font-[family-name:var(--font-heading)] text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-none tracking-[-0.04em] text-text-primary">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportOnce}
+                className="font-[family-name:var(--font-heading)] text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-none tracking-[-0.04em] text-text-primary"
+              >
                 {lead.display ? (
                   lead.display
                 ) : (
                   <StatCounter value={lead.value} prefix={lead.prefix} suffix={lead.suffix} />
                 )}
-              </div>
+              </motion.div>
               <p className="mt-3 font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-[0.08em] text-text-primary">
                 {lead.label}
               </p>

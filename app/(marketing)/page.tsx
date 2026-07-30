@@ -4,6 +4,7 @@ import { TheLeads } from "@/components/sections/TheLeads";
 import { DisciplinesList } from "@/components/sections/DisciplinesList";
 import { CaseStudyGrid } from "@/components/sections/CaseStudyGrid";
 import { ProcessPipeline } from "@/components/sections/ProcessPipeline";
+import { VideoConstellation } from "@/components/sections/VideoConstellation";
 import { AuditTool } from "@/components/sections/AuditTool";
 import { StoryPeople } from "@/components/sections/StoryPeople";
 import { ProofCredentials } from "@/components/sections/ProofCredentials";
@@ -44,6 +45,7 @@ export default function HomePage() {
       <DisciplinesList />
       <CaseStudyGrid />
       <ProcessPipeline />
+      <VideoConstellation />
       <div className="section-band">
         <AuditTool />
       </div>
