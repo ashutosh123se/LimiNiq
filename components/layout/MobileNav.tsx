@@ -67,7 +67,7 @@ function SubAccordion({
                         key={`${item.href}-${item.label}`}
                         href={item.href}
                         onClick={onClose}
-                        className="block rounded-lg px-2 py-2 text-sm text-text-secondary hover:bg-white/5 hover:text-accent"
+                        className="block rounded-lg px-2 py-2 text-sm text-text-secondary hover:bg-accent/5 hover:text-accent"
                       >
                         {item.label}
                       </Link>
@@ -79,7 +79,7 @@ function SubAccordion({
                   key={`${item.href}-${item.label}`}
                   href={item.href}
                   onClick={onClose}
-                  className="block rounded-lg px-2 py-2.5 text-sm text-text-secondary hover:bg-white/5 hover:text-accent"
+                  className="block rounded-lg px-2 py-2.5 text-sm text-text-secondary hover:bg-accent/5 hover:text-accent"
                 >
                   <span className="font-medium text-text-primary">{item.label}</span>
                   {item.description && (
@@ -140,27 +140,27 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"
-            className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-bg-secondary shadow-2xl xl:hidden"
+            className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white shadow-2xl xl:hidden"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-subtle px-5">
-              <Link href="/" onClick={onClose} aria-label="LIMINIQ home">
+              <Link href="/" onClick={onClose} aria-label="LIMINIQ home" className="flex items-center">
                 <Image
-                  src="/images/logo-lq-dark.png"
+                  src="/images/logo-stack-dark.png"
                   alt="LIMINIQ"
-                  width={320}
-                  height={320}
-                  className="h-10 w-10 object-contain"
+                  width={480}
+                  height={480}
+                  className="h-12 w-12 object-contain"
                 />
               </Link>
               <button
                 type="button"
                 aria-label="Close menu"
                 onClick={onClose}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle bg-white text-text-primary"
               >
                 <X size={18} />
               </button>

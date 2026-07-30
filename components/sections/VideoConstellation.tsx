@@ -124,11 +124,11 @@ export function VideoConstellation() {
             >
               <span>Hover any title to peek. Frames from</span>
               <Image
-                src="/images/logo-lq.png"
+                src="/images/logo-stack.png"
                 alt="LIMINIQ"
-                width={320}
-                height={320}
-                className="h-6 w-6 object-contain opacity-95 sm:h-7 sm:w-7"
+                width={480}
+                height={480}
+                className="h-8 w-8 object-contain opacity-95 sm:h-9 sm:w-9"
               />
               <span>+ shipped work.</span>
             </motion.div>
