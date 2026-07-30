@@ -149,11 +149,11 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-subtle px-5">
               <Link href="/" onClick={onClose} aria-label="LIMINIQ home">
                 <Image
-                  src="/images/logo-nav-dark.png"
+                  src="/images/logo-lq-dark.png"
                   alt="LIMINIQ"
-                  width={560}
-                  height={180}
-                  className="h-9 w-auto object-contain object-left"
+                  width={320}
+                  height={320}
+                  className="h-10 w-10 object-contain"
                 />
               </Link>
               <button

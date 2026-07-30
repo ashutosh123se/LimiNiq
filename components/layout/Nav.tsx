@@ -235,12 +235,12 @@ export function Nav() {
             aria-label="LIMINIQ home"
           >
             <Image
-              src={overHero ? "/images/logo-nav.png" : "/images/logo-nav-dark.png"}
+              src={overHero ? "/images/logo-lq.png" : "/images/logo-lq-dark.png"}
               alt="LIMINIQ"
-              width={560}
-              height={180}
+              width={320}
+              height={320}
               priority
-              className="h-9 w-auto object-contain object-left transition-transform duration-300 group-hover:scale-[1.03] sm:h-10 lg:h-11"
+              className="h-11 w-11 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-12 sm:w-12"
             />
           </Link>
 
