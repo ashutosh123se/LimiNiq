@@ -126,10 +126,11 @@ function NavItem({
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              "z-50 pt-3",
+              "fixed left-1/2 z-50 -translate-x-1/2 pt-3",
+              "top-[4.75rem] sm:top-[5.25rem] lg:top-[5.75rem]",
               link.mega
-                ? "fixed left-1/2 top-[4.75rem] w-[min(1080px,calc(100vw-1.5rem))] -translate-x-1/2 sm:top-[5.25rem] lg:top-[5.75rem]"
-                : "absolute left-0 top-full"
+                ? "w-[min(820px,calc(100vw-1.5rem))]"
+                : "w-[min(400px,calc(100vw-1.5rem))]"
             )}
             onMouseEnter={() => openMenu(menuKey)}
             onMouseLeave={scheduleClose}
