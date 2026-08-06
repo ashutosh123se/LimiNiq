@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Phone, X } from "lucide-react";
-import { NAV_LINKS, MEGA_MENU, WHATSAPP_URL, type NavLink } from "@/data/navigation";
+import { MEGA_MENU, MOBILE_NAV_LINKS, WHATSAPP_URL, type NavLink } from "@/data/navigation";
 import { SITE_CONTACT } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { revealVariants, staggerFast } from "@/lib/motion";
@@ -172,7 +172,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
               animate="visible"
               className="flex-1 overflow-y-auto px-5 py-2"
             >
-              {NAV_LINKS.map((link) => {
+              {MOBILE_NAV_LINKS.map((link) => {
                 const hasSub = Boolean(link.mega || link.dropdown);
                 if (hasSub) {
                   return (

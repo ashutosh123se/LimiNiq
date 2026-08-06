@@ -35,22 +35,16 @@ function NavItem({
   link,
   menuKey,
   openKey,
-  openMenu,
-  scheduleClose,
-  setOpenKey,
+  toggleMenu,
   pathname,
   tone,
-  compact,
 }: {
   link: NavLink;
   menuKey: string;
   openKey: string | null;
-  openMenu: (key: string) => void;
-  scheduleClose: () => void;
-  setOpenKey: (key: string | null) => void;
+  toggleMenu: (key: string) => void;
   pathname: string | null;
   tone: ShellTone;
-  compact?: boolean;
 }) {
   const isOpen = openKey === menuKey;
   const isActive = isLinkActive(pathname, link.href);
@@ -58,14 +52,13 @@ function NavItem({
   const dark = tone === "dark";
 
   const linkClass = cn(
-    "relative z-[1] flex items-center gap-1 rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors duration-200",
-    compact && "px-3",
+    "relative z-[1] flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-200",
     isActive || isOpen
       ? dark
         ? "text-white"
         : "text-accent"
       : dark
-        ? "text-white/65 hover:text-white"
+        ? "text-white/70 hover:text-white"
         : "text-text-secondary hover:text-text-primary"
   );
 
@@ -74,7 +67,7 @@ function NavItem({
       <Link href={link.href} className={linkClass}>
         {(isActive || isOpen) && (
           <motion.span
-            layoutId={compact ? "nav-pill-compact" : "nav-pill"}
+            layoutId="nav-pill"
             className={cn(
               "absolute inset-0 -z-10 rounded-full",
               dark ? "bg-white/12 ring-1 ring-white/15" : "bg-accent/10 ring-1 ring-accent/15"
@@ -88,67 +81,29 @@ function NavItem({
   }
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={() => openMenu(menuKey)}
-      onMouseLeave={scheduleClose}
-      onFocus={() => openMenu(menuKey)}
+    <button
+      type="button"
+      aria-expanded={isOpen}
+      aria-haspopup="true"
+      onClick={() => toggleMenu(menuKey)}
+      className={linkClass}
     >
-      <Link
-        href={link.href}
-        onClick={() => setOpenKey(null)}
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-        className={linkClass}
-      >
-        {(isActive || isOpen) && (
-          <motion.span
-            layoutId={compact ? "nav-pill-compact" : "nav-pill"}
-            className={cn(
-              "absolute inset-0 -z-10 rounded-full",
-              dark ? "bg-white/12 ring-1 ring-white/15" : "bg-accent/10 ring-1 ring-accent/15"
-            )}
-            transition={{ type: "spring", stiffness: 420, damping: 32 }}
-          />
-        )}
-        {link.label}
-        <ChevronDown
-          size={compact ? 12 : 13}
-          className={cn("transition-transform duration-200", isOpen && "rotate-180")}
+      {(isActive || isOpen) && (
+        <motion.span
+          layoutId="nav-pill"
+          className={cn(
+            "absolute inset-0 -z-10 rounded-full",
+            dark ? "bg-white/12 ring-1 ring-white/15" : "bg-accent/10 ring-1 ring-accent/15"
+          )}
+          transition={{ type: "spring", stiffness: 420, damping: 32 }}
         />
-      </Link>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className={cn(
-              "fixed left-1/2 z-50 -translate-x-1/2 pt-3",
-              "top-[4.75rem] sm:top-[5.25rem] lg:top-[5.75rem]",
-              link.mega
-                ? "w-[min(820px,calc(100vw-1.5rem))]"
-                : "w-[min(400px,calc(100vw-1.5rem))]"
-            )}
-            onMouseEnter={() => openMenu(menuKey)}
-            onMouseLeave={scheduleClose}
-          >
-            {link.mega ? (
-              <MegaMenu onNavigate={() => setOpenKey(null)} />
-            ) : link.dropdown ? (
-              <NavDropdown
-                title={link.dropdown.title}
-                items={[...link.dropdown.items]}
-                footer={link.dropdown.footer}
-                onNavigate={() => setOpenKey(null)}
-              />
-            ) : null}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+      )}
+      {link.label}
+      <ChevronDown
+        size={13}
+        className={cn("transition-transform duration-200", isOpen && "rotate-180")}
+      />
+    </button>
   );
 }
 
@@ -158,13 +113,16 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   const overHero = pathname === "/" && !scrolled;
   const tone: ShellTone = overHero ? "dark" : "light";
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+      setOpenKey(null);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -175,21 +133,34 @@ export function Nav() {
     setMobileOpen(false);
   }, [pathname]);
 
+  // Click-outside + Escape close — never open from hero hover
   useEffect(() => {
-    return () => {
-      if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (!openKey) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      const target = e.target as Node | null;
+      if (!target) return;
+      if (navRef.current?.contains(target)) return;
+      setOpenKey(null);
     };
-  }, []);
 
-  const openMenu = (key: string) => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setOpenKey(key);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenKey(null);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [openKey]);
+
+  const toggleMenu = (key: string) => {
+    setOpenKey((prev) => (prev === key ? null : key));
   };
 
-  const scheduleClose = () => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setOpenKey(null), 180);
-  };
+  const openLink = NAV_LINKS.find((l) => l.href === openKey) ?? null;
 
   const shell = (extra?: string) =>
     cn(
@@ -210,13 +181,8 @@ export function Nav() {
         transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         className="pointer-events-auto mx-auto flex max-w-[1440px] items-center justify-between gap-2 px-3 pt-3 sm:gap-3 lg:gap-4 lg:px-6 lg:pt-4"
       >
-        {/* Logo island */}
         <div className={shell("h-[3.6rem] shrink-0 px-2 sm:h-16 sm:px-2.5 lg:h-[4.25rem] lg:px-3")}>
-          <Link
-            href="/"
-            className="group flex items-center"
-            aria-label="LIMINIQ home"
-          >
+          <Link href="/" className="group flex items-center" aria-label="LIMINIQ home">
             <Image
               src={overHero ? "/images/logo-stack.png" : "/images/logo-stack-dark.png"}
               alt="LIMINIQ"
@@ -228,61 +194,67 @@ export function Nav() {
           </Link>
         </div>
 
-        {/* Links island */}
         <nav
+          ref={navRef}
           className={shell(
-            "hidden h-[3.6rem] min-w-0 flex-1 items-center justify-center gap-0.5 px-2 sm:h-16 lg:flex lg:h-[4.25rem] lg:px-3 xl:max-w-3xl"
+            "relative hidden h-[3.6rem] min-w-0 flex-1 items-center justify-center gap-1 px-3 sm:h-16 lg:flex lg:h-[4.25rem] lg:max-w-xl lg:px-4"
           )}
           aria-label="Primary"
         >
-          <div className="hidden w-full items-center justify-center gap-0.5 xl:flex">
-            {NAV_LINKS.map((link) => (
-              <NavItem
-                key={link.href}
-                link={link}
-                menuKey={link.href}
-                openKey={openKey}
-                openMenu={openMenu}
-                scheduleClose={scheduleClose}
-                setOpenKey={setOpenKey}
-                pathname={pathname}
-                tone={tone}
-              />
-            ))}
-          </div>
-          <div className="flex w-full items-center justify-center gap-0.5 xl:hidden">
-            {NAV_LINKS.filter((l) =>
-              ["Services", "Work", "Tools", "Pricing"].includes(l.label)
-            ).map((link) => (
-              <NavItem
-                key={`compact-${link.href}`}
-                link={link}
-                menuKey={`compact-${link.href}`}
-                openKey={openKey}
-                openMenu={openMenu}
-                scheduleClose={scheduleClose}
-                setOpenKey={setOpenKey}
-                pathname={pathname}
-                tone={tone}
-                compact
-              />
-            ))}
-          </div>
+          {NAV_LINKS.map((link) => (
+            <NavItem
+              key={link.href}
+              link={link}
+              menuKey={link.href}
+              openKey={openKey}
+              toggleMenu={toggleMenu}
+              pathname={pathname}
+              tone={tone}
+            />
+          ))}
+
+          <AnimatePresence>
+            {openLink && (
+              <motion.div
+                key={openLink.href}
+                initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                className={cn(
+                  "absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3",
+                  openLink.mega
+                    ? "w-[min(820px,calc(100vw-1.5rem))]"
+                    : "w-[min(400px,calc(100vw-1.5rem))]"
+                )}
+              >
+                {openLink.mega ? (
+                  <MegaMenu onNavigate={() => setOpenKey(null)} />
+                ) : openLink.dropdown ? (
+                  <NavDropdown
+                    title={openLink.dropdown.title}
+                    items={[...openLink.dropdown.items]}
+                    footer={openLink.dropdown.footer}
+                    onNavigate={() => setOpenKey(null)}
+                  />
+                ) : null}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </nav>
 
-        {/* Actions island */}
         <div className={shell("h-[3.6rem] shrink-0 gap-1.5 px-2 sm:h-16 lg:h-[4.25rem] lg:gap-2 lg:px-3")}>
           <a
             href={`tel:${SITE_CONTACT.phoneTel}`}
             className={cn(
-              "hidden items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors lg:flex",
+              "hidden items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors xl:flex",
               overHero
                 ? "text-white/70 hover:bg-white/10 hover:text-white"
                 : "text-text-secondary hover:bg-accent/5 hover:text-text-primary"
             )}
           >
             <Phone size={15} />
-            <span className="hidden xl:inline">{SITE_CONTACT.phone}</span>
+            <span>{SITE_CONTACT.phone}</span>
           </a>
 
           <a
@@ -309,13 +281,6 @@ export function Nav() {
                 : "bg-accent text-white shadow-[0_10px_28px_rgba(29,78,216,0.35)] hover:bg-accent-hover"
             )}
           >
-            {!overHero && !reduced && (
-              <motion.span
-                className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent"
-                animate={{ x: ["-120%", "120%"] }}
-                transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", repeatDelay: 2.5 }}
-              />
-            )}
             <span className="relative flex items-center gap-1.5">
               Book a Call
               <ArrowUpRight
@@ -330,7 +295,7 @@ export function Nav() {
             aria-label="Open menu"
             onClick={() => setMobileOpen(true)}
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full border transition-colors xl:hidden",
+              "flex h-10 w-10 items-center justify-center rounded-full border transition-colors lg:hidden",
               overHero
                 ? "border-white/20 text-white hover:bg-white/10"
                 : "border-border-subtle text-text-primary hover:border-accent/40 hover:text-accent"
@@ -341,7 +306,6 @@ export function Nav() {
         </div>
       </motion.div>
 
-      {/* Outside pointer-events-none header shell so the drawer is clickable */}
       <div className="pointer-events-auto">
         <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
       </div>
