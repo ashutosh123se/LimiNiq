@@ -26,7 +26,9 @@ function PortfolioCard({ study, index }: { study: CaseStudy; index: number }) {
         <div className="pf-card-media">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={study.imageSrc} alt={study.title} loading="lazy" />
-          <span className="pf-card-badge">{study.category}</span>
+          <span className="pf-card-badge">
+            {study.projectType === "Client Delivery (Flagship)" ? "★ Flagship" : study.projectType === "Internal R&D / Concept" ? "R&D Concept" : study.category}
+          </span>
           <span className="pf-card-year">{study.year}</span>
         </div>
 

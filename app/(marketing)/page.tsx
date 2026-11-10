@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
+import { InternationalLogos } from "@/components/sections/InternationalLogos";
 import { TheLeads } from "@/components/sections/TheLeads";
 import { DisciplinesList } from "@/components/sections/DisciplinesList";
 import { CaseStudyGrid } from "@/components/sections/CaseStudyGrid";
@@ -42,6 +43,7 @@ export default function HomePage() {
     <>
       <JsonLd data={websiteJsonLd()} />
       <Hero />
+      <InternationalLogos />
       <TheLeads />
       <DisciplinesList />
       <CaseStudyGrid />

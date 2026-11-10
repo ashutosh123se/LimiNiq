@@ -6,9 +6,9 @@ import { PortfolioGrid } from "@/components/sections/portfolio/PortfolioGrid";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Our Work & Deliveries",
+  title: "Case Studies & Engineering Deliveries | AI & SaaS | LIMINIQ",
   description:
-    "Software platforms, web products, and marketing systems built by LIMINIQ for clients across India — LeadFlow AI, PropSearch, StockSense, and more.",
+    "Explore case studies in AI automation, multi-tenant SaaS, and web platforms built by LIMINIQ for clients across the US, UK, UAE, and Europe — including LeadFlow AI, PropSearch, and StockSense.",
   path: "/portfolio",
 });
 
