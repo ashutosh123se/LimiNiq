@@ -15,11 +15,11 @@ import {
   CheckCircle2,
   Calendar,
   Globe2,
-  Linkedin,
   Video,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import { LinkedInIcon } from "@/components/ui/SocialIcons";
 import { SERVICES } from "@/data/services";
 import { SITE_CONTACT, SITE_SOCIAL } from "@/lib/site";
 import { WHATSAPP_URL } from "@/data/navigation";
@@ -126,7 +126,7 @@ function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string 
 
   const CONTACT_INFO = [
     { icon: <Mail size={18} />, label: "Direct Email", value: SITE_CONTACT.email, href: `mailto:${SITE_CONTACT.email}` },
-    { icon: <Linkedin size={18} />, label: "LinkedIn", value: "LIMINIQ Company", href: SITE_SOCIAL.linkedin },
+    { icon: <LinkedInIcon className="h-[18px] w-[18px]" />, label: "LinkedIn", value: "LIMINIQ Company", href: SITE_SOCIAL.linkedin },
     { icon: <Phone size={18} />, label: "Phone", value: SITE_CONTACT.phone, href: `tel:${SITE_CONTACT.phoneTel}` },
     {
       icon: <MapPin size={18} />,

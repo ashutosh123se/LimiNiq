@@ -146,7 +146,7 @@ export async function validateHostForSsrf(hostname: string): Promise<void> {
   }
 
   // Resolve hostname via DNS lookup
-  let addresses: dns.LookupAddress[];
+  let addresses: Array<{ address: string; family: number }>;
   try {
     addresses = await dns.lookup(cleanHost, { all: true });
   } catch (err) {

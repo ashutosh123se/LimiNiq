@@ -1,6 +1,88 @@
 import { prisma } from "./prisma";
+import { hasAnalyticsConsent } from "@/components/layout/CookieBar";
 
-// ── Page View Tracking ───────────────────────────────────────
+// ── Client-Side Privacy-Respecting Conversion Tracking ────────
+export type ConversionEvent =
+  | "form_submit"
+  | "call_booking_click"
+  | "whatsapp_click"
+  | "audit_tool_run"
+  | "audit_lead_submit"
+  | "pricing_tier_view"
+  | "currency_change";
+
+interface EventPayload {
+  category?: string;
+  label?: string;
+  value?: number;
+  [key: string]: any;
+}
+
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+    dataLayer?: any[];
+  }
+}
+
+export function trackEvent(eventName: ConversionEvent | string, params: EventPayload = {}) {
+  if (typeof window === "undefined") return;
+
+  const hasConsent = hasAnalyticsConsent();
+
+  if (process.env.NODE_ENV === "development") {
+    console.log(`[Analytics Event] ${eventName}`, { consented: hasConsent, ...params });
+  }
+
+  if (hasConsent && typeof window.gtag === "function") {
+    window.gtag("event", eventName, {
+      ...params,
+      event_category: params.category || "engagement",
+      event_label: params.label,
+      value: params.value,
+    });
+  }
+}
+
+export function trackFormSubmit(formName: "contact_brief" | "audit_report", service?: string) {
+  trackEvent("form_submit", {
+    category: "conversion",
+    label: formName,
+    service: service || "general",
+  });
+}
+
+export function trackCallBooking(source = "contact_page") {
+  trackEvent("call_booking_click", {
+    category: "conversion",
+    label: source,
+  });
+}
+
+export function trackWhatsAppClick(source = "unknown") {
+  trackEvent("whatsapp_click", {
+    category: "conversion",
+    label: source,
+  });
+}
+
+export function trackAuditRun(targetUrl: string, score: number) {
+  trackEvent("audit_tool_run", {
+    category: "engagement",
+    label: targetUrl,
+    value: score,
+  });
+}
+
+export function trackPricingView(currency: string, tierId?: string) {
+  trackEvent("pricing_tier_view", {
+    category: "pricing",
+    label: tierId || "all",
+    currency,
+  });
+}
+
+// ── Server-Side Page View Tracking ────────────────────────────
 export async function logPageView(page: string): Promise<void> {
   try {
     const today = new Date();
@@ -16,7 +98,7 @@ export async function logPageView(page: string): Promise<void> {
   }
 }
 
-// ── Dashboard KPI Stats ──────────────────────────────────────
+// ── Server-Side Dashboard KPI Stats ───────────────────────────
 export async function getOverviewStats() {
   const now = new Date();
   const startOfToday = new Date(now);
@@ -49,12 +131,11 @@ export async function getOverviewStats() {
     newToday,
     conversionRate: Math.round(conversionRate * 10) / 10,
     monthlyGrowth: Math.round(monthlyGrowth * 10) / 10,
-    // Estimate ₹50K average deal × conversion rate
     estimatedRevenue: `₹${Math.round(convertedTotal * 50000 / 100000)}L`,
   };
 }
 
-// ── Lead Analytics ────────────────────────────────────────────
+// ── Server-Side Lead Analytics ────────────────────────────────
 export async function getLeadsByStatus() {
   const grouped = await prisma.lead.groupBy({
     by: ["status"],
@@ -83,7 +164,6 @@ export async function getLeadsOverTime(days = 30) {
     orderBy: { createdAt: "asc" },
   });
 
-  // Group by date
   const byDate: Record<string, { total: number; converted: number }> = {};
   leads.forEach((lead) => {
     const date = lead.createdAt.toISOString().split("T")[0];
@@ -95,7 +175,7 @@ export async function getLeadsOverTime(days = 30) {
   return Object.entries(byDate).map(([date, data]) => ({ date, ...data }));
 }
 
-// ── Traffic Analytics ─────────────────────────────────────────
+// ── Server-Side Traffic Analytics ─────────────────────────────
 export async function getTopPages(limit = 10) {
   const since = new Date();
   since.setDate(since.getDate() - 30);

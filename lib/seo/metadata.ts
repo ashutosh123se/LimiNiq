@@ -13,7 +13,7 @@ type PageMetadataInput = {
   noIndex?: boolean;
 };
 
-/** Consistent per-page metadata with matching canonical, og:url, and Twitter tags. */
+/** Consistent per-page metadata with matching canonical, hreflang, og:url, and Twitter tags. */
 export function buildPageMetadata({
   title,
   description,
@@ -30,10 +30,19 @@ export function buildPageMetadata({
     title: absoluteTitle ? { absolute: title } : title,
     description,
     keywords,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: {
+        "en-US": url,
+        "en-GB": url,
+        "en-IN": url,
+        "x-default": url,
+      },
+    },
     openGraph: {
       type: "website",
-      locale: "en_IN",
+      locale: "en_US",
+      alternateLocale: ["en_GB", "en_IN"],
       url,
       siteName: SITE_NAME,
       title: fullTitle,
@@ -61,10 +70,14 @@ export function buildPageMetadata({
           robots: {
             index: true,
             follow: true,
-            googleBot: { index: true, follow: true, "max-image-preview": "large" as const },
+            googleBot: {
+              index: true,
+              follow: true,
+              "max-video-preview": -1,
+              "max-image-preview": "large",
+              "max-snippet": -1,
+            },
           },
         }),
   };
 }
-
-export { SITE_URL, SITE_NAME };

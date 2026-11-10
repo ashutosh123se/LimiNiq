@@ -1,6 +1,7 @@
 "use client";
 
-import { Star, Quote, Linkedin, CheckCircle2, ExternalLink } from "lucide-react";
+import { Star, Quote, CheckCircle2, ExternalLink } from "lucide-react";
+import { LinkedInIcon } from "@/components/ui/SocialIcons";
 import { motion } from "framer-motion";
 import { TESTIMONIALS, type Testimonial } from "@/data/testimonials";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
@@ -83,7 +84,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
                   title="View LinkedIn profile"
                   className="text-text-muted hover:text-[var(--accent)] transition-colors"
                 >
-                  <Linkedin size={13} />
+                  <LinkedInIcon className="h-3.5 w-3.5" />
                 </a>
               )}
             </div>

@@ -2,26 +2,32 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { LegalLayout, type LegalSection } from "@/components/sections/legal/LegalLayout";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { SITE_CONTACT } from "@/lib/site";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Privacy Policy",
+  title: "Privacy Policy | GDPR & CCPA Compliance",
   description:
-    "How LIMINIQ collects, uses, stores, and protects your personal information when you use our website and services.",
+    "How LIMINIQ collects, processes, protects, and retains your personal information in compliance with GDPR, UK GDPR, and CCPA/CPRA regulations.",
   path: "/privacy-policy",
 });
 
 const SECTIONS: LegalSection[] = [
-  { id: "information-we-collect", title: "1. Information We Collect" },
-  { id: "how-we-use-your-information", title: "2. How We Use Your Information" },
-  { id: "log-files", title: "3. Log Files" },
-  { id: "cookies-and-web-beacons", title: "4. Cookies and Web Beacons" },
-  { id: "third-party-privacy-policies", title: "5. Third Party Privacy Policies" },
+  { id: "scope-overview", title: "1. Scope & Overview" },
+  { id: "information-we-collect", title: "2. Information We Collect" },
+  { id: "lawful-basis-processing", title: "3. Lawful Basis for Processing (GDPR / UK GDPR)" },
+  { id: "how-we-use-information", title: "4. How We Use Your Data" },
+  { id: "cookies-tracking", title: "5. Cookies, Analytics & Consent Mode" },
+  { id: "data-retention", title: "6. Data Retention Schedules" },
+  { id: "international-transfers", title: "7. International Data Transfers" },
+  { id: "your-privacy-rights", title: "8. Your Rights (GDPR & CCPA/CPRA)" },
+  { id: "security-safeguards", title: "9. Technical & Security Safeguards" },
+  { id: "contact-data-requests", title: "10. Contact for Data Protection Requests" },
 ];
 
 export default function PrivacyPolicyPage() {
   return (
     <LegalLayout
-      eyebrow="Legal"
+      eyebrow="Legal & Compliance"
       title={
         <>
           Privacy <span style={{ color: "var(--text-secondary)" }}>Policy</span>
@@ -31,71 +37,122 @@ export default function PrivacyPolicyPage() {
       sections={SECTIONS}
     >
       <p>
-        At LIMINIQ, accessible from liminiq.com, one of our main priorities is the privacy of our visitors. This
-        Privacy Policy document contains types of information that is collected and recorded by LIMINIQ and how we
-        use it.
+        At <strong>LIMINIQ</strong> (&ldquo;LIMINIQ&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;), we take the privacy and confidentiality of our website visitors, prospective partners, and international clients seriously. This Privacy Policy details our operational commitments under the European General Data Protection Regulation (<strong>GDPR</strong>), the <strong>UK GDPR</strong>, the California Consumer Privacy Act as amended by the California Privacy Rights Act (<strong>CCPA/CPRA</strong>), and applicable Indian data protection laws.
       </p>
 
+      <h2 id="scope-overview">1. Scope & Overview</h2>
       <p>
-        If you have additional questions or require more information about our Privacy Policy, do not hesitate to
-        contact us at{" "}
-        <a href="mailto:hello@liminiq.com">hello@liminiq.com</a>.
+        This policy applies to information gathered through <code>liminiq.com</code>, our interactive engineering tools (including the Website Audit Scanner, ROAS Calculator, and Favicon Generator), scheduling integrations, and direct commercial correspondence.
       </p>
 
-      <h2 id="information-we-collect">1. Information We Collect</h2>
-      <p>
-        The personal information that you are asked to provide, and the reasons why you are asked to provide it,
-        will be made clear to you at the point we ask you to provide your personal information.
-      </p>
-      <p>
-        If you contact us directly, we may receive additional information about you such as your name, email
-        address, phone number, the contents of the message and/or attachments you may send us, and any other
-        information you may choose to provide.
-      </p>
-
-      <h2 id="how-we-use-your-information">2. How We Use Your Information</h2>
-      <p>We use the information we collect in various ways, including to:</p>
+      <h2 id="information-we-collect">2. Information We Collect</h2>
+      <p>We collect data under two primary classifications:</p>
       <ul>
-        <li>Provide, operate, and maintain our website and services</li>
-        <li>Improve, personalize, and expand our website</li>
-        <li>Understand and analyze how you use our website</li>
-        <li>Develop new products, services, features, and functionality</li>
-        <li>Communicate with you for customer service and updates</li>
-        <li>Send you emails and marketing communications</li>
-        <li>Find and prevent fraud</li>
+        <li>
+          <strong>Information You Explicitly Provide:</strong> Name, work email address, phone number, company name, target project budget, architectural briefs, and URLs submitted into our Website Audit tool.
+        </li>
+        <li>
+          <strong>Automated Technical Telemetry:</strong> Anonymized or pseudonymized IP addresses (processed via Cloudflare to resolve geographical region without storing raw identifiers), browser version, operating system, referring URL, time spent per route, and Core Web Vitals telemetry.
+        </li>
       </ul>
 
-      <h2 id="log-files">3. Log Files</h2>
+      <h2 id="lawful-basis-processing">3. Lawful Basis for Processing (GDPR / UK GDPR)</h2>
+      <p>We process personal data only when an established legal basis under Article 6 of the GDPR applies:</p>
+      <ul>
+        <li>
+          <strong>Contractual Necessity (Art. 6(1)(b)):</strong> To prepare technical discovery proposals, execute Master Services Agreements (MSAs), fulfill Statements of Work (SOW), and deliver software milestones.
+        </li>
+        <li>
+          <strong>Consent (Art. 6(1)(a)):</strong> For non-essential cookies, technical audit PDF reports delivered via email, and subscription to engineering newsletters. You may revoke consent at any time.
+        </li>
+        <li>
+          <strong>Legitimate Interests (Art. 6(1)(f)):</strong> To secure our infrastructure against DDoS attacks, brute-force exploits, SSRF attempts, and bot spam, as well as to improve application performance.
+        </li>
+      </ul>
+
+      <h2 id="how-we-use-information">4. How We Use Your Data</h2>
+      <p>Your data is processed strictly for legitimate engineering and commercial operations:</p>
+      <ul>
+        <li>Evaluating technical feasibility and providing milestone quotes.</li>
+        <li>Generating and delivering automated website audit and security reports.</li>
+        <li>Coordinating live discovery sessions across US, UK, European, and Gulf time zones.</li>
+        <li>Detecting, preventing, and mitigating security threats and unauthorized access.</li>
+        <li><strong>We do not sell, rent, trade, or monetize your personal data. Ever.</strong></li>
+      </ul>
+
+      <h2 id="cookies-tracking">5. Cookies, Analytics & Consent Mode</h2>
       <p>
-        LIMINIQ follows a standard procedure of using log files. These files log visitors when they visit websites.
-        All hosting companies do this and a part of hosting services&apos; analytics. The information collected by
-        log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and
-        time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information
-        that is personally identifiable.
+        We employ Google Consent Mode v2 and granular local consent flags. We categorize cookies into:
+      </p>
+      <ul>
+        <li>
+          <strong>Strictly Necessary:</strong> Essential for CSRF token validation, security session maintenance, and rate-limiting. These cannot be disabled.
+        </li>
+        <li>
+          <strong>Analytics & Performance:</strong> Aggregated, privacy-respecting metrics (PageSpeed, bounce rates). Loaded strictly upon affirmative consent.
+        </li>
+        <li>
+          <strong>Marketing Signals:</strong> Conversion tracking pixels (Google Ads, Meta). Only activated if you select &ldquo;Accept All&rdquo; in our cookie preferences dialog.
+        </li>
+      </ul>
+
+      <h2 id="data-retention">6. Data Retention Schedules</h2>
+      <p>
+        We retain personal data only for as long as necessary to fulfill the purposes outlined herein:
+      </p>
+      <ul>
+        <li>
+          <strong>Inquiries & Briefs:</strong> Kept for up to 24 months to support prospective project scoping, after which records are purged or anonymized.
+        </li>
+        <li>
+          <strong>Client Engagement Data:</strong> Governed by our signed Master Services Agreement (MSA) and Mutual NDA. Code repositories, staging databases, and production credentials are transferred or purged upon contract conclusion.
+        </li>
+        <li>
+          <strong>Website Audit Scans:</strong> Cached in memory for rate-limiting purposes and purged within 24 hours.
+        </li>
+      </ul>
+
+      <h2 id="international-transfers">7. International Data Transfers</h2>
+      <p>
+        As a global software engineering partner, we collaborate with clients in North America, Europe, Australia, and the Middle East. Where data is transferred across international borders, we implement Standard Contractual Clauses (SCCs) approved by the European Commission, UK International Data Transfer Agreements (IDTAs), and robust cryptographic encryption (TLS 1.3 in transit, AES-256 at rest).
       </p>
 
-      <h2 id="cookies-and-web-beacons">4. Cookies and Web Beacons</h2>
-      <p>
-        Like any other website, LIMINIQ uses &apos;cookies&apos;. These cookies are used to store information
-        including visitors&apos; preferences, and the pages on the website that the visitor accessed or visited. The
-        information is used to optimize the users&apos; experience by customizing our web page content based on
-        visitors&apos; browser type and/or other information.
-      </p>
+      <h2 id="your-privacy-rights">8. Your Rights (GDPR & CCPA/CPRA)</h2>
+      <p>Depending on your jurisdiction, you have enforceable statutory rights regarding your personal data:</p>
+      <ul>
+        <li><strong>Right to Access & Portability:</strong> Request a machine-readable export of all data we maintain about you.</li>
+        <li><strong>Right to Rectification:</strong> Request correction of inaccurate or incomplete records.</li>
+        <li><strong>Right to Erasure (&ldquo;Right to be Forgotten&rdquo;):</strong> Request immediate deletion of your personal records from our databases.</li>
+        <li><strong>Right to Restrict or Object to Processing:</strong> Opt out of analytical processing or marketing communications.</li>
+        <li><strong>Non-Discrimination (CCPA):</strong> We never deny services, charge different prices, or alter service quality for exercising your statutory privacy rights.</li>
+      </ul>
 
-      <h2 id="third-party-privacy-policies">5. Third Party Privacy Policies</h2>
+      <h2 id="security-safeguards">9. Technical & Security Safeguards</h2>
       <p>
-        LIMINIQ&apos;s Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to
-        consult the respective Privacy Policies of these third-party ad servers for more detailed information. It
-        may include their practices and instructions about how to opt-out of certain options.
+        We apply defense-in-depth security engineering to protect all handled information:
       </p>
+      <ul>
+        <li>HSTS-enforced HTTPS transport with strict TLS 1.2+ cipher suites.</li>
+        <li>Strict Content Security Policy (CSP), Permissions-Policy, COOP, and CORP headers.</li>
+        <li>Zero-trust SSRF validation on all URL-fetching endpoints.</li>
+        <li>Automated IP-based and token-based rate limiting on all public endpoints.</li>
+      </ul>
 
-      <div style={{ marginTop: "4rem", paddingTop: "2rem", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-        <p style={{ marginBottom: "1rem" }}>
-          For any privacy-related concerns or data deletion requests, please email us directly:
+      <h2 id="contact-data-requests">10. Contact for Data Protection Requests</h2>
+      <p>
+        To exercise any of your data rights or submit inquiries regarding our privacy standards, contact our Data Protection Lead:
+      </p>
+      <div style={{ marginTop: "1.5rem", padding: "1.5rem", borderRadius: "16px", background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}>
+        <p style={{ margin: "0 0 0.5rem", fontWeight: 700 }}>Data Protection Officer / Privacy Operations</p>
+        <p style={{ margin: "0 0 0.25rem", color: "var(--text-secondary)", fontSize: "0.9rem" }}>
+          Email: <a href="mailto:hello@liminiq.com" style={{ color: "var(--accent)" }}>hello@liminiq.com</a> (Attn: Privacy / DPO)
         </p>
-        <Link href="mailto:hello@liminiq.com" className="btn-primary" style={{ display: "inline-flex" }}>
-          hello@liminiq.com
-        </Link>
+        <p style={{ margin: "0 0 0.25rem", color: "var(--text-secondary)", fontSize: "0.9rem" }}>
+          Registered Address: {SITE_CONTACT.streetAddress}, {SITE_CONTACT.addressLocality} {SITE_CONTACT.postalCode}, India
+        </p>
+        <p style={{ margin: "0.75rem 0 0", color: "var(--text-muted)", fontSize: "0.8rem" }}>
+          Statutory Response SLA: All verifiable data deletion, access, or export requests are fulfilled within 30 calendar days.
+        </p>
       </div>
     </LegalLayout>
   );

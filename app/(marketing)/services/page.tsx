@@ -10,17 +10,17 @@ import { getIcon } from "@/lib/icons";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Our Services",
+  title: "Engineering & AI Services | LIMINIQ",
   description:
-    "Custom software & SaaS, websites & e-commerce, mobile apps, UI/UX & branding, plus SEO, digital marketing, content, and AI/automation/cloud solutions — all under one delivery team.",
+    "Autonomous AI agents, custom software & SaaS, high-performance web applications, and growth engineering delivered by LIMINIQ for international clients across the US, UK, Europe, and UAE.",
   path: "/services",
 });
 
 const CATEGORIES: Service["category"][] = [
-  "Software & SaaS",
-  "Web & Commerce",
-  "Mobile & Design",
-  "Marketing & Growth",
+  "AI & Software",
+  "Web & Mobile",
+  "Growth & Marketing",
+  "Design & Creative",
 ];
 
 export default function ServicesPage() {
