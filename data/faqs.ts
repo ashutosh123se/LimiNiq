@@ -6,51 +6,51 @@ export interface FAQ {
 
 export const FAQS: FAQ[] = [
   {
-    question: "What is LIMINIQ and what services does it offer?",
+    question: "What does LIMINIQ do and what is your core specialty?",
     answer:
-      "LIMINIQ is India's software-led agency founded in 2019. We build custom software and SaaS, websites and e-commerce, mobile apps, UI/UX and branding, plus SEO, digital marketing, content, and AI/automation/cloud solutions.",
+      "LIMINIQ is an engineering-first AI automation and custom software development company. We specialize in building autonomous AI agent workflows, SaaS platforms, high-performance web applications, and mission-critical cloud integrations that cut operational work by 50%+.",
     page: "home",
   },
   {
-    question: "Where is LIMINIQ located and who do you work with?",
+    question: "How do you work with international clients across different timezones?",
     answer:
-      "We are based in Paschim Vihar, Delhi 110063, India, and work with startups and growing brands across SaaS, healthcare, edtech, real estate, e-commerce, fintech, hospitality, and B2B services — serving clients globally.",
+      "We regularly collaborate with clients across North America (EST/PST), the United Kingdom (GMT), Europe (CET), and the Middle East (GST). Our senior engineers maintain 4 to 6 hours of synchronous daily overlap for standups, architecture reviews, and sprint demos, paired with transparent asynchronous communication in Slack and Linear.",
     page: "home",
   },
   {
-    question: "How much does a custom software or SaaS project cost?",
+    question: "How much does an AI automation or custom software project cost?",
     answer:
-      "Custom software and SaaS engagements start from ₹75,000 per project. Final quotes are scoped after a free discovery call based on complexity, integrations, and timeline.",
+      "Scoped automation pipelines typically start from $2,500 (or ₹1,25,000), custom SaaS platforms from $5,000 (or ₹2,50,000), and rapid 4-week MVP sprints from $3,500 (or ₹1,75,000). We also provide dedicated senior engineering pods starting at $2,000/month. Exact investments are locked in writing with a milestone-based Statement of Work (SOW) after a free technical discovery call.",
     page: "pricing",
   },
   {
-    question: "How long does a typical project take?",
+    question: "What currencies and payment methods do you accept?",
     answer:
-      "Timelines depend on scope. Lean SaaS MVPs and marketing sites can ship in weeks; larger multi-tenant platforms and full growth retainers run on milestone schedules agreed during discovery.",
+      "We accept international payments in USD, GBP, EUR, AUD, CAD, and INR. Clients can pay via Stripe (credit/debit cards), Wise, bank wire transfers (SWIFT, ACH, SEPA), or PayPal with clear milestone-gated invoices.",
+    page: "pricing",
+  },
+  {
+    question: "Do I own 100% of the code and intellectual property?",
+    answer:
+      "Yes, completely. You retain full, unencumbered ownership of all source code, models, database schemas, architectural blueprints, and cloud configurations upon final milestone signoff. We sign a comprehensive IP assignment agreement as part of our Master Services Agreement.",
+    page: "pricing",
+  },
+  {
+    question: "How long does a typical project take to ship?",
+    answer:
+      "Focused AI automation workflows and rapid SaaS MVPs typically ship in 3 to 6 weeks. Larger enterprise platforms and multi-tenant systems run in 2-week agile sprints over 8 to 14 weeks with continuous staging demos.",
     page: "services",
   },
   {
-    question: "Do you offer ongoing support after launch?",
+    question: "Do you offer post-launch support and maintenance SLAs?",
     answer:
-      "Yes. We offer post-launch support, SEO/marketing retainers, and continuous optimization so products keep compounding after go-live.",
+      "Yes. Every custom software project includes a 30 to 60-day post-launch warranty with zero-cost bug fixes. We also offer ongoing engineering retainers covering model monitoring, vector database tuning, security patches, and guaranteed 4-hour SLA response times.",
     page: "services",
   },
   {
-    question: "What industries does LIMINIQ specialize in?",
+    question: "How do we get started?",
     answer:
-      "We work across SaaS/startups, healthcare, edtech, real estate/proptech, e-commerce/D2C, fintech, hospitality/food, and professional B2B services — with case studies and reviews tied to those verticals.",
-    page: "home",
-  },
-  {
-    question: "How do I start a project with LIMINIQ?",
-    answer:
-      "Book a free audit and strategy session via the contact form or WhatsApp (+91 9431471654). We review fit and goals, run a site/product snapshot, and share a prioritized growth roadmap — no pressure pitch.",
-    page: "home",
-  },
-  {
-    question: "What makes LIMINIQ different from other agencies?",
-    answer:
-      "We abandoned the traditional agency model for a boutique, senior-led delivery culture: software and SaaS at the core, backed by data-driven marketing. You own the code, pricing is transparent, and we optimize for measurable ROI.",
+      "Schedule a 30-minute technical discovery call with our senior architects or submit a project brief. We will review your goals, conduct an initial feasibility assessment, and deliver a clear milestone roadmap within 24 to 48 hours — with zero sales pressure.",
     page: "home",
   },
 ];

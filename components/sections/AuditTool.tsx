@@ -15,6 +15,9 @@ import {
   RotateCcw,
   ShieldCheck,
   ShieldAlert,
+  Mail,
+  Calendar,
+  Sparkles,
 } from "lucide-react";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -105,6 +108,12 @@ export function AuditTool() {
   const [result, setResult] = useState<AuditResult | null>(null);
   const [error, setError] = useState("");
 
+  // Lead capture state
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadName, setLeadName] = useState("");
+  const [consent, setConsent] = useState(true);
+  const [leadState, setLeadState] = useState<"idle" | "submitting" | "sent" | "error">("idle");
+
   const runAudit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = url.trim();
@@ -113,6 +122,7 @@ export function AuditTool() {
     setPhase("scanning");
     setError("");
     setMessageIndex(0);
+    setLeadState("idle");
 
     const messageTimer = setInterval(() => {
       setMessageIndex((prev) => Math.min(prev + 1, SCAN_MESSAGES.length - 1));
@@ -141,16 +151,46 @@ export function AuditTool() {
     }
   };
 
+  const handleLeadSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!leadEmail.trim() || !result) return;
+
+    setLeadState("submitting");
+    try {
+      const formattedUrl = result.url.startsWith("http") ? result.url : `https://${result.url}`;
+      const res = await fetch("/api/audit-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: leadEmail.trim(),
+          name: leadName.trim() || "Website Audit Lead",
+          website: formattedUrl,
+        }),
+      });
+
+      if (res.ok) {
+        setLeadState("sent");
+      } else {
+        setLeadState("error");
+      }
+    } catch {
+      setLeadState("error");
+    }
+  };
+
   const resetAudit = () => {
     setPhase("idle");
     setUrl("");
     setResult(null);
     setError("");
     setMessageIndex(0);
+    setLeadState("idle");
+    setLeadEmail("");
+    setLeadName("");
   };
 
   return (
-    <section className="section-padding relative overflow-hidden">
+    <section className="section-padding relative overflow-hidden" id="audit-tool">
       <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
         <div
           className="absolute -left-32 top-10 h-80 w-80 rounded-full opacity-30 blur-[110px]"
@@ -171,7 +211,7 @@ export function AuditTool() {
           className="mx-auto mb-12 max-w-2xl text-center"
         >
           <motion.span variants={revealVariants} className="pill-badge mb-4 inline-flex">
-            <span className="text-[var(--signal)]">§03</span> Free Tool
+            <span className="text-[var(--signal)]">§03</span> Free Tool & Lead Magnet
           </motion.span>
           <motion.h2
             variants={revealVariants}
@@ -180,8 +220,7 @@ export function AuditTool() {
             Instant Website <span className="heading-accent">Audit</span>
           </motion.h2>
           <motion.p variants={revealVariants} className="mx-auto mt-4 max-w-xl text-text-secondary">
-            Drop your URL for a live snapshot across performance, SEO, mobile, security, and
-            accessibility — no signup required.
+            Scan your web property across performance, SEO, mobile UX, security headers, and accessibility — get instant diagnostics and download a complete remediation roadmap.
           </motion.p>
         </motion.div>
 
@@ -197,7 +236,7 @@ export function AuditTool() {
               <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
               <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
             </div>
-            <span className="flex-1 font-mono text-[0.7rem] text-text-muted">LIMINIQ Site Scanner</span>
+            <span className="flex-1 font-mono text-[0.7rem] text-text-muted">LIMINIQ Site Scanner & Architecture Check</span>
             <span
               className={cn(
                 "flex items-center gap-1.5 font-mono text-[0.6rem] font-bold uppercase tracking-widest",
@@ -228,7 +267,7 @@ export function AuditTool() {
                   className="flex flex-col gap-3"
                 >
                   <label htmlFor="audit-url" className="font-mono text-[0.65rem] uppercase tracking-widest text-text-muted">
-                    Website URL
+                    Target Website URL
                   </label>
                   <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="flex flex-1 items-center rounded-xl border border-[var(--border-subtle)] bg-bg-secondary transition-colors focus-within:border-[var(--accent)]">
@@ -239,17 +278,17 @@ export function AuditTool() {
                         inputMode="url"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
-                        placeholder="yourwebsite.com"
+                        placeholder="yourcompany.com"
                         required
                         className="w-full bg-transparent px-2 py-3.5 text-sm text-text-primary outline-none placeholder:text-text-muted"
                       />
                     </div>
                     <button type="submit" className="btn-primary shrink-0 justify-center">
-                      <ScanSearch size={18} /> Run Audit
+                      <ScanSearch size={18} /> Run Free Audit
                     </button>
                   </div>
                   {error && <p className="text-sm text-red-400">{error}</p>}
-                  <p className="text-xs text-text-muted">No signup required · Results in seconds</p>
+                  <p className="text-xs text-text-muted">Instant server-side check · No credit card required</p>
                 </motion.form>
               )}
 
@@ -319,7 +358,7 @@ export function AuditTool() {
                       </span>
                     </div>
                     {result.demo && (
-                      <span className="pill-badge shrink-0 !bg-white/5 !text-[0.65rem]">Demo estimate</span>
+                      <span className="pill-badge shrink-0 !bg-white/5 !text-[0.65rem]">Estimate</span>
                     )}
                   </div>
 
@@ -356,20 +395,129 @@ export function AuditTool() {
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] pt-5">
-                    <p className="text-sm text-text-secondary">
-                      Want the full breakdown with prioritized fixes?{" "}
+                  {/* High-Converting Lead Magnet: Full Technical Report & Consultation */}
+                  <div className="rounded-2xl border border-[var(--border-subtle)] bg-bg-secondary/70 p-6">
+                    {leadState === "sent" ? (
+                      <div className="text-center py-4">
+                        <span className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-[var(--signal-muted)] text-[var(--signal)] mb-3">
+                          <CheckCircle2 size={24} />
+                        </span>
+                        <h4 className="font-heading text-base font-bold text-text-primary">
+                          Executive Report Request Dispatched!
+                        </h4>
+                        <p className="mt-1.5 text-xs text-text-secondary max-w-md mx-auto">
+                          We&apos;re preparing the comprehensive technical breakdown for <strong>{result.url}</strong>. You will receive it shortly at <strong>{leadEmail}</strong>.
+                        </p>
+                        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                          <a href="/contact#booking" className="btn-primary text-xs">
+                            <Calendar size={14} /> Schedule 15-Min Strategy Call
+                          </a>
+                          <button
+                            type="button"
+                            onClick={resetAudit}
+                            className="btn-secondary text-xs"
+                          >
+                            <RotateCcw size={13} /> Audit Another URL
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="flex items-start justify-between gap-4 mb-4">
+                          <div>
+                            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--signal)]">
+                              <Sparkles size={11} /> Free Comprehensive Deliverable
+                            </span>
+                            <h4 className="font-heading text-base font-bold text-text-primary mt-1">
+                              Get the Full Technical Audit & Remediation Roadmap
+                            </h4>
+                            <p className="mt-1 text-xs text-text-secondary leading-relaxed">
+                              Receive an engineering-level PDF report detailing Core Web Vitals bottlenecks, missing security headers, SEO schema fixes, and a prioritized action plan.
+                            </p>
+                          </div>
+                        </div>
+
+                        <form onSubmit={handleLeadSubmit} className="flex flex-col gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input
+                              type="text"
+                              value={leadName}
+                              onChange={(e) => setLeadName(e.target.value)}
+                              placeholder="Your Name (Optional)"
+                              className="rounded-xl border border-[var(--border-subtle)] bg-bg-elevated px-3.5 py-2.5 text-xs text-text-primary outline-none focus:border-[var(--accent)]"
+                            />
+                            <input
+                              type="email"
+                              required
+                              value={leadEmail}
+                              onChange={(e) => setLeadEmail(e.target.value)}
+                              placeholder="Work Email Address *"
+                              className="rounded-xl border border-[var(--border-subtle)] bg-bg-elevated px-3.5 py-2.5 text-xs text-text-primary outline-none focus:border-[var(--accent)]"
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-2 pt-1">
+                            <input
+                              type="checkbox"
+                              id="audit-consent"
+                              checked={consent}
+                              onChange={(e) => setConsent(e.target.checked)}
+                              required
+                              className="rounded border-[var(--border-subtle)] text-[var(--accent)] focus:ring-0"
+                            />
+                            <label htmlFor="audit-consent" className="text-[11px] text-text-muted">
+                              I agree to receive the technical audit report and occasional engineering insights.
+                            </label>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-3 pt-2">
+                            <button
+                              type="submit"
+                              disabled={leadState === "submitting"}
+                              className="btn-primary text-xs"
+                            >
+                              {leadState === "submitting" ? (
+                                <>
+                                  <Loader2 size={14} className="animate-spin" /> Preparing Report...
+                                </>
+                              ) : (
+                                <>
+                                  <Mail size={14} /> Email Me Full Audit Report
+                                </>
+                              )}
+                            </button>
+                            <a
+                              href="/contact#booking"
+                              className="btn-secondary text-xs"
+                            >
+                              <Calendar size={13} /> Book 15-Min Walkthrough
+                            </a>
+                          </div>
+
+                          {leadState === "error" && (
+                            <p className="text-xs text-red-400 mt-1">
+                              Failed to submit request. Please try again or reach out at hello@liminiq.com.
+                            </p>
+                          )}
+                        </form>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] pt-4">
+                    <p className="text-xs text-text-muted">
+                      Need custom architecture or migration support?{" "}
                       <a href="/contact" className="font-semibold text-[var(--accent)]">
-                        Talk to our team
+                        Talk to our engineering leads
                       </a>
                       .
                     </p>
                     <button
                       type="button"
                       onClick={resetAudit}
-                      className="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-text-muted transition-colors hover:text-text-primary"
+                      className="inline-flex items-center gap-1.5 font-heading text-xs font-semibold text-text-muted transition-colors hover:text-text-primary"
                     >
-                      <RotateCcw size={14} /> Audit another site
+                      <RotateCcw size={13} /> Audit another site
                     </button>
                   </div>
                 </motion.div>
@@ -380,7 +528,7 @@ export function AuditTool() {
 
         <div className="mx-auto mt-4 flex max-w-3xl justify-center">
           <span className="inline-flex items-center gap-1.5 text-xs text-text-muted">
-            <ArrowRight size={12} /> Powered by Google PageSpeed Insights when configured
+            <ArrowRight size={12} /> Powered by Google PageSpeed Insights & Server-Side Security Scanners
           </span>
         </div>
       </div>
