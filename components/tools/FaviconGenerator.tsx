@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Download, Upload } from "lucide-react";
+import { Download, Upload, AlertCircle } from "lucide-react";
 import { ToolHeader } from "@/components/tools/ToolHeader";
 
 const SIZES = [16, 32, 48, 96, 180, 192, 512];
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB limit
+const ALLOWED_MIME_TYPES = ["image/png", "image/jpeg", "image/webp", "image/svg+xml"];
 
 function resizeToDataUrl(image: HTMLImageElement, size: number): string {
   const canvas = document.createElement("canvas");
@@ -21,14 +23,41 @@ export function FaviconGenerator() {
   const [sourceImage, setSourceImage] = useState<HTMLImageElement | null>(null);
   const [previews, setPreviews] = useState<Record<number, string>>({});
   const [fileName, setFileName] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleFile(file: File | undefined) {
+    setError(null);
     if (!file) return;
-    setFileName(file.name.replace(/\.[^.]+$/, ""));
+
+    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+      setError("Please upload a valid PNG, JPG, WebP, or SVG image.");
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      setError("Image file is too large. Please select a file under 5MB.");
+      return;
+    }
+
+    // Sanitize filename for safe downloads
+    const safeBase = file.name
+      .replace(/\.[^.]+$/, "")
+      .replace(/[^a-zA-Z0-9_\-]/g, "_")
+      .slice(0, 40);
+    setFileName(safeBase || "favicon");
+
     const reader = new FileReader();
+    reader.onerror = () => {
+      setError("Failed to read image file.");
+    };
+
     reader.onload = () => {
       const img = new Image();
+      img.onerror = () => {
+        setError("Invalid or corrupted image format.");
+      };
+
       img.onload = () => {
         setSourceImage(img);
         const next: Record<number, string> = {};
@@ -37,8 +66,10 @@ export function FaviconGenerator() {
         });
         setPreviews(next);
       };
+
       img.src = reader.result as string;
     };
+
     reader.readAsDataURL(file);
   }
 
@@ -62,13 +93,41 @@ export function FaviconGenerator() {
           onChange={(e) => handleFile(e.target.files?.[0])}
           style={{ display: "none" }}
         />
-        <div className="tool-dropzone" onClick={() => inputRef.current?.click()}>
+        <div className="tool-dropzone" onClick={() => inputRef.current?.click()} style={{ cursor: "pointer" }}>
           <Upload size={26} style={{ margin: "0 auto 0.75rem", color: "var(--accent)" }} />
-          <p style={{ fontFamily: "var(--font-heading)", fontWeight: 600, color: "var(--text-primary)", margin: "0 0 0.35rem" }}>
+          <p
+            style={{
+              fontFamily: "var(--font-heading)",
+              fontWeight: 600,
+              color: "var(--text-primary)",
+              margin: "0 0 0.35rem",
+            }}
+          >
             {sourceImage ? "Click to replace image" : "Click to upload an image"}
           </p>
-          <p style={{ fontSize: "0.8rem", margin: 0 }}>PNG, JPG, WebP, or SVG — square images work best.</p>
+          <p style={{ fontSize: "0.8rem", margin: 0, color: "var(--text-secondary)" }}>
+            PNG, JPG, WebP, or SVG (max 5MB) — square images work best.
+          </p>
         </div>
+        {error && (
+          <div
+            style={{
+              marginTop: "1rem",
+              padding: "0.75rem",
+              borderRadius: "10px",
+              background: "rgba(239, 68, 68, 0.1)",
+              border: "1px solid rgba(239, 68, 68, 0.25)",
+              color: "#f87171",
+              fontSize: "0.85rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <AlertCircle size={16} />
+            <span>{error}</span>
+          </div>
+        )}
       </div>
 
       {sourceImage && (
@@ -82,7 +141,8 @@ export function FaviconGenerator() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    background: "repeating-conic-gradient(#1a1d26 0% 25%, #14171f 0% 50%) 50% / 16px 16px",
+                    background:
+                      "repeating-conic-gradient(#1a1d26 0% 25%, #14171f 0% 50%) 50% / 16px 16px",
                   }}
                 >
                   {previews[size] && (
@@ -97,7 +157,9 @@ export function FaviconGenerator() {
                   )}
                 </div>
                 <div className="tool-swatch-info" style={{ justifyContent: "center", gap: 8 }}>
-                  <span>{size}×{size}</span>
+                  <span>
+                    {size}×{size}
+                  </span>
                   <a
                     href={previews[size]}
                     download={`${fileName || "favicon"}-${size}x${size}.png`}
@@ -110,7 +172,14 @@ export function FaviconGenerator() {
               </div>
             ))}
           </div>
-          <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "1.25rem", marginBottom: 0 }}>
+          <p
+            style={{
+              fontSize: "0.8rem",
+              color: "var(--text-muted)",
+              marginTop: "1.25rem",
+              marginBottom: 0,
+            }}
+          >
             Use 16×16 / 32×32 for browser tabs, 180×180 for Apple touch icons, and 192×192 / 512×512 for PWA manifests.
           </p>
         </div>

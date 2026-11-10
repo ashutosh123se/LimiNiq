@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-
-export const runtime = "edge";
+import { safeSsrfFetch, validateUrlForSsrf, SsrfBlockedError } from "@/lib/security/ssrf";
+import { rateLimit, getClientIP } from "@/lib/rateLimit";
 
 interface AuditDimension {
   key: "performance" | "seo" | "mobile" | "security" | "accessibility";
@@ -22,8 +22,6 @@ interface PageSpeedScores {
   bestPractices: number | null;
 }
 
-const FETCH_TIMEOUT_MS = 8000;
-
 function seededRandom(seed: string) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) {
@@ -37,55 +35,40 @@ function seededRandom(seed: string) {
   };
 }
 
-function normalizeUrl(raw: string) {
+function normalizeUrl(raw: string): string {
   const trimmed = raw.trim();
-  const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-  return new URL(withScheme);
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 }
 
 function clampScore(value: number) {
   return Math.max(5, Math.min(99, Math.round(value)));
 }
 
-async function fetchWithTimeout(url: string, init?: RequestInit): Promise<Response> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-  try {
-    return await fetch(url, { ...init, signal: controller.signal });
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-/** Fetches the live page once to check HTTPS, a viewport meta tag, and baseline security headers. */
-async function runHeuristics(parsed: URL): Promise<Heuristics> {
-  const isHttps = parsed.protocol === "https:";
+/** Fetches the live page safely with SSRF defense to inspect HTTPS, viewport meta, and security headers. */
+async function runHeuristics(targetUrl: string): Promise<Heuristics> {
+  let isHttps = false;
   let hasViewportMeta = false;
   let hasSecurityHeaders = false;
   let responseOk = false;
   let fetchFailed = false;
 
   try {
-    const res = await fetchWithTimeout(parsed.toString(), {
-      redirect: "follow",
-      headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; LiminiqAuditBot/1.0; +https://www.liminiq.com)",
-        Accept: "text/html,application/xhtml+xml",
-      },
+    const res = await safeSsrfFetch(targetUrl, {
+      timeoutMs: 6000,
+      maxRedirects: 3,
+      maxSizeBytes: 1024 * 1024, // 1MB max for heuristics
     });
 
-    responseOk = res.ok;
+    isHttps = res.finalUrl.startsWith("https:");
+    responseOk = res.status >= 200 && res.status < 400;
+
     hasSecurityHeaders =
       res.headers.has("strict-transport-security") ||
       res.headers.has("content-security-policy") ||
       res.headers.has("x-content-type-options") ||
       res.headers.has("x-frame-options");
 
-    const contentType = res.headers.get("content-type") || "";
-    if (contentType.includes("text/html") || contentType === "") {
-      const html = await res.text();
-      hasViewportMeta = /<meta[^>]+name=["']viewport["'][^>]*>/i.test(html.slice(0, 80_000));
-    }
+    hasViewportMeta = /<meta[^>]+name=["']viewport["'][^>]*>/i.test(res.bodyText.slice(0, 80_000));
   } catch {
     fetchFailed = true;
   }
@@ -93,7 +76,7 @@ async function runHeuristics(parsed: URL): Promise<Heuristics> {
   return { isHttps, hasViewportMeta, hasSecurityHeaders, responseOk, fetchFailed };
 }
 
-/** Calls Google PageSpeed Insights (Lighthouse) when an API key is configured. */
+/** Calls Google PageSpeed Insights when an API key is configured. */
 async function fetchPageSpeed(targetUrl: string, apiKey: string): Promise<PageSpeedScores> {
   const endpoint = new URL("https://www.googleapis.com/pagespeedonline/v5/runPagespeed");
   endpoint.searchParams.set("url", targetUrl);
@@ -103,33 +86,55 @@ async function fetchPageSpeed(targetUrl: string, apiKey: string): Promise<PageSp
     endpoint.searchParams.append("category", category);
   }
 
-  const res = await fetchWithTimeout(endpoint.toString());
-  if (!res.ok) {
-    throw new Error(`PageSpeed API responded with status ${res.status}`);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 9000);
+
+  try {
+    const res = await fetch(endpoint.toString(), { signal: controller.signal });
+    if (!res.ok) {
+      throw new Error(`PageSpeed API error: ${res.status}`);
+    }
+
+    const data = (await res.json()) as {
+      lighthouseResult?: { categories?: Record<string, { score?: number | null }> };
+    };
+    const categories = data.lighthouseResult?.categories;
+    if (!categories) {
+      throw new Error("PageSpeed response missing Lighthouse categories");
+    }
+
+    const scoreOf = (key: string) => {
+      const raw = categories[key]?.score;
+      return typeof raw === "number" ? clampScore(raw * 100) : null;
+    };
+
+    return {
+      performance: scoreOf("performance"),
+      seo: scoreOf("seo"),
+      accessibility: scoreOf("accessibility"),
+      bestPractices: scoreOf("best-practices"),
+    };
+  } finally {
+    clearTimeout(timer);
   }
-
-  const data = (await res.json()) as {
-    lighthouseResult?: { categories?: Record<string, { score?: number | null }> };
-  };
-  const categories = data.lighthouseResult?.categories;
-  if (!categories) {
-    throw new Error("PageSpeed response missing Lighthouse categories");
-  }
-
-  const scoreOf = (key: string) => {
-    const raw = categories[key]?.score;
-    return typeof raw === "number" ? clampScore(raw * 100) : null;
-  };
-
-  return {
-    performance: scoreOf("performance"),
-    seo: scoreOf("seo"),
-    accessibility: scoreOf("accessibility"),
-    bestPractices: scoreOf("best-practices"),
-  };
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limiting: 10 requests per 5 minutes per IP
+  const clientIp = getClientIP(req);
+  const rl = rateLimit(`tool:audit:${clientIp}`, { maxRequests: 10, windowMs: 5 * 60 * 1000 });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Too many audit requests from this network. Please wait a few minutes." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": Math.ceil((rl.resetAt - Date.now()) / 1000).toString(),
+        },
+      }
+    );
+  }
+
   const body = await req.json().catch(() => null);
   const rawUrl = typeof body?.url === "string" ? body.url : "";
 
@@ -137,25 +142,40 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "A website URL is required." }, { status: 400 });
   }
 
-  let parsed: URL;
+  let normalized: string;
   try {
-    parsed = normalizeUrl(rawUrl);
+    normalized = normalizeUrl(rawUrl);
   } catch {
     return NextResponse.json({ error: "That doesn't look like a valid URL." }, { status: 400 });
   }
 
+  // SSRF Validation: Hostname and DNS resolution check
+  let parsedUrl: URL;
+  try {
+    parsedUrl = await validateUrlForSsrf(normalized);
+  } catch (err) {
+    if (err instanceof SsrfBlockedError) {
+      return NextResponse.json(
+        { error: "Scanning internal, local, or private network addresses is not permitted." },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json({ error: "Invalid or unreachable URL." }, { status: 400 });
+  }
+
+  const validatedUrlString = parsedUrl.toString();
   const apiKey = process.env.PAGESPEED_API_KEY;
-  const rand = seededRandom(parsed.hostname);
+  const rand = seededRandom(parsedUrl.hostname);
   const demoScore = (min: number, span: number) => Math.floor(min + rand() * span);
 
-  const heuristics = await runHeuristics(parsed);
+  const heuristics = await runHeuristics(validatedUrlString);
 
   let psi: PageSpeedScores | null = null;
   let demo = true;
 
   if (apiKey) {
     try {
-      psi = await fetchPageSpeed(parsed.toString(), apiKey);
+      psi = await fetchPageSpeed(validatedUrlString, apiKey);
       demo = false;
     } catch {
       psi = null;
@@ -167,7 +187,7 @@ export async function POST(req: NextRequest) {
   const seo = psi?.seo ?? demoScore(52, 42);
   const accessibility = psi?.accessibility ?? demoScore(46, 46);
 
-  // Security blends the HTTPS/header heuristics with PSI's best-practices score when available.
+  // Security blends HTTPS/header heuristics with PSI best-practices score
   const security = (() => {
     let base = heuristics.isHttps ? 76 : 38;
     if (heuristics.hasSecurityHeaders) base += 12;
@@ -177,7 +197,7 @@ export async function POST(req: NextRequest) {
     return clampScore(base + jitter);
   })();
 
-  // Mobile blends the viewport-meta heuristic with PSI's mobile performance score when available.
+  // Mobile blends viewport-meta heuristic with PSI mobile performance score
   const mobile = (() => {
     let base = heuristics.hasViewportMeta ? 80 : 42;
     if (psi?.performance != null) base = Math.round((base + psi.performance) / 2);
@@ -196,13 +216,12 @@ export async function POST(req: NextRequest) {
   const overall = Math.round(dimensions.reduce((sum, d) => sum + d.score, 0) / dimensions.length);
 
   if (demo) {
-    // Keep the perceived scan time consistent even without a real Lighthouse run.
-    await new Promise((r) => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 250));
   }
 
   return NextResponse.json({
-    url: parsed.toString(),
-    hostname: parsed.hostname,
+    url: validatedUrlString,
+    hostname: parsedUrl.hostname,
     overall,
     dimensions,
     heuristics: {

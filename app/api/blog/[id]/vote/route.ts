@@ -3,17 +3,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { pollVoteSchema } from "@/lib/validations";
+import { rateLimit, getClientIP } from "@/lib/rateLimit";
 import type { PollOption } from "@/lib/data/blogEngagement";
 
 export const dynamic = "force-dynamic";
 
 function getVoterKey(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const ip = getClientIP(req);
   const ua = req.headers.get("user-agent") || "unknown";
-  return createHash("sha256").update(`${ip}:${ua}`).digest("hex").slice(0, 32);
+  const salt = process.env.NEXTAUTH_SECRET || "liminiq-poll-salt";
+  return createHash("sha256").update(`${salt}:${ip}:${ua}`).digest("hex").slice(0, 32);
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const ip = getClientIP(req);
+  const rl = rateLimit(`poll-vote:${ip}`, { maxRequests: 5, windowMs: 10 * 60 * 1000 });
+  if (!rl.success) {
+    return NextResponse.json({ error: "Too many voting attempts. Please wait." }, { status: 429 });
+  }
+
   const { id } = await params;
 
   let body: unknown;
