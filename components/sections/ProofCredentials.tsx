@@ -1,33 +1,33 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Shield, Star, Code2 } from "lucide-react";
+import { CheckCircle2, Shield, Star, Code2, Globe2 } from "lucide-react";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 
 const PROOFS = [
   {
     icon: Star,
     title: "4.9★",
-    subtitle: "Client rating",
-    body: "Average across delivered software and growth engagements.",
+    subtitle: "Verified Client Rating",
+    body: "Standardized average across delivered software, AI, and growth engagements.",
   },
   {
-    icon: Star,
-    title: "4.5★",
-    subtitle: "Google Reviews",
-    body: "Public reviews from real clients on Google Business.",
+    icon: Globe2,
+    title: "Timezone SLA",
+    subtitle: "Global Overlap",
+    body: "Dedicated synchronous working overlap across US East, UK GMT, and Gulf hours.",
   },
   {
     icon: Code2,
-    title: "You own it",
-    subtitle: "Code ownership",
-    body: "IP transfer and milestone billing written into every SOW.",
+    title: "You Own It",
+    subtitle: "100% Code Ownership",
+    body: "Full IP transfer and milestone billing written into every contract. Zero vendor lock-in.",
   },
   {
     icon: Shield,
     title: "98%",
-    subtitle: "Retention",
-    body: "Partners who stay because delivery stays accountable.",
+    subtitle: "Client Retention",
+    body: "Long-term partners who stay because engineering delivery remains accountable.",
   },
 ];
 

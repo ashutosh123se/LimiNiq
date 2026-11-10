@@ -25,13 +25,14 @@ export async function generateMetadata(): Promise<Metadata> {
     path: "/",
     absoluteTitle: true,
     keywords: [
-      "custom software development company India",
-      "enterprise software development company",
-      "SaaS development company India",
-      "SEO agency India",
-      "digital marketing agency India",
-      "software development agency",
-      "ERP CRM development India",
+      "AI automation agency",
+      "custom software development company",
+      "SaaS MVP development",
+      "AI agent development",
+      "workflow automation agency",
+      "enterprise software engineering",
+      "AI chatbot development",
+      "full stack development agency",
     ],
   });
 }

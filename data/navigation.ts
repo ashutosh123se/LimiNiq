@@ -45,11 +45,11 @@ export const NAV_LINKS: NavLink[] = [
     dropdown: {
       title: "Company",
       items: [
-        { label: "About", href: "/about", description: "Founded 2019 · Delhi", icon: "BookOpen" },
+        { label: "About", href: "/about", description: "Senior engineering team", icon: "BookOpen" },
         { label: "Industries", href: "/industries", description: "Who we build for", icon: "Building2" },
         { label: "Free tools", href: "/tools", description: "12 utilities", icon: "Wrench" },
         { label: "Blog", href: "/blog", description: "Notes from the lab", icon: "FileText" },
-        { label: "Careers", href: "/careers", description: "Join the craft", icon: "Briefcase" },
+        { label: "Careers", href: "/careers", description: "Join the team", icon: "Briefcase" },
         { label: "Contact", href: "/contact", description: "Reply within 24h", icon: "Mail" },
       ],
     },
@@ -109,7 +109,7 @@ export const MOBILE_NAV_LINKS: NavLink[] = [
     dropdown: {
       title: "Company",
       items: [
-        { label: "Our story", href: "/about", description: "Founded 2019 · Delhi", icon: "BookOpen" },
+        { label: "Our story", href: "/about", description: "Senior engineering team", icon: "BookOpen" },
         { label: "The team", href: "/about#team", description: "Builders & strategists", icon: "Users" },
         { label: "Careers", href: "/careers", description: "Join the craft", icon: "Briefcase" },
         { label: "Contact", href: "/contact", description: "Reply within 24h", icon: "Mail" },
@@ -123,52 +123,54 @@ export const MOBILE_NAV_LINKS: NavLink[] = [
 export const MEGA_MENU = {
   columns: [
     {
+      title: "AI & Autonomous Systems",
+      items: [
+        { label: "AI Automation & Agents", href: "/services/ai-automation", icon: "Cpu" },
+        { label: "Autonomous Support Triage", href: "/services/ai-automation", icon: "Bot" },
+        { label: "Intelligent Lead Routing", href: "/services/ai-automation", icon: "UserCheck" },
+        { label: "Document & Invoice Processing", href: "/services/ai-automation", icon: "FileSpreadsheet" },
+        { label: "Executive Analytics Digests", href: "/services/ai-automation", icon: "BarChart3" },
+      ],
+    },
+    {
       title: "Software & SaaS",
       items: [
-        { label: "Custom Software & SaaS Development", href: "/services/custom-software-saas", icon: "Code2" },
+        { label: "Custom Software & SaaS", href: "/services/custom-software-saas", icon: "Code2" },
         { label: "SaaS MVP Development", href: "/services/saas-mvp-development", icon: "Rocket" },
-        { label: "Enterprise Web Portals", href: "/services/custom-software-saas", icon: "LayoutDashboard" },
-        { label: "Legacy System Modernization", href: "/services/custom-software-saas", icon: "RefreshCw" },
+        { label: "Enterprise Web Applications", href: "/services/custom-software-saas", icon: "LayoutDashboard" },
         { label: "Custom ERP & CRM Solutions", href: "/services/custom-software-saas", icon: "Database" },
+        { label: "Legacy Modernization", href: "/services/custom-software-saas", icon: "RefreshCw" },
       ],
     },
     {
-      title: "Web & Commerce",
+      title: "Web & Mobile",
       items: [
-        { label: "Website & E-commerce Development", href: "/services/website-ecommerce", icon: "Globe" },
-        { label: "Next.js / React Builds", href: "/services/website-ecommerce", icon: "Component" },
-        { label: "Website Redesign", href: "/services/website-ecommerce", icon: "Paintbrush" },
-        { label: "Website Maintenance", href: "/services/website-ecommerce", icon: "Wrench" },
-      ],
-    },
-    {
-      title: "Mobile & Design",
-      items: [
+        { label: "Website & E-commerce", href: "/services/website-ecommerce", icon: "Globe" },
         { label: "Mobile App Development", href: "/services/mobile-app-development", icon: "Smartphone" },
-        { label: "UI/UX Design & Branding", href: "/services/ui-ux-design-branding", icon: "PenTool" },
-        { label: "Graphic Design & Creative", href: "/services/graphic-design-creative", icon: "Palette" },
+        { label: "UI/UX & Design Systems", href: "/services/ui-ux-design-branding", icon: "PenTool" },
       ],
     },
     {
-      title: "Marketing & Growth",
+      title: "Growth & Additional Services",
       items: [
-        { label: "Digital Marketing", href: "/services/digital-marketing", icon: "BarChart3" },
-        { label: "SEO & Search Engine Marketing", href: "/services/seo-search-engine-marketing", icon: "TrendingUp" },
-        { label: "Content Creation & Copywriting", href: "/services/content-creation", icon: "FileText" },
-        { label: "AI, Automation & Cloud Solutions", href: "/services/ai-automation-cloud", icon: "Cpu" },
+        { label: "SEO & Organic Growth", href: "/services/seo-search-engine-marketing", icon: "TrendingUp" },
+        { label: "Paid Acquisition & Ads", href: "/services/digital-marketing", icon: "BarChart3" },
+        { label: "Technical Copywriting", href: "/services/content-creation", icon: "FileText" },
+        { label: "Visual & Creative Systems", href: "/services/graphic-design-creative", icon: "Palette" },
       ],
     },
   ],
   footerCta: { label: "All services →", href: "/services" },
-  promo: { stat: "150+ Projects Delivered", cta: "Start a project →", href: "/contact" },
+  promo: { stat: "Cut Manual Work by 50%+", cta: "Book an automation audit →", href: "/contact" },
 } as const;
 
 export const FOOTER_SERVICES = [
+  { label: "AI Automation & Agents", href: "/services/ai-automation" },
+  { label: "Custom Software & SaaS", href: "/services/custom-software-saas" },
+  { label: "SaaS MVP Development", href: "/services/saas-mvp-development" },
   { label: "Website & E-commerce", href: "/services/website-ecommerce" },
   { label: "Mobile App Development", href: "/services/mobile-app-development" },
-  { label: "SaaS Development", href: "/services/custom-software-saas" },
-  { label: "Digital Marketing", href: "/services/digital-marketing" },
-  { label: "SEO Services", href: "/services/seo-search-engine-marketing" },
+  { label: "SEO & Growth Marketing", href: "/services/seo-search-engine-marketing" },
 ];
 
 export const FOOTER_COMPANY = [
@@ -183,4 +185,4 @@ export const FOOTER_COMPANY = [
 
 export const WHATSAPP_URL =
   "https://wa.me/919431471654?text=" +
-  encodeURIComponent("Hi LIMINIQ, I have a question about my project.");
+  encodeURIComponent("Hi LIMINIQ, I would like to discuss an AI automation or custom software project.");

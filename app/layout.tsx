@@ -45,13 +45,14 @@ export const metadata: Metadata = {
   },
   description: HOME_SEO.description,
   keywords: [
-    "custom software development company India",
-    "enterprise software development company",
-    "SaaS development company India",
-    "SEO agency India",
-    "digital marketing agency India",
-    "software development agency",
-    "ERP CRM development India",
+    "AI automation agency",
+    "custom software development company",
+    "SaaS MVP development",
+    "AI agent development",
+    "workflow automation agency",
+    "enterprise software engineering",
+    "AI chatbot development",
+    "full stack development agency",
   ],
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
@@ -72,7 +73,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <SitewideSchema />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />

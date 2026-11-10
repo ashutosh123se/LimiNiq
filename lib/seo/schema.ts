@@ -46,7 +46,7 @@ export function organizationJsonLd() {
       email: SITE_CONTACT.email,
       contactType: "customer service",
       availableLanguage: "English",
-      areaServed: "IN",
+      areaServed: ["US", "GB", "CA", "AU", "AE", "EU", "IN"],
     },
     sameAs: [SITE_SOCIAL.linkedin, SITE_SOCIAL.instagram],
     aggregateRating: {
@@ -84,10 +84,15 @@ export function localBusinessJsonLd() {
       "@type": "GeoCoordinates",
       addressCountry: "IN",
     },
-    areaServed: {
-      "@type": "Country",
-      name: "India",
-    },
+    areaServed: [
+      { "@type": "Country", name: "United States" },
+      { "@type": "Country", name: "United Kingdom" },
+      { "@type": "Country", name: "Canada" },
+      { "@type": "Country", name: "Australia" },
+      { "@type": "Country", name: "United Arab Emirates" },
+      { "@type": "Country", name: "Germany" },
+      { "@type": "Country", name: "India" },
+    ],
     sameAs: [SITE_SOCIAL.linkedin, SITE_SOCIAL.instagram],
   };
 }
@@ -101,9 +106,9 @@ export function websiteJsonLd() {
     url: absoluteUrl("/"),
     name: SITE_NAME,
     description:
-      "Custom software, SaaS, and enterprise development company also offering SEO and digital marketing services.",
+      "AI automation, custom software, and enterprise SaaS development company.",
     publisher: { "@id": `${SITE_URL}/#organization` },
-    inLanguage: "en-IN",
+    inLanguage: "en",
   };
 }
 
@@ -145,7 +150,7 @@ export function serviceSchema(input: {
       url: SITE_URL,
     },
     description: input.description,
-    areaServed: { "@type": "Country", name: "India" },
+    areaServed: ["US", "GB", "CA", "AU", "AE", "EU", "IN"],
     url: absoluteUrl(`/services/${input.slug}`),
   };
 }

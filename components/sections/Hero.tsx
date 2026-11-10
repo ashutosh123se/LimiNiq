@@ -22,19 +22,19 @@ const PAINS = [
 
 const TRUST = [
   "150+ projects delivered",
-  "4.9★ client rating",
-  "$12M+ revenue generated",
+  "4.9★ verified client rating",
+  "$12M+ client revenue influenced",
   "98% client retention",
   "You own the code",
-  "Milestone billing",
-  "Founded 2019 · Delhi",
-  "4.5★ Google Reviews",
+  "Milestone-based billing",
+  "US, UK & Gulf timezone overlap",
+  "Senior engineering team",
 ];
 
 const STACK = [
-  { icon: Zap, label: "Ship velocity", value: "Sprint-ready" },
-  { icon: ShieldCheck, label: "Ownership", value: "You own the code" },
-  { icon: Sparkles, label: "Growth loop", value: "Build + acquire" },
+  { icon: Zap, label: "Velocity", value: "Fixed milestone sprints" },
+  { icon: ShieldCheck, label: "Ownership", value: "You own 100% of the code" },
+  { icon: Sparkles, label: "Audit", value: "Free automation assessment" },
 ];
 
 export function Hero() {
@@ -76,50 +76,32 @@ export function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-300" />
               </span>
-              LIMINIQ Showreel · Est 2019
+              AI Automation &amp; Custom Software Engineering
+            </span>
+            <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-blue-200/70 font-medium">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              US East, UK &amp; Gulf Timezone Overlap
             </span>
           </motion.div>
 
-          <motion.p
-            variants={revealVariants}
-            className="mb-2 font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-[0.22em] text-blue-200/80"
-          >
-            NO MORE
-          </motion.p>
-
           <motion.h1
             variants={revealVariants}
-            className="mb-3 font-[family-name:var(--font-heading)] text-[clamp(2.6rem,6vw,4.8rem)] font-extrabold leading-[1.02] tracking-[-0.04em]"
+            className="mb-4 font-[family-name:var(--font-heading)] text-[clamp(2.4rem,5.5vw,4.5rem)] font-extrabold leading-[1.04] tracking-[-0.04em]"
           >
-            <span className="block text-white/35">agency chaos.</span>
-            <span className="relative block min-h-[1.15em] overflow-hidden">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={PAINS[painIndex].text}
-                  initial={reduced ? false : { y: 28, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -28, opacity: 0 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  className="block"
-                >
-                  {PAINS[painIndex].accent ? (
-                    <em className="font-[family-name:var(--font-display)] font-normal italic text-blue-300">
-                      {PAINS[painIndex].text}
-                    </em>
-                  ) : (
-                    PAINS[painIndex].text
-                  )}
-                </motion.span>
-              </AnimatePresence>
+            AI Automation &amp; Custom Software That Cut Manual Work by{" "}
+            <span className="font-[family-name:var(--font-display)] font-normal italic text-blue-300">
+              50%+
             </span>
+            .
           </motion.h1>
 
           <motion.p
             variants={revealVariants}
-            className="mb-8 max-w-lg text-base leading-relaxed text-blue-100/75 sm:text-lg"
+            className="mb-8 max-w-xl text-base leading-relaxed text-blue-100/80 sm:text-lg"
           >
-            Custom software, SaaS, websites, and growth — done fast, done right, done once. One senior
-            team for product and pipeline.
+            Senior engineers. Fixed milestones. You own 100% of the code. We architect custom SaaS
+            platforms, autonomous AI agents, and internal workflow automations — backed by a senior
+            engineering team with seamless international timezone coverage.
           </motion.p>
 
           <motion.div variants={revealVariants} className="mb-10 flex flex-wrap items-center gap-3">
@@ -127,22 +109,20 @@ export function Hero() {
               href="/contact"
               className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_12px_40px_rgba(59,130,246,0.45)] transition hover:bg-blue-400"
             >
-              Start your project <ArrowRight size={16} />
+              Claim Free Automation Audit <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="/services/ai-automation"
+              className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/15"
+            >
+              Explore AI Services
             </Link>
             <Link
               href="/portfolio"
-              className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/15"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-200 hover:text-white px-3 py-2"
             >
-              View our work
+              Case Studies <ArrowUpRight size={14} />
             </Link>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-blue-200 hover:text-white"
-            >
-              WhatsApp <ArrowUpRight size={14} />
-            </a>
           </motion.div>
 
           <motion.div

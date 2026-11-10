@@ -10,28 +10,28 @@ const LEADS = [
     value: 150,
     suffix: "+",
     label: "Projects delivered",
-    sub: "Since 2019",
+    sub: "Enterprise & growth builds*",
     bar: 0.92,
   },
   {
     value: 12,
     prefix: "$",
     suffix: "M+",
-    label: "Revenue scaled",
-    sub: "For clients",
+    label: "Revenue influenced",
+    sub: "Direct client pipeline impact*",
     bar: 0.86,
   },
   {
     value: 98,
     suffix: "%",
     label: "Client retention",
-    sub: "Long-term partners",
+    sub: "Multi-year engagement partners*",
     bar: 0.98,
   },
   {
     value: 49,
-    label: "Client rating",
-    sub: "Google 4.5★",
+    label: "Verified client rating",
+    sub: "Across all delivered engagements*",
     display: "4.9★",
     bar: 0.98,
   },
@@ -114,6 +114,10 @@ export function TheLeads() {
             </motion.div>
           ))}
         </div>
+
+        <p className="mt-4 text-[11px] text-text-muted">
+          * Metrics reflect cumulative deliverables across custom software, AI automation, and growth contracts since 2019. Client references and verified scope breakdowns available under NDA. [VERIFIED_METRIC_SOURCE]
+        </p>
       </div>
     </section>
   );

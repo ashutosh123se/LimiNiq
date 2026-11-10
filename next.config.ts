@@ -61,6 +61,7 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       // Legacy / friendly aliases for continuity
+      { source: "/services/ai-automation-cloud", destination: "/services/ai-automation", permanent: true },
       { source: "/service", destination: "/services", permanent: true },
       { source: "/service/:slug*", destination: "/services/:slug*", permanent: true },
       { source: "/work", destination: "/portfolio", permanent: true },

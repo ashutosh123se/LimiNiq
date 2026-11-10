@@ -13,21 +13,22 @@ type IconComponent = React.ComponentType<{ size?: number; className?: string }>;
 
 const FILTERS = [
   { id: "all", label: "All" },
-  { id: "Software & SaaS", label: "Software" },
-  { id: "Web & Commerce", label: "Web" },
-  { id: "Mobile & Design", label: "Design" },
-  { id: "Marketing & Growth", label: "Growth" },
+  { id: "AI & Software", label: "AI & Software" },
+  { id: "Web & Mobile", label: "Web & Mobile" },
+  { id: "Growth & Marketing", label: "Growth" },
+  { id: "Design & Creative", label: "Design" },
 ] as const;
 
 function shortName(name: string) {
   return name
     .replace(/ Development$/, "")
+    .replace(/ & Autonomous Agents$/, "")
     .replace(/ & Branding$/, "")
     .replace(/ & Creative$/, "")
     .replace(/ & Copywriting$/, "")
     .replace(/ Solutions$/, "")
     .replace(/^Custom /, "")
-    .replace(/^AI, Automation & Cloud$/, "AI & Automation");
+    .replace(/^AI Automation/, "AI Automation");
 }
 
 function getIcon(name: string): IconComponent {

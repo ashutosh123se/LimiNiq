@@ -1,6 +1,8 @@
 /** Valid service slugs for `/contact/service/[slug]` pre-filled contact links. */
 export const CONTACT_SERVICE_SLUG_MAP: Record<string, string> = {
+  "ai-automation": "AI Automation & Agents",
   "custom-software-saas": "Custom Software & SaaS",
+  "saas-mvp-development": "SaaS MVP Development",
   "website-ecommerce": "Website Development",
   "seo-search-engine-marketing": "SEO",
   "digital-marketing": "Digital Marketing",
