@@ -172,11 +172,12 @@ export function PricingCards({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25 }}
-            className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:gap-4 xl:grid-cols-4 xl:gap-5.5"
           >
             {filteredTiers.map((tier: PricingTier) => {
               const price = getTierPrice(tier, currency);
               const isFeatured = Boolean(tier.popular);
+              const isLongPrice = currency === "INR" || price.amount.length > 7;
               const tags = TIER_MODEL_TAGS[tier.id] || {
                 category: "Custom Build",
                 model: "Milestone SOW",
@@ -187,7 +188,7 @@ export function PricingCards({
                   key={tier.id}
                   id={tier.id}
                   className={cn(
-                    "group relative flex flex-col justify-between rounded-2xl bg-white p-6 transition-all duration-300 scroll-mt-28",
+                    "group relative flex flex-col justify-between rounded-2xl bg-white p-5 xl:p-6 transition-all duration-300 scroll-mt-28",
                     isFeatured
                       ? "border-2 border-blue-600 shadow-[0_16px_40px_-8px_rgba(37,99,235,0.22)] ring-4 ring-blue-500/10 lg:-translate-y-1.5"
                       : "border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)] hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_12px_32px_-6px_rgba(15,23,42,0.1)]"
@@ -229,16 +230,23 @@ export function PricingCards({
 
                     {/* Price Block (Strict Height & Baseline Alignment) */}
                     <div className="mt-4 border-t border-slate-100 pt-4">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                        <span
+                          className={cn(
+                            "font-heading font-extrabold tracking-tight text-slate-900",
+                            isLongPrice
+                              ? "text-2xl sm:text-[1.65rem] xl:text-[1.85rem]"
+                              : "text-3xl sm:text-[2rem]"
+                          )}
+                        >
                           {price.amount}
                         </span>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                        <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap shrink-0">
                           / {price.unit}
                         </span>
                       </div>
-                      <div className="mt-1 flex h-6 items-center">
-                        <p className="text-[11px] font-medium text-slate-600 truncate">
+                      <div className="mt-1.5 flex min-h-[2.25rem] items-start">
+                        <p className="text-[11px] font-medium leading-normal text-slate-500">
                           {price.note}
                         </p>
                       </div>
