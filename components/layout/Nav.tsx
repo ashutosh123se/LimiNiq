@@ -36,6 +36,7 @@ function NavItem({
   menuKey,
   openKey,
   toggleMenu,
+  onMouseEnter,
   pathname,
   tone,
 }: {
@@ -43,6 +44,7 @@ function NavItem({
   menuKey: string;
   openKey: string | null;
   toggleMenu: (key: string) => void;
+  onMouseEnter?: () => void;
   pathname: string | null;
   tone: ShellTone;
 }) {
@@ -64,7 +66,7 @@ function NavItem({
 
   if (!sub) {
     return (
-      <Link href={link.href} className={linkClass}>
+      <Link href={link.href} onMouseEnter={onMouseEnter} className={linkClass}>
         {(isActive || isOpen) && (
           <motion.span
             layoutId="nav-pill"
@@ -86,6 +88,7 @@ function NavItem({
       aria-expanded={isOpen}
       aria-haspopup="true"
       onClick={() => toggleMenu(menuKey)}
+      onMouseEnter={onMouseEnter}
       className={linkClass}
     >
       {(isActive || isOpen) && (
@@ -114,9 +117,38 @@ export function Nav() {
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const overHero = pathname === "/" && !scrolled;
   const tone: ShellTone = overHero ? "dark" : "light";
+
+  const handleMouseEnter = (key: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setOpenKey(key);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setOpenKey(null);
+    }, 180);
+  };
+
+  const cancelClose = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -210,6 +242,7 @@ export function Nav() {
             ref={navRef}
             className="relative hidden items-center justify-center gap-1 lg:flex"
             aria-label="Primary Navigation"
+            onMouseLeave={handleMouseLeave}
           >
             {NAV_LINKS.map((link) => (
               <NavItem
@@ -218,6 +251,7 @@ export function Nav() {
                 menuKey={link.href}
                 openKey={openKey}
                 toggleMenu={toggleMenu}
+                onMouseEnter={() => (hasSubnav(link) ? handleMouseEnter(link.href) : handleMouseEnter(""))}
                 pathname={pathname}
                 tone={tone}
               />
@@ -232,11 +266,15 @@ export function Nav() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.98 }}
                   transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                  onMouseEnter={cancelClose}
+                  onMouseLeave={handleMouseLeave}
                   className={cn(
-                    "absolute left-1/2 top-full z-50 -translate-x-1/2 pt-4",
+                    "absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3",
                     openLink.mega
-                      ? "w-[min(840px,calc(100vw-2rem))]"
-                      : "w-[min(420px,calc(100vw-2rem))]"
+                      ? "w-[min(900px,calc(100vw-2rem))]"
+                      : openLink.href === "/about"
+                        ? "w-[min(640px,calc(100vw-2rem))]"
+                        : "w-[min(540px,calc(100vw-2rem))]"
                   )}
                 >
                   {openLink.mega ? (
