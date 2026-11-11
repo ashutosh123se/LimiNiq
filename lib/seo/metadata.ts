@@ -6,7 +6,6 @@ type PageMetadataInput = {
   title: string;
   description: string;
   path: string;
-  keywords?: string[];
   ogImage?: string;
   /** Skip title template — use for homepage where brand is already in title. */
   absoluteTitle?: boolean;
@@ -18,7 +17,6 @@ export function buildPageMetadata({
   title,
   description,
   path,
-  keywords,
   ogImage = "/api/og",
   absoluteTitle = false,
   noIndex = false,
@@ -29,7 +27,6 @@ export function buildPageMetadata({
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
-    keywords,
     alternates: {
       canonical: url,
       languages: {

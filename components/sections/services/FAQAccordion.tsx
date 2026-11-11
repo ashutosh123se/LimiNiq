@@ -60,7 +60,10 @@ export function FAQAccordion({
             }}
           >
             <button
+              id={`faq-accordion-btn-${i}`}
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
+              aria-expanded={openIndex === i}
+              aria-controls={`faq-accordion-panel-${i}`}
               style={{
                 width: "100%",
                 display: "flex",
@@ -88,29 +91,32 @@ export function FAQAccordion({
               </motion.div>
             </button>
 
-            <AnimatePresence>
-              {openIndex === i && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  style={{ overflow: "hidden" }}
+            <div
+              id={`faq-accordion-panel-${i}`}
+              role="region"
+              aria-labelledby={`faq-accordion-btn-${i}`}
+              className="faq-answer-grid"
+              style={{
+                display: "grid",
+                gridTemplateRows: openIndex === i ? "1fr" : "0fr",
+                opacity: openIndex === i ? 1 : 0,
+                transition: "grid-template-rows 0.3s ease, opacity 0.3s ease",
+              }}
+            >
+              <div style={{ overflow: "hidden" }}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "1rem",
+                    color: "var(--text-secondary)",
+                    lineHeight: 1.7,
+                    margin: "1rem 0 0",
+                  }}
                 >
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "1rem",
-                      color: "var(--text-secondary)",
-                      lineHeight: 1.7,
-                      margin: "1rem 0 0",
-                    }}
-                  >
-                    {faq.answer}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {faq.answer}
+                </p>
+              </div>
+            </div>
           </div>
         ))}
       </div>

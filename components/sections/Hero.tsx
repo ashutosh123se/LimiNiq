@@ -57,6 +57,7 @@ export function Hero() {
         src="/videos/hero.mp4"
         poster="/images/showreel/frame-01.png"
         opacity={0.55}
+        priority={true}
         overlayClassName="bg-gradient-to-r from-[#0B1F3A]/92 via-[#0B1F3A]/72 to-[#0B1F3A]/45"
       />
       <div
@@ -86,14 +87,21 @@ export function Hero() {
 
           <motion.h1
             variants={revealVariants}
-            className="mb-4 font-[family-name:var(--font-heading)] text-[clamp(2.4rem,5.5vw,4.5rem)] font-extrabold leading-[1.04] tracking-[-0.04em]"
+            className="mb-3 font-[family-name:var(--font-heading)] text-[clamp(2.4rem,5.2vw,4.2rem)] font-extrabold leading-[1.06] tracking-[-0.04em]"
           >
-            AI Automation &amp; Custom Software That Cut Manual Work by{" "}
+            Custom Software Development &amp; AI Automation
+          </motion.h1>
+
+          <motion.p
+            variants={revealVariants}
+            className="mb-4 text-xl font-medium text-blue-200 sm:text-2xl"
+          >
+            Cut manual work by{" "}
             <span className="font-[family-name:var(--font-display)] font-normal italic text-blue-300">
               50%+
-            </span>
-            .
-          </motion.h1>
+            </span>{" "}
+            with production-grade engineering.
+          </motion.p>
 
           <motion.p
             variants={revealVariants}
@@ -161,7 +169,7 @@ export function Hero() {
             <div className="relative aspect-[16/10] overflow-hidden">
               <Image
                 src="/images/portfolio/ecommerce_dashboard.png"
-                alt="LIMINIQ delivery dashboard"
+                alt="LIMINIQ Custom Software & AI LeadFlow Dashboard"
                 fill
                 priority
                 sizes="(max-width: 1024px) 90vw, 420px"
@@ -203,7 +211,7 @@ export function Hero() {
                   >
                     <Image
                       src={m.photoSrc}
-                      alt={m.name}
+                      alt={`${m.name} - ${m.role} at LIMINIQ`}
                       fill
                       sizes="32px"
                       className="object-cover object-top"

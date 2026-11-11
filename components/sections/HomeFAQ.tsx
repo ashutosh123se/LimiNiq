@@ -53,9 +53,11 @@ export function HomeFAQ() {
               >
                 <button
                   type="button"
+                  id={`faq-trigger-${i}`}
                   onClick={() => setOpen(isOpen ? -1 : i)}
-                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left cursor-pointer"
                   aria-expanded={isOpen}
+                  aria-controls={`faq-panel-${i}`}
                 >
                   <span className="font-[family-name:var(--font-heading)] text-sm font-semibold text-text-primary sm:text-base">
                     {faq.question}
@@ -63,26 +65,26 @@ export function HomeFAQ() {
                   <ChevronDown
                     size={18}
                     className={cn(
-                      "shrink-0 text-text-muted transition-transform",
+                      "shrink-0 text-text-muted transition-transform duration-200",
                       isOpen && "rotate-180 text-accent"
                     )}
                   />
                 </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="overflow-hidden"
-                    >
-                      <p className="border-t border-border-subtle px-5 pb-5 pt-3 text-sm leading-relaxed text-text-secondary">
-                        {faq.answer}
-                      </p>
-                    </motion.div>
+                <div
+                  id={`faq-panel-${i}`}
+                  role="region"
+                  aria-labelledby={`faq-trigger-${i}`}
+                  className={cn(
+                    "grid transition-all duration-300 ease-in-out",
+                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   )}
-                </AnimatePresence>
+                >
+                  <div className="overflow-hidden">
+                    <p className="border-t border-border-subtle px-5 pb-5 pt-3 text-sm leading-relaxed text-text-secondary">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
               </div>
             );
           })}

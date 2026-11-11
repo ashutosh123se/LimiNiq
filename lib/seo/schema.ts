@@ -2,17 +2,8 @@ import { SITE_CONTACT, SITE_NAME, SITE_SOCIAL, SITE_URL, absoluteUrl } from "@/l
 import { TESTIMONIALS } from "@/lib/data/testimonials";
 import type { FAQItem } from "@/components/sections/services/FAQAccordion";
 
-function averageRating(): { ratingValue: string; reviewCount: string } {
-  return {
-    ratingValue: "4.9",
-    reviewCount: "58",
-  };
-}
-
 /** Top-level Organization JSON-LD (auditor-friendly, not @graph). */
 export function organizationJsonLd() {
-  const { ratingValue, reviewCount } = averageRating();
-
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -27,7 +18,7 @@ export function organizationJsonLd() {
     },
     foundingDate: SITE_CONTACT.foundingYear,
     description:
-      "Custom software, SaaS, and enterprise development company also offering SEO and digital marketing services.",
+      "Custom software development, AI automation, and SaaS engineering company based in Delhi, India.",
     email: SITE_CONTACT.email,
     telephone: SITE_CONTACT.phone,
     address: {
@@ -43,17 +34,10 @@ export function organizationJsonLd() {
       telephone: SITE_CONTACT.phone,
       email: SITE_CONTACT.email,
       contactType: "customer service",
-      availableLanguage: "English",
+      availableLanguage: ["English", "Hindi"],
       areaServed: ["US", "GB", "CA", "AU", "AE", "EU", "IN"],
     },
     sameAs: [SITE_SOCIAL.linkedin, SITE_SOCIAL.instagram],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue,
-      reviewCount,
-      bestRating: "5",
-      worstRating: "4",
-    },
   };
 }
 
@@ -61,7 +45,7 @@ export function organizationJsonLd() {
 export function localBusinessJsonLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "ProfessionalService",
     "@id": `${SITE_URL}/#localbusiness`,
     name: SITE_NAME,
     url: absoluteUrl("/"),
@@ -80,7 +64,8 @@ export function localBusinessJsonLd() {
     },
     geo: {
       "@type": "GeoCoordinates",
-      addressCountry: "IN",
+      latitude: "28.6692",
+      longitude: "77.1046",
     },
     areaServed: [
       { "@type": "Country", name: "United States" },

@@ -16,8 +16,9 @@ import { TestimonialMarquee } from "@/components/sections/TestimonialMarquee";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { websiteJsonLd } from "@/lib/seo/schema";
+import { websiteJsonLd, faqPageSchema } from "@/lib/seo/schema";
 import { HOME_SEO } from "@/lib/seo/homeMetadata";
+import { FAQS } from "@/data/faqs";
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
@@ -25,23 +26,17 @@ export async function generateMetadata(): Promise<Metadata> {
     description: HOME_SEO.description,
     path: "/",
     absoluteTitle: true,
-    keywords: [
-      "AI automation agency",
-      "custom software development company",
-      "SaaS MVP development",
-      "AI agent development",
-      "workflow automation agency",
-      "enterprise software engineering",
-      "AI chatbot development",
-      "full stack development agency",
-    ],
   });
 }
 
 export default function HomePage() {
+  const homeFaqs = FAQS.filter((f) => f.page === "home" || f.page === "services").slice(0, 10);
+  const faqSchemaData = faqPageSchema(homeFaqs);
+
   return (
     <>
       <JsonLd data={websiteJsonLd()} />
+      {faqSchemaData && <JsonLd data={faqSchemaData} />}
       <Hero />
       <InternationalLogos />
       <TheLeads />
