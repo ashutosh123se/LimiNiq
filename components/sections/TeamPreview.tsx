@@ -49,7 +49,7 @@ export function TeamPreview() {
               <div className="relative aspect-[4/5] overflow-hidden bg-accent-muted">
                 <Image
                   src={member.photoSrc}
-                  alt={member.name}
+                  alt={`${member.name} - ${member.role} at LIMINIQ`}
                   fill
                   sizes="(max-width: 640px) 100vw, 25vw"
                   className="object-cover object-top transition duration-500 group-hover:scale-105"

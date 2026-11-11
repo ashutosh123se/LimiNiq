@@ -49,10 +49,9 @@ function FeaturedStudy({ study }: { study: CaseStudy }) {
     >
       <Image
         src={study.imageSrc}
-        alt={study.title}
+        alt={`${study.title} - ${study.category} Software Case Study by LIMINIQ`}
         fill
-        priority
-        sizes="100vw"
+        sizes="(max-width: 1024px) 100vw, 1200px"
         className="object-cover transition duration-[1.1s] ease-out group-hover:scale-[1.06]"
       />
       <div
@@ -189,7 +188,7 @@ function StudyRow({
           <div className="relative aspect-[16/11] overflow-hidden lg:aspect-auto lg:h-full lg:min-h-[22rem]">
             <Image
               src={study.imageSrc}
-              alt={study.title}
+              alt={`${study.title} - ${study.category} Digital Platform by LIMINIQ`}
               fill
               sizes="(max-width: 1024px) 100vw, 55vw"
               className="object-cover transition duration-700 ease-out group-hover:scale-105"
