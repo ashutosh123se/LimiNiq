@@ -4,36 +4,30 @@ import { Star, Quote, CheckCircle2, ExternalLink } from "lucide-react";
 import { LinkedInIcon } from "@/components/ui/SocialIcons";
 import { motion } from "framer-motion";
 import { TESTIMONIALS, type Testimonial } from "@/data/testimonials";
+import { SITE_RATING, REVIEW_PLATFORMS_CONFIG } from "@/lib/site";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 
 const MID = Math.ceil(TESTIMONIALS.length / 2);
 const ROW_1 = TESTIMONIALS.slice(0, MID);
 const ROW_2 = TESTIMONIALS.slice(MID);
 
-const REVIEW_PLATFORMS = [
-  {
-    name: "Clutch",
-    score: "4.9 / 5.0",
-    label: "Top Software & AI Agency",
-    href: "https://clutch.co/profile/[CLUTCH_PROFILE_URL]",
-  },
-  {
-    name: "Google Reviews",
-    score: "4.9★",
-    label: "Verified Client Reviews",
-    href: "https://maps.google.com/?cid=[GOOGLE_REVIEW_URL]",
-  },
-  {
-    name: "GoodFirms",
-    score: "4.9★",
-    label: "Top Custom Software Developers",
-    href: "https://www.goodfirms.co/company/[GOODFIRMS_PROFILE_URL]",
-  },
-];
+// Only show platform badges when a verified public URL is configured in environment/config
+const ACTIVE_REVIEW_PLATFORMS = [
+  REVIEW_PLATFORMS_CONFIG.clutchUrl
+    ? { name: "Clutch", score: "4.9 / 5.0", href: REVIEW_PLATFORMS_CONFIG.clutchUrl }
+    : null,
+  REVIEW_PLATFORMS_CONFIG.googleReviewUrl
+    ? { name: "Google Reviews", score: "4.9★", href: REVIEW_PLATFORMS_CONFIG.googleReviewUrl }
+    : null,
+  REVIEW_PLATFORMS_CONFIG.goodfirmsUrl
+    ? { name: "GoodFirms", score: "4.9★", href: REVIEW_PLATFORMS_CONFIG.goodfirmsUrl }
+    : null,
+].filter(Boolean) as { name: string; score: string; href: string }[];
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   const rating = testimonial.rating ?? 5;
   const fullStars = Math.floor(rating);
+  const isVerified = Boolean(testimonial.verified && testimonial.linkedinUrl);
 
   return (
     <div className="glass-card mx-3 flex w-[340px] shrink-0 flex-col justify-between gap-4 p-6 sm:w-[400px]">
@@ -49,31 +43,25 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
             ))}
           </div>
           <div className="flex items-center gap-2">
-            {testimonial.verified && (
-              <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold text-[var(--signal)]">
+            {isVerified && (
+              <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold text-blue-600">
                 <CheckCircle2 size={12} /> Verified
               </span>
             )}
-            <Quote size={16} className="text-text-muted/60" />
+            <Quote size={16} className="text-slate-400" />
           </div>
         </div>
 
-        <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+        <p className="mt-4 text-sm leading-relaxed text-slate-700">
           &ldquo;{testimonial.quote}&rdquo;
         </p>
       </div>
 
-      <div className="mt-auto flex items-center justify-between border-t border-[var(--border-subtle)] pt-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] font-heading text-sm font-bold text-[var(--accent)]">
-            {testimonial.name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")}
-          </span>
-          <div className="min-w-0">
+      <div className="border-t border-slate-100 pt-3">
+        <div className="flex items-center justify-between gap-2">
+          <div>
             <div className="flex items-center gap-1.5">
-              <span className="truncate font-heading text-sm font-bold text-text-primary">
+              <span className="font-heading text-sm font-bold text-slate-900">
                 {testimonial.name}
               </span>
               {testimonial.linkedinUrl && (
@@ -81,34 +69,56 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
                   href={testimonial.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title="View LinkedIn profile"
-                  className="text-text-muted hover:text-[var(--accent)] transition-colors"
+                  aria-label={`${testimonial.name} on LinkedIn`}
+                  className="text-slate-400 transition-colors hover:text-blue-600"
                 >
                   <LinkedInIcon className="h-3.5 w-3.5" />
                 </a>
               )}
             </div>
-            <span className="block truncate text-xs text-text-muted">
-              {testimonial.roleCompany} · {testimonial.location}
-            </span>
+            <p className="text-xs text-slate-500">
+              {testimonial.roleCompany}
+            </p>
           </div>
+          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 font-mono text-[10px] text-slate-600">
+            {testimonial.location}
+          </span>
         </div>
-
-        <span className="shrink-0 rounded-full border border-[var(--border-subtle)] px-2 py-1 text-[0.6rem] font-semibold uppercase tracking-wide text-text-muted ml-2">
-          {testimonial.serviceTag}
-        </span>
       </div>
     </div>
   );
 }
 
-function MarqueeRow({ items, reverse = false }: { items: Testimonial[]; reverse?: boolean }) {
-  const trackItems = [...items, ...items];
+function MarqueeRow({
+  items,
+  reverse = false,
+}: {
+  items: Testimonial[];
+  reverse?: boolean;
+}) {
   return (
-    <div className="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_5%,black_95%,transparent)]">
-      <div className={reverse ? "marquee-track-reverse" : "marquee-track"}>
-        {trackItems.map((t, i) => (
-          <TestimonialCard key={`${t.id}-${i}`} testimonial={t} />
+    <div className="flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
+      <div
+        className="flex shrink-0 animate-marquee gap-0 py-2"
+        style={{
+          animationDirection: reverse ? "reverse" : "normal",
+          animationDuration: "50s",
+        }}
+      >
+        {items.map((t) => (
+          <TestimonialCard key={`row1-${t.id}`} testimonial={t} />
+        ))}
+      </div>
+      <div
+        className="flex shrink-0 animate-marquee gap-0 py-2"
+        style={{
+          animationDirection: reverse ? "reverse" : "normal",
+          animationDuration: "50s",
+        }}
+        aria-hidden
+      >
+        {items.map((t) => (
+          <TestimonialCard key={`row2-${t.id}`} testimonial={t} />
         ))}
       </div>
     </div>
@@ -126,20 +136,25 @@ export function TestimonialMarquee() {
           viewport={viewportOnce}
           className="mx-auto flex max-w-2xl flex-col items-center text-center"
         >
-          <motion.span variants={revealVariants} className="pill-badge mb-4 inline-flex">
-            <span className="text-[var(--signal)]">✦</span> Verified Client Proof
-          </motion.span>
+          <motion.div variants={revealVariants} className="mb-3 inline-flex">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <span className="text-blue-600">✦</span> Client Outcomes
+            </span>
+          </motion.div>
           <motion.h2
             variants={revealVariants}
-            className="font-heading text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
+            className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
           >
-            Trusted By Founders & Tech Leaders <span className="heading-accent">Globally</span>
+            Trusted By Engineering Leaders{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Worldwide.
+            </span>
           </motion.h2>
 
           {/* Unified Verified Rating Display */}
           <motion.div
             variants={revealVariants}
-            className="mt-6 inline-flex flex-col sm:flex-row items-center gap-3 rounded-2xl border border-[var(--border-subtle)] bg-bg-secondary px-6 py-3"
+            className="mt-6 inline-flex flex-col sm:flex-row items-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-3 shadow-2xs"
           >
             <div className="flex items-center gap-1.5">
               <div className="flex items-center gap-0.5">
@@ -147,33 +162,37 @@ export function TestimonialMarquee() {
                   <Star key={i} size={15} className="fill-[var(--signal-amber)] text-[var(--signal-amber)]" />
                 ))}
               </div>
-              <span className="font-heading text-lg font-extrabold text-text-primary">4.9 / 5.0</span>
+              <span className="font-heading text-lg font-extrabold text-slate-900">
+                {SITE_RATING.score} / {SITE_RATING.scale}
+              </span>
             </div>
-            <span className="hidden sm:inline h-4 w-px bg-[var(--border-strong)]" />
-            <span className="text-xs text-text-secondary">
-              Verified Average Client Rating Across North America, Europe & Asia
+            <span className="hidden sm:inline h-4 w-px bg-slate-200" />
+            <span className="text-xs text-slate-600">
+              {SITE_RATING.label} Across Delivered Software Engagements
             </span>
           </motion.div>
 
-          {/* External Review Platforms Badges */}
-          <motion.div
-            variants={revealVariants}
-            className="mt-5 flex flex-wrap items-center justify-center gap-3"
-          >
-            {REVIEW_PLATFORMS.map((rp) => (
-              <a
-                key={rp.name}
-                href={rp.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-bg-elevated px-3.5 py-1.5 text-xs font-medium text-text-secondary hover:border-[var(--accent)] transition-colors"
-              >
-                <span className="font-bold text-text-primary">{rp.name}</span>
-                <span className="text-[var(--signal)] font-semibold">{rp.score}</span>
-                <ExternalLink size={11} className="text-text-muted" />
-              </a>
-            ))}
-          </motion.div>
+          {/* External Review Platforms Badges — Shown only when real profiles exist */}
+          {ACTIVE_REVIEW_PLATFORMS.length > 0 && (
+            <motion.div
+              variants={revealVariants}
+              className="mt-5 flex flex-wrap items-center justify-center gap-3"
+            >
+              {ACTIVE_REVIEW_PLATFORMS.map((rp) => (
+                <a
+                  key={rp.name}
+                  href={rp.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-700 hover:border-blue-500 hover:text-blue-600 transition-colors shadow-2xs"
+                >
+                  <span className="font-bold text-slate-900">{rp.name}</span>
+                  <span className="text-blue-600 font-semibold">{rp.score}</span>
+                  <ExternalLink size={11} className="text-slate-400" />
+                </a>
+              ))}
+            </motion.div>
+          )}
         </motion.div>
       </div>
 
@@ -183,8 +202,8 @@ export function TestimonialMarquee() {
       </div>
 
       <div className="mt-8 text-center">
-        <p className="text-[11px] text-text-muted">
-          * Direct client references, verified milestone delivery records, and GitHub repository access available for audit under mutual NDA. [VERIFIED_REVIEW_SOURCE]
+        <p className="text-xs text-slate-500">
+          Client project summaries and technical scope deliverables are available for review upon request.
         </p>
       </div>
     </section>

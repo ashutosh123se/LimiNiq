@@ -11,7 +11,6 @@ const CLIENT_PLACEHOLDERS = [
     countryFlag: "🇺🇸",
     countryCode: "USA",
     category: "Cloud & SaaS",
-    tag: "[INTERNATIONAL_CLIENT_LOGO_1]",
   },
   {
     name: "ApexFlow Tech",
@@ -19,7 +18,6 @@ const CLIENT_PLACEHOLDERS = [
     countryFlag: "🇬🇧",
     countryCode: "UK",
     category: "AI Workflows",
-    tag: "[INTERNATIONAL_CLIENT_LOGO_2]",
   },
   {
     name: "PropSearch Middle East",
@@ -27,7 +25,6 @@ const CLIENT_PLACEHOLDERS = [
     countryFlag: "🇦🇪",
     countryCode: "UAE",
     category: "PropTech Platform",
-    tag: "[INTERNATIONAL_CLIENT_LOGO_3]",
   },
   {
     name: "Nordic StyleHub",
@@ -35,7 +32,6 @@ const CLIENT_PLACEHOLDERS = [
     countryFlag: "🇸🇪",
     countryCode: "Sweden",
     category: "Headless E-Com",
-    tag: "[INTERNATIONAL_CLIENT_LOGO_4]",
   },
   {
     name: "LearnSphere Global",
@@ -43,7 +39,6 @@ const CLIENT_PLACEHOLDERS = [
     countryFlag: "🇸🇬",
     countryCode: "Global",
     category: "EdTech SaaS",
-    tag: "[INTERNATIONAL_CLIENT_LOGO_5]",
   },
   {
     name: "Finova Analytics",
@@ -51,7 +46,6 @@ const CLIENT_PLACEHOLDERS = [
     countryFlag: "🇩🇪",
     countryCode: "Germany",
     category: "FinTech Intelligence",
-    tag: "[INTERNATIONAL_CLIENT_LOGO_6]",
   },
 ];
 

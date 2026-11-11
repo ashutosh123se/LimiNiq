@@ -138,7 +138,7 @@ export function TheLeads() {
 
         <div className="mt-6 text-center sm:text-left">
           <p className="text-xs text-slate-500">
-            * Metrics reflect cumulative deliverables across custom software, AI automation, and growth contracts since 2019. Client references and verified scope breakdowns available under NDA. [VERIFIED_METRIC_SOURCE]
+            * Cumulative metrics across delivered custom software and AI automation contracts since 2019. Detailed scope breakdowns and client references available under mutual NDA.
           </p>
         </div>
       </div>

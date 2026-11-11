@@ -60,7 +60,7 @@ export interface InternationalWorkflowStep {
 
 /**
  * Standardized pricing tiers.
- * Note: Starting ranges are placeholders to be confirmed by client [STARTING_PRICE_CONFIRMATION].
+ * Note: Starting price ranges are subject to technical discovery and custom scope.
  */
 export const PRICING_TIERS: PricingTier[] = [
   {

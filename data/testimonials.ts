@@ -10,14 +10,13 @@ export interface Testimonial {
   location: string;
   rating?: number;
   linkedinUrl?: string;
-  avatarPlaceholder?: string;
-  verified?: boolean;
+  verified: boolean;
 }
 
 /**
- * Standardized client testimonials.
- * Real names, companies, roles, and LinkedIn references.
- * Unconfirmed items use [REAL_CLIENT_NAME / REAL_CLIENT_LINKEDIN_URL].
+ * Client feedback and engagement testimonials.
+ * TODO: Founder to provide public LinkedIn profile URLs and permission confirmations.
+ * The "Verified" badge is rendered ONLY when `verified === true` AND a valid `linkedinUrl` is provided.
  */
 export const TESTIMONIALS: Testimonial[] = [
   {
@@ -32,9 +31,7 @@ export const TESTIMONIALS: Testimonial[] = [
     roleCompany: "VP of Engineering, CloudStack IT",
     location: "Austin, TX (USA)",
     rating: 5,
-    linkedinUrl: "https://www.linkedin.com/in/[REAL_CLIENT_LINKEDIN_URL_1]",
-    avatarPlaceholder: "[REAL_CLIENT_PHOTO_DEEPAK]",
-    verified: true,
+    verified: false,
   },
   {
     id: "marcus-vance",
@@ -48,9 +45,7 @@ export const TESTIMONIALS: Testimonial[] = [
     roleCompany: "CRO, ApexFlow Technologies",
     location: "London (UK)",
     rating: 5,
-    linkedinUrl: "https://www.linkedin.com/in/[REAL_CLIENT_LINKEDIN_URL_2]",
-    avatarPlaceholder: "[REAL_CLIENT_PHOTO_MARCUS]",
-    verified: true,
+    verified: false,
   },
   {
     id: "arjun-kapoor",
@@ -64,9 +59,7 @@ export const TESTIMONIALS: Testimonial[] = [
     roleCompany: "Founder, LearnSphere EdTech",
     location: "Bengaluru (India)",
     rating: 5,
-    linkedinUrl: "https://www.linkedin.com/in/[REAL_CLIENT_LINKEDIN_URL_3]",
-    avatarPlaceholder: "[REAL_CLIENT_PHOTO_ARJUN]",
-    verified: true,
+    verified: false,
   },
   {
     id: "tariq-al-mansoor",
@@ -80,9 +73,7 @@ export const TESTIMONIALS: Testimonial[] = [
     roleCompany: "Managing Director, PropSearch",
     location: "Dubai (UAE)",
     rating: 5,
-    linkedinUrl: "https://www.linkedin.com/in/[REAL_CLIENT_LINKEDIN_URL_4]",
-    avatarPlaceholder: "[REAL_CLIENT_PHOTO_TARIQ]",
-    verified: true,
+    verified: false,
   },
   {
     id: "priya-sharma",
@@ -96,9 +87,7 @@ export const TESTIMONIALS: Testimonial[] = [
     roleCompany: "Marketing Director, HealthFirst",
     location: "Delhi (India)",
     rating: 5,
-    linkedinUrl: "https://www.linkedin.com/in/[REAL_CLIENT_LINKEDIN_URL_5]",
-    avatarPlaceholder: "[REAL_CLIENT_PHOTO_PRIYA]",
-    verified: true,
+    verified: false,
   },
   {
     id: "sarah-lindqvist",
@@ -112,9 +101,7 @@ export const TESTIMONIALS: Testimonial[] = [
     roleCompany: "Head of Digital, Nordic StyleHub",
     location: "Stockholm (Sweden)",
     rating: 5,
-    linkedinUrl: "https://www.linkedin.com/in/[REAL_CLIENT_LINKEDIN_URL_6]",
-    avatarPlaceholder: "[REAL_CLIENT_PHOTO_SARAH]",
-    verified: true,
+    verified: false,
   },
 ];
 

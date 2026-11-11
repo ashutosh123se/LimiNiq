@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { SITE_RATING } from "@/lib/site";
 
 const TRUST_ITEMS = [
   "150+ Projects Delivered",
-  "4.9★ Client Rating",
+  `${SITE_RATING.display} ${SITE_RATING.label}`,
   "98% Client Retention",
   "$12M+ Revenue Generated",
   "Founded 2019 · Delhi",
   "Software + Marketing Under One Roof",
   "You Own the Code",
   "Milestone Billing",
-  "4.5★ Google Reviews",
 ];
 
 export function TrustTicker() {
