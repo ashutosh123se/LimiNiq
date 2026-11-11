@@ -64,3 +64,4 @@ In `data/team.ts`, bracketed placeholder links were removed:
 - **Removed**: Fake `aggregateRating` (which previously claimed 58 reviews) from `lib/seo/schema.ts` to prevent Google Rich Results penalties.
 - **Implemented**: Clean `Organization` and `ProfessionalService` schema with verified NAP (Name, Address, Phone: `Paschim Vihar, Delhi 110063, India`, `+91 9431471654`).
 - **Implemented**: Valid `FAQPage` schema on the homepage and service landing pages matching exact server-rendered HTML.
+

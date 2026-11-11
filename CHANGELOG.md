@@ -94,3 +94,4 @@ This document logs all changes made to the LIMINIQ codebase across Tasks 1 throu
   - Cross-linked new pages to case studies (`/portfolio/leadflow-ai`) and related service pillars.
 - **15-Article Content Roadmap**:
   - Created `content/blog-plan.md` featuring 15 comprehensive article ideas with target keywords, search intent, word counts, strategic outlines, and internal linking directives.
+
