@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { Sparkles, TrendingUp, ShieldCheck, Star, Award } from "lucide-react";
 import { StatCounter } from "@/components/ui/StatCounter";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -9,30 +10,34 @@ const LEADS = [
   {
     value: 150,
     suffix: "+",
-    label: "Projects delivered",
-    sub: "Enterprise & growth builds*",
-    bar: 0.92,
+    label: "Projects Delivered",
+    sub: "Enterprise SaaS & AI systems",
+    icon: Award,
+    bar: 0.95,
   },
   {
     value: 12,
     prefix: "$",
     suffix: "M+",
-    label: "Revenue influenced",
-    sub: "Direct client pipeline impact*",
-    bar: 0.86,
+    label: "Client Revenue Influenced",
+    sub: "Direct sales & pipeline automation",
+    icon: TrendingUp,
+    bar: 0.88,
   },
   {
     value: 98,
     suffix: "%",
-    label: "Client retention",
-    sub: "Multi-year engagement partners*",
+    label: "Client Retention Rate",
+    sub: "Multi-quarter retained partners",
+    icon: ShieldCheck,
     bar: 0.98,
   },
   {
     value: 49,
-    label: "Verified client rating",
-    sub: "Across all delivered engagements*",
+    label: "Verified Client Rating",
+    sub: "Standardized across all deliveries",
     display: "4.9★",
+    icon: Star,
     bar: 0.98,
   },
 ];
@@ -41,83 +46,101 @@ export function TheLeads() {
   const reduced = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden border-b border-border-subtle bg-white py-14 lg:py-20">
-      <div className="section-container relative">
+    <section className="relative overflow-hidden border-b border-slate-200/80 bg-slate-50/50 py-16 lg:py-24">
+      <div className="section-container relative z-10">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between"
+          className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
         >
           <div>
-            <motion.p variants={revealVariants} className="section-number mb-2">
-              the <em className="font-[family-name:var(--font-display)] not-italic italic">leads</em>
-            </motion.p>
+            <motion.div variants={revealVariants} className="mb-3 inline-flex">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+                <Sparkles size={12} className="text-blue-600" /> Accountable Track Record
+              </span>
+            </motion.div>
             <motion.h2
               variants={revealVariants}
-              className="font-[family-name:var(--font-heading)] text-[clamp(1.85rem,3.5vw,2.75rem)] font-extrabold tracking-tight text-text-primary"
+              className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
             >
-              Numbers that earn the next call.
+              Numbers That{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Earn Trust.
+              </span>
             </motion.h2>
           </div>
           <motion.p
             variants={revealVariants}
-            className="max-w-xs text-sm text-text-secondary sm:text-right"
+            className="max-w-md text-sm sm:text-base text-slate-600 sm:text-right"
           >
-            Client-earned proof — not borrowed badges.
+            Verified client outcomes, zero vanity metrics, and 100% written milestone accountability.
           </motion.p>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border-subtle bg-border-subtle lg:grid-cols-4">
-          {LEADS.map((lead, i) => (
-            <motion.div
-              key={lead.label}
-              initial={reduced ? false : { opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative bg-white px-5 py-7 sm:px-7 sm:py-9"
-            >
-              <div
-                className="pointer-events-none absolute inset-0 bg-gradient-to-b from-accent/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                aria-hidden
-              />
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {LEADS.map((lead, i) => {
+            const Icon = lead.icon;
+            return (
+              <motion.div
+                key={lead.label}
+                initial={reduced ? false : { opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportOnce}
+                transition={{ duration: 0.45, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-6 sm:p-7 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-[0_12px_32px_-6px_rgba(37,99,235,0.12)]"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-xs font-bold text-blue-600">
+                      0{i + 1} // PROOF
+                    </span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600 ring-1 ring-blue-500/10">
+                      <Icon size={16} />
+                    </span>
+                  </div>
 
-              <p className="relative mb-5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-                0{i + 1}
-              </p>
+                  <div className="font-heading text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+                    {lead.display ? (
+                      <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        {lead.display}
+                      </span>
+                    ) : (
+                      <StatCounter value={lead.value} prefix={lead.prefix} suffix={lead.suffix} />
+                    )}
+                  </div>
 
-              <div className="relative font-[family-name:var(--font-heading)] text-[clamp(2.4rem,4vw,3.4rem)] font-extrabold leading-none tracking-[-0.04em] text-text-primary">
-                {lead.display ? (
-                  lead.display
-                ) : (
-                  <StatCounter value={lead.value} prefix={lead.prefix} suffix={lead.suffix} />
-                )}
-              </div>
+                  <p className="mt-3 font-heading text-base font-bold text-slate-900">
+                    {lead.label}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-500 font-medium leading-relaxed">
+                    {lead.sub}
+                  </p>
+                </div>
 
-              <p className="relative mt-4 font-[family-name:var(--font-heading)] text-sm font-bold text-text-primary">
-                {lead.label}
-              </p>
-              <p className="relative mt-1 text-xs text-text-muted">{lead.sub}</p>
-
-              <div className="relative mt-5 h-1 overflow-hidden rounded-full bg-accent/10">
-                <motion.div
-                  className={cn("h-full rounded-full bg-accent")}
-                  initial={reduced ? false : { scaleX: 0 }}
-                  whileInView={{ scaleX: lead.bar }}
-                  viewport={viewportOnce}
-                  transition={{ duration: 1, delay: 0.15 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ originX: 0 }}
-                />
-              </div>
-            </motion.div>
-          ))}
+                <div className="mt-6 pt-4 border-t border-slate-100">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                    <motion.div
+                      className="h-full rounded-full bg-gradient-to-r from-blue-600 to-indigo-600"
+                      initial={reduced ? false : { scaleX: 0 }}
+                      whileInView={{ scaleX: lead.bar }}
+                      viewport={viewportOnce}
+                      transition={{ duration: 1, delay: 0.2 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                      style={{ originX: 0 }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
-        <p className="mt-4 text-[11px] text-text-muted">
-          * Metrics reflect cumulative deliverables across custom software, AI automation, and growth contracts since 2019. Client references and verified scope breakdowns available under NDA. [VERIFIED_METRIC_SOURCE]
-        </p>
+        <div className="mt-6 text-center sm:text-left">
+          <p className="text-xs text-slate-500">
+            * Metrics reflect cumulative deliverables across custom software, AI automation, and growth contracts since 2019. Client references and verified scope breakdowns available under NDA. [VERIFIED_METRIC_SOURCE]
+          </p>
+        </div>
       </div>
     </section>
   );

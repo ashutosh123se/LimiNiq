@@ -99,21 +99,22 @@ export function ProcessPipeline() {
           viewport={viewportOnce}
           className="mb-12 max-w-2xl"
         >
-          <motion.p variants={revealVariants} className="section-number mb-3">
-            § 05 the{" "}
-            <em className="font-[family-name:var(--font-display)] not-italic italic">process</em>
-          </motion.p>
+          <motion.div variants={revealVariants} className="mb-3 inline-flex">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <Sparkles size={12} className="text-blue-600" /> Five-Stage Delivery Architecture
+            </span>
+          </motion.div>
           <motion.h2
             variants={revealVariants}
-            className="font-[family-name:var(--font-heading)] text-[clamp(2.2rem,5vw,3.75rem)] font-extrabold leading-[1.05] tracking-[-0.035em] text-text-primary"
+            className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
           >
-            Three services.
-            <br />
-            <span className="heading-accent">One system.</span>
+            Milestone-Gated.{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Zero Surprises.
+            </span>
           </motion.h2>
-          <motion.p variants={revealVariants} className="mt-4 text-text-secondary">
-            Same five acts. Different stage — whether the deliverable is a page, a product, or a
-            growth engine.
+          <motion.p variants={revealVariants} className="mt-4 text-base text-slate-600 sm:text-lg">
+            A battle-tested 5-stage engineering pipeline — from discovery and architecture to deployment and continuous optimization.
           </motion.p>
         </motion.div>
 

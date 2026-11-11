@@ -21,17 +21,22 @@ export function HomeFAQ() {
           viewport={viewportOnce}
           className="mb-10 text-center"
         >
-          <motion.p variants={revealVariants} className="section-number mb-3">
-            § 10 · questions
-          </motion.p>
+          <motion.div variants={revealVariants} className="mb-3 inline-flex">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <span className="text-blue-600">✦</span> Direct Answers
+            </span>
+          </motion.div>
           <motion.h2
             variants={revealVariants}
-            className="font-[family-name:var(--font-heading)] text-[clamp(1.9rem,4vw,2.75rem)] font-bold text-text-primary"
+            className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
           >
-            Ten direct <span className="heading-accent">answers.</span>
+            Frequently Asked{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Questions.
+            </span>
           </motion.h2>
-          <motion.p variants={revealVariants} className="mt-3 text-text-secondary">
-            Who we are, what we build, and how an engagement works.
+          <motion.p variants={revealVariants} className="mt-3 text-base text-slate-600">
+            Clear answers on contracts, international delivery, codebase ownership, and billing.
           </motion.p>
         </motion.div>
 

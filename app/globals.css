@@ -1,44 +1,44 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════
-   LIMINIQ × Digital Heroes — light white/blue
+   LIMINIQ — Modern High-End Studio Design Tokens
 ═══════════════════════════════════════════ */
 :root {
   --bg-primary: #ffffff;
-  --bg-secondary: #f7f9fc;
+  --bg-secondary: #f8fafc;
   --bg-elevated: #ffffff;
-  --bg-overlay: rgba(255, 255, 255, 0.86);
+  --bg-overlay: rgba(255, 255, 255, 0.92);
 
-  --accent: #1d4ed8;
-  --accent-hover: #1e40af;
-  --accent-muted: rgba(29, 78, 216, 0.08);
-  --accent-primary: #1d4ed8;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-muted: rgba(37, 99, 235, 0.08);
+  --accent-primary: #2563eb;
   --accent-secondary: #3b82f6;
-  --accent-violet: #1d4ed8;
-  --accent-teal: #2563eb;
-  --accent-blue: #1d4ed8;
+  --accent-violet: #4f46e5;
+  --accent-teal: #0284c7;
+  --accent-blue: #2563eb;
 
   --signal: #2563eb;
   --signal-amber: #d97706;
   --success: #16a34a;
 
-  --text-primary: #0b1f3a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --text-tertiary: #64748b;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-tertiary: #475569;
 
-  --border-subtle: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.14);
-  --border-hover: rgba(29, 78, 216, 0.35);
+  --border-subtle: rgba(15, 23, 42, 0.11);
+  --border-strong: rgba(15, 23, 42, 0.2);
+  --border-hover: rgba(37, 99, 235, 0.4);
 
-  --glass-1: rgba(255, 255, 255, 0.72);
-  --glass-2: rgba(247, 249, 252, 0.9);
+  --glass-1: rgba(255, 255, 255, 0.85);
+  --glass-2: rgba(248, 250, 252, 0.95);
   --glass-border: var(--border-subtle);
 
   --bg-base: var(--bg-primary);
   --bg-surface: var(--bg-secondary);
 
-  --gradient-signature: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+  --gradient-signature: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
   --container-max: 1280px;
   --section-pad-x: clamp(1.25rem, 5vw, 5rem);
 }
@@ -222,16 +222,22 @@ body {
 
 .glass-card {
   background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: 1rem;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 1.125rem;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.glass-card:hover {
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
 }
 
 .glass-card-premium {
-  background: #fff;
-  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  border: 1.5px solid rgba(37, 99, 235, 0.35);
   border-radius: 1.25rem;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 16px 40px -8px rgba(37, 99, 235, 0.16), 0 2px 6px rgba(15, 23, 42, 0.04);
 }
 
 .mesh-gradient {

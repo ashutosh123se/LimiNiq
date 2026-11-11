@@ -28,15 +28,19 @@ export function StoryPeople() {
           className="mb-16 grid gap-12 lg:grid-cols-12 lg:items-start"
         >
           <div className="lg:col-span-7">
-            <motion.p variants={revealVariants} className="section-number mb-3">
-              § 06 our <em className="font-[family-name:var(--font-display)] not-italic italic">story</em>
-            </motion.p>
+            <motion.div variants={revealVariants} className="mb-3 inline-flex">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+                <span className="text-blue-600">✦</span> Senior Engineering Leadership
+              </span>
+            </motion.div>
             <motion.h2
               variants={revealVariants}
-              className="font-[family-name:var(--font-heading)] text-[clamp(2.2rem,4.5vw,3.5rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-text-primary"
+              className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
             >
-              Built to launch brands into{" "}
-              <span className="heading-accent">new orbits.</span>
+              Built by Engineers Who{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Ship at Scale.
+              </span>
             </motion.h2>
             <motion.blockquote
               variants={revealVariants}

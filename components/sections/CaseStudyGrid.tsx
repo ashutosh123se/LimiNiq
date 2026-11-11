@@ -235,29 +235,19 @@ export function CaseStudyGrid() {
           className="mb-12 flex flex-col gap-6 lg:mb-16 lg:flex-row lg:items-end lg:justify-between"
         >
           <div className="max-w-3xl">
-            <motion.p variants={revealVariants} className="section-number mb-3">
-              § 04 case{" "}
-              <em className="font-[family-name:var(--font-display)] not-italic italic">studies</em>
-            </motion.p>
+            <motion.div variants={revealVariants} className="mb-3 inline-flex">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+                <span className="text-blue-600">✦</span> Flagship Case Studies
+              </span>
+            </motion.div>
             <motion.h2
               variants={revealVariants}
-              className="font-[family-name:var(--font-heading)] text-[clamp(2.2rem,5vw,3.75rem)] font-extrabold leading-[1.05] tracking-[-0.035em] text-text-primary"
+              className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
             >
-              Brands we&apos;ve scaled
-              <br />
-              to{" "}
-              <span className="relative inline-block">
-                <span className="relative z-[1]">measurable growth</span>
-                <motion.span
-                  className="absolute bottom-1 left-0 -z-0 h-3 w-full rounded-sm bg-blue-200/70"
-                  initial={reduced ? false : { scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={viewportOnce}
-                  transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ originX: 0 }}
-                />
+              Enterprise Systems &amp;{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Measurable Results.
               </span>
-              .
             </motion.h2>
           </div>
           <motion.p

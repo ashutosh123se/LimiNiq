@@ -200,14 +200,19 @@ export function BlogTeaser() {
           className="mb-8 flex flex-wrap items-end justify-between gap-4"
         >
           <div>
-            <motion.p variants={revealVariants} className="section-number mb-3">
-              § 09 · from the journal
-            </motion.p>
+            <motion.div variants={revealVariants} className="mb-3 inline-flex">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+                <span className="text-blue-600">✦</span> Technical Insights &amp; R&amp;D
+              </span>
+            </motion.div>
             <motion.h2
               variants={revealVariants}
-              className="font-[family-name:var(--font-heading)] text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
+              className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
             >
-              Ideas worth <span className="heading-accent">reading.</span>
+              Engineering &amp; Growth{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Insights.
+              </span>
             </motion.h2>
           </div>
           <motion.div variants={revealVariants}>

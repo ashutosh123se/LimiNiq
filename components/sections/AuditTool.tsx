@@ -210,16 +210,21 @@ export function AuditTool() {
           viewport={viewportOnce}
           className="mx-auto mb-12 max-w-2xl text-center"
         >
-          <motion.span variants={revealVariants} className="pill-badge mb-4 inline-flex">
-            <span className="text-[var(--signal)]">§03</span> Free Tool & Lead Magnet
-          </motion.span>
+          <motion.div variants={revealVariants} className="mb-3 inline-flex">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <Sparkles size={12} className="text-blue-600" /> Free Architecture Diagnostics
+            </span>
+          </motion.div>
           <motion.h2
             variants={revealVariants}
-            className="font-heading text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight text-text-primary"
+            className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
           >
-            Instant Website <span className="heading-accent">Audit</span>
+            Instant Website &amp;{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Core Vitals Audit.
+            </span>
           </motion.h2>
-          <motion.p variants={revealVariants} className="mx-auto mt-4 max-w-xl text-text-secondary">
+          <motion.p variants={revealVariants} className="mx-auto mt-4 max-w-xl text-base text-slate-600 sm:text-lg">
             Scan your web property across performance, SEO, mobile UX, security headers, and accessibility — get instant diagnostics and download a complete remediation roadmap.
           </motion.p>
         </motion.div>

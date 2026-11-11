@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, ChevronDown, Menu, Phone } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Menu, Phone, Sparkles } from "lucide-react";
 import { NAV_LINKS, WHATSAPP_URL, type NavLink } from "@/data/navigation";
 import { SITE_CONTACT } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -52,14 +52,14 @@ function NavItem({
   const dark = tone === "dark";
 
   const linkClass = cn(
-    "relative z-[1] flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-200",
+    "relative z-[1] flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors duration-200",
     isActive || isOpen
       ? dark
         ? "text-white"
-        : "text-accent"
+        : "text-blue-600"
       : dark
-        ? "text-white/70 hover:text-white"
-        : "text-text-secondary hover:text-text-primary"
+        ? "text-white/75 hover:text-white"
+        : "text-slate-600 hover:text-slate-900"
   );
 
   if (!sub) {
@@ -70,7 +70,7 @@ function NavItem({
             layoutId="nav-pill"
             className={cn(
               "absolute inset-0 -z-10 rounded-full",
-              dark ? "bg-white/12 ring-1 ring-white/15" : "bg-accent/10 ring-1 ring-accent/15"
+              dark ? "bg-white/15 ring-1 ring-white/20" : "bg-blue-50 ring-1 ring-blue-500/20"
             )}
             transition={{ type: "spring", stiffness: 420, damping: 32 }}
           />
@@ -93,14 +93,14 @@ function NavItem({
           layoutId="nav-pill"
           className={cn(
             "absolute inset-0 -z-10 rounded-full",
-            dark ? "bg-white/12 ring-1 ring-white/15" : "bg-accent/10 ring-1 ring-accent/15"
+            dark ? "bg-white/15 ring-1 ring-white/20" : "bg-blue-50 ring-1 ring-blue-500/20"
           )}
           transition={{ type: "spring", stiffness: 420, damping: 32 }}
         />
       )}
       {link.label}
       <ChevronDown
-        size={13}
+        size={12}
         className={cn("transition-transform duration-200", isOpen && "rotate-180")}
       />
     </button>
@@ -133,7 +133,7 @@ export function Nav() {
     setMobileOpen(false);
   }, [pathname]);
 
-  // Click-outside + Escape close — never open from hero hover
+  // Click-outside + Escape close
   useEffect(() => {
     if (!openKey) return;
 
@@ -162,150 +162,182 @@ export function Nav() {
 
   const openLink = NAV_LINKS.find((l) => l.href === openKey) ?? null;
 
-  const shell = (extra?: string) =>
-    cn(
-      "relative flex items-center rounded-2xl border backdrop-blur-2xl transition-all duration-500",
-      overHero
-        ? "border-white/12 bg-[#0B1F3A]/60 shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
-        : scrolled
-          ? "border-border-subtle bg-white/90 shadow-[0_14px_40px_rgba(15,23,42,0.1)]"
-          : "border-border-subtle/80 bg-white/80 shadow-[0_8px_28px_rgba(15,23,42,0.06)]",
-      extra
-    );
-
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <motion.div
-        initial={reduced ? false : { y: -28, opacity: 0 }}
+        initial={reduced ? false : { y: -24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-        className="pointer-events-auto mx-auto flex max-w-[1440px] items-center justify-between gap-2 px-3 pt-3 sm:gap-3 lg:gap-4 lg:px-6 lg:pt-4"
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="mx-auto max-w-7xl px-4 pt-3 sm:px-6 sm:pt-4"
       >
-        <div className={shell("h-[3.6rem] shrink-0 px-2 sm:h-16 sm:px-2.5 lg:h-[4.25rem] lg:px-3")}>
-          <Link href="/" className="group flex items-center" aria-label="LIMINIQ home">
-            <Image
-              src={overHero ? "/images/logo-stack.png" : "/images/logo-stack-dark.png"}
-              alt="LIMINIQ"
-              width={480}
-              height={480}
-              priority
-              className="h-[3.1rem] w-[3.1rem] object-contain transition-transform duration-300 group-hover:scale-105 sm:h-14 sm:w-14"
-            />
-          </Link>
-        </div>
-
-        <nav
-          ref={navRef}
-          className={shell(
-            "relative hidden h-[3.6rem] min-w-0 flex-1 items-center justify-center gap-1 px-3 sm:h-16 lg:flex lg:h-[4.25rem] lg:max-w-xl lg:px-4"
+        <div
+          className={cn(
+            "pointer-events-auto flex items-center justify-between gap-3 rounded-2xl px-3.5 py-2 sm:px-5 sm:py-2.5 transition-all duration-300 backdrop-blur-2xl border",
+            overHero
+              ? "bg-[#0B1F3A]/80 border-white/15 text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)]"
+              : "bg-white/92 border-slate-200/90 text-slate-900 shadow-[0_8px_30px_rgba(15,23,42,0.08)]"
           )}
-          aria-label="Primary"
         >
-          {NAV_LINKS.map((link) => (
-            <NavItem
-              key={link.href}
-              link={link}
-              menuKey={link.href}
-              openKey={openKey}
-              toggleMenu={toggleMenu}
-              pathname={pathname}
-              tone={tone}
-            />
-          ))}
+          {/* Brand Lockup */}
+          <Link href="/" className="group flex items-center gap-2.5 shrink-0" aria-label="LIMINIQ Home">
+            <div className={cn(
+              "relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-xl border transition-transform duration-300 group-hover:scale-105",
+              overHero ? "border-white/15 bg-white/10" : "border-slate-200 bg-slate-50"
+            )}>
+              <Image
+                src={overHero ? "/images/logo-stack.png" : "/images/logo-stack-dark.png"}
+                alt="LIMINIQ Logo"
+                fill
+                priority
+                className="object-contain p-1.5"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-heading text-lg sm:text-xl font-extrabold tracking-tight leading-none text-current">
+                LIMINIQ
+              </span>
+              <span className={cn(
+                "font-mono text-[9px] font-bold tracking-widest uppercase leading-none mt-1 flex items-center gap-1",
+                overHero ? "text-blue-300" : "text-blue-600"
+              )}>
+                AI &amp; SOFTWARE
+              </span>
+            </div>
+          </Link>
 
-          <AnimatePresence>
-            {openLink && (
-              <motion.div
-                key={openLink.href}
-                initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                className={cn(
-                  "absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3",
-                  openLink.mega
-                    ? "w-[min(820px,calc(100vw-1.5rem))]"
-                    : "w-[min(400px,calc(100vw-1.5rem))]"
-                )}
-              >
-                {openLink.mega ? (
-                  <MegaMenu onNavigate={() => setOpenKey(null)} />
-                ) : openLink.dropdown ? (
-                  <NavDropdown
-                    title={openLink.dropdown.title}
-                    items={[...openLink.dropdown.items]}
-                    footer={openLink.dropdown.footer}
-                    onNavigate={() => setOpenKey(null)}
-                  />
-                ) : null}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </nav>
-
-        <div className={shell("h-[3.6rem] shrink-0 gap-1.5 px-2 sm:h-16 lg:h-[4.25rem] lg:gap-2 lg:px-3")}>
-          <a
-            href={`tel:${SITE_CONTACT.phoneTel}`}
-            className={cn(
-              "hidden items-center gap-2 rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors xl:flex",
-              overHero
-                ? "text-white/70 hover:bg-white/10 hover:text-white"
-                : "text-text-secondary hover:bg-accent/5 hover:text-text-primary"
-            )}
+          {/* Desktop Navigation Links */}
+          <nav
+            ref={navRef}
+            className="relative hidden items-center justify-center gap-1 lg:flex"
+            aria-label="Primary Navigation"
           >
-            <Phone size={15} />
-            <span>{SITE_CONTACT.phone}</span>
-          </a>
+            {NAV_LINKS.map((link) => (
+              <NavItem
+                key={link.href}
+                link={link}
+                menuKey={link.href}
+                openKey={openKey}
+                toggleMenu={toggleMenu}
+                pathname={pathname}
+                tone={tone}
+              />
+            ))}
 
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Chat on WhatsApp"
-            className={cn(
-              "hidden h-9 w-9 items-center justify-center rounded-full border transition-all lg:flex",
-              overHero
-                ? "border-white/15 text-white/75 hover:border-[#25D366]/60 hover:bg-[#25D366]/15 hover:text-[#25D366]"
-                : "border-border-subtle text-text-secondary hover:border-[#25D366]/50 hover:text-[#25D366]"
-            )}
-          >
-            <WhatsAppIcon className="h-4 w-4" />
-          </a>
+            {/* Dropdown / Mega Menu Container */}
+            <AnimatePresence>
+              {openLink && (
+                <motion.div
+                  key={openLink.href}
+                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                  transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                  className={cn(
+                    "absolute left-1/2 top-full z-50 -translate-x-1/2 pt-4",
+                    openLink.mega
+                      ? "w-[min(840px,calc(100vw-2rem))]"
+                      : "w-[min(420px,calc(100vw-2rem))]"
+                  )}
+                >
+                  {openLink.mega ? (
+                    <MegaMenu onNavigate={() => setOpenKey(null)} />
+                  ) : openLink.dropdown ? (
+                    <NavDropdown
+                      title={openLink.dropdown.title}
+                      items={[...openLink.dropdown.items]}
+                      footer={openLink.dropdown.footer}
+                      onNavigate={() => setOpenKey(null)}
+                    />
+                  ) : null}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </nav>
 
-          <Link
-            href="/contact"
-            className={cn(
-              "group relative hidden overflow-hidden rounded-full px-4 py-2 text-sm font-semibold transition-transform hover:scale-[1.03] active:scale-[0.98] lg:inline-flex",
-              overHero
-                ? "bg-white text-[#0B1F3A] hover:bg-blue-50"
-                : "bg-accent text-white shadow-[0_10px_28px_rgba(29,78,216,0.35)] hover:bg-accent-hover"
-            )}
-          >
-            <span className="relative flex items-center gap-1.5">
-              Book a Call
+          {/* Right Action Group */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {/* Global Timezone Indicator */}
+            <div
+              className={cn(
+                "hidden xl:inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold border",
+                overHero
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                  : "border-emerald-200 bg-emerald-50 text-emerald-700"
+              )}
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              US / UK / Gulf Overlap
+            </div>
+
+            {/* Direct Phone */}
+            <a
+              href={`tel:${SITE_CONTACT.phoneTel}`}
+              className={cn(
+                "hidden 2xl:flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold transition-colors",
+                overHero
+                  ? "text-white/75 hover:bg-white/10 hover:text-white"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              )}
+            >
+              <Phone size={13} />
+              <span>{SITE_CONTACT.phone}</span>
+            </a>
+
+            {/* WhatsApp Quick Chat */}
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Chat with our engineering team on WhatsApp"
+              className={cn(
+                "hidden sm:flex h-9 w-9 items-center justify-center rounded-xl border transition-all duration-200",
+                overHero
+                  ? "border-white/15 text-white/80 hover:border-emerald-400/60 hover:bg-emerald-500/15 hover:text-emerald-400"
+                  : "border-slate-200 text-slate-600 hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50"
+              )}
+            >
+              <WhatsAppIcon className="h-4 w-4" />
+            </a>
+
+            {/* Primary Action Button */}
+            <Link
+              href="/contact"
+              className={cn(
+                "group inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs sm:text-sm font-bold transition-all duration-200 shadow-2xs",
+                overHero
+                  ? "bg-blue-500 text-white hover:bg-blue-400 shadow-[0_4px_16px_rgba(59,130,246,0.4)]"
+                  : "bg-blue-600 text-white hover:bg-blue-700 shadow-[0_4px_16px_rgba(37,99,235,0.3)]"
+              )}
+            >
+              <span>Book a Call</span>
               <ArrowUpRight
                 size={14}
-                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               />
-            </span>
-          </Link>
+            </Link>
 
-          <button
-            type="button"
-            aria-label="Open menu"
-            onClick={() => setMobileOpen(true)}
-            className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full border transition-colors lg:hidden",
-              overHero
-                ? "border-white/20 text-white hover:bg-white/10"
-                : "border-border-subtle text-text-primary hover:border-accent/40 hover:text-accent"
-            )}
-          >
-            <Menu size={20} />
-          </button>
+            {/* Mobile Hamburger Button */}
+            <button
+              type="button"
+              aria-label="Open mobile navigation menu"
+              onClick={() => setMobileOpen(true)}
+              className={cn(
+                "flex h-9 w-9 items-center justify-center rounded-xl border transition-colors lg:hidden",
+                overHero
+                  ? "border-white/20 text-white hover:bg-white/10"
+                  : "border-slate-200 text-slate-800 hover:border-blue-500 hover:text-blue-600"
+              )}
+            >
+              <Menu size={18} />
+            </button>
+          </div>
         </div>
       </motion.div>
 
+      {/* Mobile Drawer */}
       <div className="pointer-events-auto">
         <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
       </div>

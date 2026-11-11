@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import * as LucideIcons from "lucide-react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Sparkles } from "lucide-react";
 import { SERVICES, type Service } from "@/data/services";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 type IconComponent = React.ComponentType<{ size?: number; className?: string }>;
 
 const FILTERS = [
-  { id: "all", label: "All" },
+  { id: "all", label: "All Disciplines" },
   { id: "AI & Software", label: "AI & Software" },
   { id: "Web & Mobile", label: "Web & Mobile" },
   { id: "Growth & Marketing", label: "Growth" },
@@ -47,53 +47,60 @@ function ServiceTile({ service, index }: { service: Service; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.28, delay: Math.min(index, 6) * 0.03 }}
+      className="h-full"
     >
       <Link
         href={`/services/${service.slug}`}
         className={cn(
-          "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white p-4 transition-all duration-300",
-          "hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-[0_16px_40px_rgba(29,78,216,0.1)]",
-          service.isCorePillar && "ring-1 ring-accent/15"
+          "group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border bg-white p-5 transition-all duration-300",
+          service.isCorePillar
+            ? "border-blue-200/90 shadow-[0_4px_20px_-4px_rgba(37,99,235,0.08)] hover:border-blue-500 hover:shadow-[0_16px_36px_-6px_rgba(37,99,235,0.18)] hover:-translate-y-1 ring-1 ring-blue-500/10"
+            : "border-slate-200/90 shadow-[0_2px_12px_-2px_rgba(15,23,42,0.04)] hover:border-slate-300 hover:shadow-[0_12px_28px_-4px_rgba(15,23,42,0.08)] hover:-translate-y-1"
         )}
       >
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/[0.04] via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-        <div className="relative mb-3 flex items-start justify-between gap-2">
-          <span
-            className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-xl border transition-colors",
-              service.isCorePillar
-                ? "border-accent/20 bg-accent/10 text-accent"
-                : "border-border-subtle bg-bg-secondary text-text-secondary group-hover:border-accent/20 group-hover:text-accent"
-            )}
-          >
-            <Icon size={16} />
-          </span>
-          <span className="flex items-center gap-1.5">
-            {service.isCorePillar && (
-              <span className="rounded-full bg-accent/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-accent">
-                Core
+        <div>
+          <div className="relative mb-4 flex items-start justify-between gap-2">
+            <span
+              className={cn(
+                "flex h-10 w-10 items-center justify-center rounded-xl border transition-colors",
+                service.isCorePillar
+                  ? "border-blue-200 bg-blue-50 text-blue-600 ring-1 ring-blue-500/10"
+                  : "border-slate-200 bg-slate-50 text-slate-700 group-hover:border-blue-200 group-hover:bg-blue-50 group-hover:text-blue-600"
+              )}
+            >
+              <Icon size={18} />
+            </span>
+            <div className="flex items-center gap-1.5">
+              {service.isCorePillar && (
+                <span className="rounded-full bg-blue-50 border border-blue-200/80 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-blue-700">
+                  Core
+                </span>
+              )}
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100/80 text-slate-400 transition-all group-hover:bg-blue-600 group-hover:text-white">
+                <ArrowUpRight size={13} />
               </span>
-            )}
-            <ArrowUpRight
-              size={14}
-              className="text-text-muted opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent group-hover:opacity-100"
-            />
-          </span>
+            </div>
+          </div>
+
+          <h3 className="relative font-heading text-base font-bold leading-snug tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+            {title}
+          </h3>
+          <p className="relative mt-2 line-clamp-2 text-xs leading-relaxed text-slate-600">
+            {service.tagline}
+          </p>
         </div>
 
-        <h3 className="relative font-[family-name:var(--font-heading)] text-[15px] font-bold leading-snug tracking-tight text-text-primary sm:text-base">
-          {title}
-        </h3>
-        <p className="relative mt-1.5 line-clamp-2 flex-1 text-xs leading-relaxed text-text-muted">
-          {service.tagline}
-        </p>
-
         {service.priceFrom && (
-          <p className="relative mt-3 border-t border-border-subtle/80 pt-2.5 font-mono text-[10px] uppercase tracking-[0.1em] text-text-muted">
-            From{" "}
-            <span className="font-semibold text-accent">{service.priceFrom.amount}</span>
-          </p>
+          <div className="relative mt-4 border-t border-slate-100 pt-3 flex items-center justify-between">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-slate-600 font-semibold">
+              From
+            </span>
+            <span className="font-mono text-xs font-bold text-blue-600">
+              {service.priceFrom.amount}
+            </span>
+          </div>
         )}
       </Link>
     </motion.div>
@@ -110,44 +117,55 @@ export function DisciplinesList() {
   );
 
   return (
-    <section className="relative overflow-hidden bg-white py-14 lg:py-16">
+    <section className="relative overflow-hidden bg-slate-50/40 py-16 lg:py-24">
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute right-0 top-0 h-56 w-56 rounded-full bg-blue-400/10 blur-3xl" />
+        <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-blue-100/30 blur-3xl" />
       </div>
 
-      <div className="section-container relative">
+      <div className="section-container relative z-10">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="mb-8 flex flex-col gap-5 lg:mb-10 lg:flex-row lg:items-end lg:justify-between"
+          className="mb-10 flex flex-col gap-5 lg:mb-12 lg:flex-row lg:items-end lg:justify-between"
         >
           <div className="max-w-xl">
-            <motion.p variants={revealVariants} className="section-number mb-2">
-              § 03 our{" "}
-              <em className="font-[family-name:var(--font-display)] not-italic italic">services</em>
-            </motion.p>
+            <motion.div variants={revealVariants} className="mb-3 inline-flex">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+                <Sparkles size={12} className="text-blue-600" /> Engineering Disciplines
+              </span>
+            </motion.div>
             <motion.h2
               variants={revealVariants}
-              className="font-[family-name:var(--font-heading)] text-[clamp(1.85rem,3.8vw,2.75rem)] font-extrabold leading-[1.1] tracking-[-0.03em] text-text-primary"
+              className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
             >
-              Built the way modern teams{" "}
-              <span className="heading-accent">actually work.</span>
+              Full-Stack Software &amp;{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Autonomous AI.
+              </span>
             </motion.h2>
           </div>
 
-          <motion.div variants={revealVariants} className="flex flex-wrap gap-2.5">
-            <Link href="/contact" className="btn-primary !px-4 !py-2.5 text-sm">
-              Start a project <ArrowUpRight size={15} />
+          <motion.div variants={revealVariants} className="flex flex-wrap gap-3">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-[0_4px_16px_rgba(37,99,235,0.3)] transition-all hover:bg-blue-700 hover:shadow-[0_8px_24px_rgba(37,99,235,0.4)]"
+            >
+              <span>Scope Your Project</span>
+              <ArrowUpRight size={15} />
             </Link>
-            <Link href="/services" className="btn-secondary !px-4 !py-2.5 text-sm">
-              All services →
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-xs sm:text-sm font-semibold text-slate-700 shadow-2xs transition-all hover:bg-slate-50 hover:text-slate-900"
+            >
+              View Service Matrix
             </Link>
           </motion.div>
         </motion.div>
 
-        <div className="mb-5 flex flex-wrap gap-2">
+        {/* Filter Pills */}
+        <div className="mb-8 flex flex-wrap gap-2">
           {FILTERS.map((f) => {
             const on = filter === f.id;
             return (
@@ -156,17 +174,12 @@ export function DisciplinesList() {
                 type="button"
                 onClick={() => setFilter(f.id)}
                 className={cn(
-                  "relative rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors",
-                  on ? "text-white" : "text-text-secondary hover:text-text-primary"
+                  "relative rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200 border",
+                  on
+                    ? "bg-slate-900 text-white border-slate-900 shadow-xs"
+                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900"
                 )}
               >
-                {on && (
-                  <motion.span
-                    layoutId="service-filter"
-                    className="absolute inset-0 rounded-full bg-accent"
-                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                  />
-                )}
                 <span className="relative z-[1]">{f.label}</span>
               </button>
             );
@@ -175,7 +188,7 @@ export function DisciplinesList() {
 
         <motion.div
           layout
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
         >
           {visible.map((service, i) => (
             <ServiceTile key={service.slug} service={service} index={i} />

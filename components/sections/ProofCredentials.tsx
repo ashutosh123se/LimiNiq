@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Shield, Star, Code2, Globe2 } from "lucide-react";
+import { CheckCircle2, Shield, Star, Code2, Globe2, Sparkles, Lock } from "lucide-react";
 import { revealVariants, staggerContainer, viewportOnce } from "@/lib/motion";
 
 const PROOFS = [
@@ -9,7 +9,7 @@ const PROOFS = [
     icon: Star,
     title: "4.9★",
     subtitle: "Verified Client Rating",
-    body: "Standardized average across delivered software, AI, and growth engagements.",
+    body: "Standardized rating across delivered software, AI, and growth engagements.",
   },
   {
     icon: Globe2,
@@ -32,16 +32,16 @@ const PROOFS = [
 ];
 
 const GUARANTEES = [
-  { label: "Scoped quote", detail: "After discovery — no surprise costs" },
-  { label: "Named leads", detail: "Engineering + marketing contacts" },
-  { label: "Weekly visibility", detail: "Not black-box sprints" },
-  { label: "Post-launch care", detail: "Retainers available month-to-month" },
+  { label: "Scoped Quote in Writing", detail: "Locked after discovery — zero surprise cost additions" },
+  { label: "Named Senior Leads", detail: "Direct engineering & architect contact — no account middlemen" },
+  { label: "Weekly Live Sprints", detail: "Staging URL walk-throughs & continuous GitHub visibility" },
+  { label: "Post-Launch SLA Care", detail: "Warranty window included + optional month-to-month retainers" },
 ];
 
 export function ProofCredentials() {
   return (
-    <section className="section-padding relative overflow-hidden bg-white">
-      <div className="section-container">
+    <section className="section-padding relative overflow-hidden bg-slate-50/40">
+      <div className="section-container relative z-10">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -49,57 +49,69 @@ export function ProofCredentials() {
           viewport={viewportOnce}
           className="mb-12 max-w-2xl"
         >
-          <motion.p variants={revealVariants} className="section-number mb-3">
-            § 07 <em className="font-[family-name:var(--font-display)] not-italic italic">credentials</em>
-          </motion.p>
+          <motion.div variants={revealVariants} className="mb-3 inline-flex">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <Sparkles size={12} className="text-blue-600" /> Contractual De-risking
+            </span>
+          </motion.div>
           <motion.h2
             variants={revealVariants}
-            className="font-[family-name:var(--font-heading)] text-[clamp(2.2rem,5vw,3.75rem)] font-extrabold leading-[1.05] tracking-[-0.035em] text-text-primary"
+            className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl"
           >
-            Verified.
-            <br />
-            Accountable.
-            <br />
-            <span className="heading-accent">Proven.</span>
+            Verified. Accountable.{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              De-risked.
+            </span>
           </motion.h2>
-          <motion.p variants={revealVariants} className="mt-4 text-text-secondary">
-            Real metrics only — a stack that de-risks your decision without borrowed badges.
+          <motion.p variants={revealVariants} className="mt-4 text-base text-slate-600 sm:text-lg">
+            Real metrics only — an engineering framework built to de-risk your investment through milestone billing and 100% IP ownership.
           </motion.p>
         </motion.div>
 
-        <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* 4 Proof Cards */}
+        <div className="mb-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {PROOFS.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.title}
-                className="rounded-[1.25rem] border border-border-subtle bg-bg-secondary p-6 transition hover:border-accent/40 hover:bg-[#EFF6FF]"
+                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-6 sm:p-7 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-[0_12px_32px_-6px_rgba(37,99,235,0.12)]"
               >
-                <Icon className="mb-4 text-accent" size={22} />
-                <div className="font-[family-name:var(--font-heading)] text-3xl font-extrabold text-text-primary">
-                  {item.title}
+                <div>
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 ring-1 ring-blue-500/10">
+                    <Icon size={18} />
+                  </div>
+                  <div className="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
+                    {item.title}
+                  </div>
+                  <p className="mt-1 font-heading text-sm font-bold text-blue-600">{item.subtitle}</p>
+                  <p className="mt-2.5 text-xs sm:text-[13px] leading-relaxed text-slate-600">{item.body}</p>
                 </div>
-                <p className="mt-1 text-sm font-semibold text-accent">{item.subtitle}</p>
-                <p className="mt-3 text-sm text-text-secondary">{item.body}</p>
               </div>
             );
           })}
         </div>
 
-        <div className="rounded-[1.75rem] border border-border-subtle bg-bg-secondary p-8 lg:p-10">
-          <p className="mb-6 font-mono text-xs uppercase tracking-wider text-accent">
-            engagement guarantees
-          </p>
-          <ul className="grid gap-5 sm:grid-cols-2">
+        {/* Engagement Guarantees Box */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-7 sm:p-10 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)]">
+          <div className="mb-6 flex items-center gap-2">
+            <Lock size={15} className="text-blue-600" />
+            <p className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900">
+              Contractual Engagement Guarantees
+            </p>
+          </div>
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {GUARANTEES.map((g) => (
               <li key={g.label} className="flex items-start gap-3">
-                <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-accent" />
-                <span>
-                  <span className="block font-[family-name:var(--font-heading)] font-bold text-text-primary">
+                <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-blue-600" />
+                <div>
+                  <span className="block font-heading text-sm font-bold text-slate-900">
                     {g.label}
                   </span>
-                  <span className="text-sm text-text-secondary">{g.detail}</span>
-                </span>
+                  <span className="mt-0.5 block text-xs text-slate-500 leading-relaxed">
+                    {g.detail}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
