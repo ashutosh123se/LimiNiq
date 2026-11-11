@@ -174,7 +174,7 @@ export function Nav() {
           className={cn(
             "pointer-events-auto flex items-center justify-between gap-3 rounded-2xl px-3.5 py-2 sm:px-5 sm:py-2.5 transition-all duration-300 backdrop-blur-2xl border",
             overHero
-              ? "bg-[#0B1F3A]/80 border-white/15 text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)]"
+              ? "bg-[#060B18]/80 border-white/15 border-t-white/25 text-white shadow-[0_16px_48px_rgba(0,0,0,0.55)]"
               : "bg-white/92 border-slate-200/90 text-slate-900 shadow-[0_8px_30px_rgba(15,23,42,0.08)]"
           )}
         >
@@ -308,7 +308,7 @@ export function Nav() {
               className={cn(
                 "group inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs sm:text-sm font-bold transition-all duration-200 shadow-2xs",
                 overHero
-                  ? "bg-blue-500 text-white hover:bg-blue-400 shadow-[0_4px_16px_rgba(59,130,246,0.4)]"
+                  ? "bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600 text-white shadow-[0_4px_20px_rgba(56,189,248,0.4)] hover:shadow-[0_4px_26px_rgba(56,189,248,0.65)] hover:scale-[1.02]"
                   : "bg-blue-600 text-white hover:bg-blue-700 shadow-[0_4px_16px_rgba(37,99,235,0.3)]"
               )}
             >
