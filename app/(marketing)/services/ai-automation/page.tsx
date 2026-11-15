@@ -25,9 +25,9 @@ import { breadcrumbSchema, serviceSchema, faqPageSchema } from "@/lib/seo/schema
 import { SITE_CONTACT, SITE_NAME, SITE_URL, absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "AI Automation & Autonomous Agents | LIMINIQ",
+  title: "Enterprise AI Automation & Autonomous Agents | LIMINIQ",
   description:
-    "Cut manual operations by 50%+ with production-grade AI agents, intelligent document processing, and automated CRM workflows. Deployed in 3–6 weeks with senior engineers.",
+    "Deploy production AI agents, intelligent document OCR pipelines, and autonomous workflows with senior engineers and 100% IP ownership.",
   path: "/services/ai-automation",
 });
 

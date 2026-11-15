@@ -19,7 +19,7 @@ export const SERVICES: Service[] = [
     isCorePillar: true,
     tagline: "Autonomous workflows, custom LLM agents, and data pipelines that cut manual operations by 50%+.",
     description:
-      "We design, build, and deploy production AI agents and custom automation systems. From customer support triage and CRM lead routing to automated document parsing and predictive reporting, our solutions integrate directly into your existing software stack.",
+      "Production-grade AI agents, document OCR pipelines, and intelligent CRM workflows engineered to cut manual operations by 50%+ with senior developers.",
     features: [
       "Custom LLM Agents & Tool-Calling Systems",
       "Automated Document & Invoice Processing (OCR + LLM)",
@@ -38,7 +38,7 @@ export const SERVICES: Service[] = [
     isCorePillar: true,
     tagline: "Scalable, secure cloud applications engineered for complex business problems.",
     description:
-      "Whether you're building a multi-tenant SaaS product from scratch or modernizing legacy software, our engineering team architects solutions that scale globally and securely with zero technical debt.",
+      "Architect multi-tenant SaaS platforms, enterprise web applications, and secure cloud microservices with senior engineers and 100% code ownership.",
     features: [
       "Multi-Tenant SaaS Architecture",
       "Enterprise Web Applications",
@@ -57,7 +57,7 @@ export const SERVICES: Service[] = [
     isCorePillar: true,
     tagline: "Ship a production-ready MVP in 4–8 weeks — validated scope, clean code, built to scale.",
     description:
-      "We help founders and product teams go from concept to live, revenue-generating SaaS fast. Focused discovery, lean architecture, complete tenancy & billing foundations, and zero rewrite required after product-market fit.",
+      "Go from concept to revenue-generating SaaS fast. Lean architecture, multi-tenancy, Stripe billing foundations, and zero rewrite needed after PMF.",
     features: [
       "4–8 Week Scoped MVP Delivery",
       "Auth, Multi-Tenancy & Stripe/LemonSqueezy Billing",

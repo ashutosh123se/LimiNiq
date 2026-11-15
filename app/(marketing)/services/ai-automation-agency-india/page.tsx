@@ -25,9 +25,9 @@ import { breadcrumbSchema, serviceSchema, faqPageSchema } from "@/lib/seo/schema
 import { SITE_CONTACT, SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "AI Automation Agency in India | LIMINIQ",
+  title: "AI Automation Agency in India | Dedicated AI Pods | LIMINIQ",
   description:
-    "Leading AI automation agency in India. We engineer production AI agents, intelligent document OCR, and bi-directional CRM/ERP workflows that cut manual labor by 50%+.",
+    "Leading AI automation agency in India. We engineer production AI agents, OCR pipelines, and ERP workflows with live US, UK & Gulf timezone coverage.",
   path: "/services/ai-automation-agency-india",
 });
 

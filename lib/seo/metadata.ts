@@ -24,8 +24,13 @@ export function buildPageMetadata({
   const url = absoluteUrl(path);
   const fullTitle = absoluteTitle || title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
 
+  // If the title already includes the brand name, use { absolute: fullTitle } to prevent
+  // Next.js layout template ("%s | LIMINIQ") from appending a duplicate brand suffix.
+  const hasBrand = title.toLowerCase().includes(SITE_NAME.toLowerCase());
+  const resolvedTitle = absoluteTitle || hasBrand ? { absolute: fullTitle } : title;
+
   return {
-    title: absoluteTitle ? { absolute: title } : title,
+    title: resolvedTitle,
     description,
     alternates: {
       canonical: url,

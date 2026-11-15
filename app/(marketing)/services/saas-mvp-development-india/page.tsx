@@ -24,7 +24,7 @@ import { SITE_CONTACT, SITE_NAME, SITE_URL } from "@/lib/site";
 export const metadata: Metadata = buildPageMetadata({
   title: "SaaS MVP Development Company in India | LIMINIQ",
   description:
-    "Launch your SaaS MVP in 4 to 6 weeks with India's leading engineering studio. Production-grade Next.js architecture, Stripe billing, auth, and 100% code ownership.",
+    "Launch your SaaS MVP in 4 to 6 weeks with India's leading engineering studio. Production Next.js architecture, Stripe billing, and 100% code ownership.",
   path: "/services/saas-mvp-development-india",
 });
 

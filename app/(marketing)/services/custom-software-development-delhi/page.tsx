@@ -26,7 +26,7 @@ import { SITE_CONTACT, SITE_NAME, SITE_URL } from "@/lib/site";
 export const metadata: Metadata = buildPageMetadata({
   title: "Custom Software Development Company in Delhi, India | LIMINIQ",
   description:
-    "Top custom software development company in Delhi, India. We engineer production-ready web apps, enterprise cloud backends, and SaaS systems with senior engineers and fixed milestone delivery.",
+    "Top custom software development company in Delhi, India. We build production web apps, cloud backends, and SaaS systems with fixed milestone delivery.",
   path: "/services/custom-software-development-delhi",
 });
 

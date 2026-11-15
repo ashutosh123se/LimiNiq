@@ -1,6 +1,6 @@
-/** Homepage SEO copy — targeted for high-intent search (title ≤60, description ≤160). */
+/** Homepage SEO copy — targeted for broad brand studio search (title ≤60, description ≤160). */
 export const HOME_SEO = {
-  title: "Custom Software Development Company in Delhi, India | LIMINIQ",
+  title: "Custom Software Development & AI Engineering Studio | LIMINIQ",
   description:
-    "Custom software development, AI automation, and SaaS MVPs by senior engineers in Delhi, India. Fixed milestones, 100% code ownership, and fast delivery.",
+    "Engineering-first custom software development and AI automation studio. Production SaaS platforms, autonomous AI agents, and cloud systems with senior velocity.",
 } as const;
