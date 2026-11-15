@@ -25,7 +25,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "About Our Senior Engineering Team | LIMINIQ",
   description:
-    "Meet LIMINIQ — an engineering-first software and AI automation studio based in Delhi, delivering custom software, SaaS architectures, and autonomous AI agents for global clients across the US, UK, Europe, and UAE.",
+    "Meet LIMINIQ — an engineering studio delivering custom software, SaaS architectures, and autonomous AI agents for global clients with senior velocity.",
   path: "/about",
 });
 

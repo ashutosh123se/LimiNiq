@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     title: `Contact — ${serviceName}`,
     description: `Request a quote for ${serviceName} from LIMINIQ. Free discovery call and tailored proposal within 24 hours.`,
-    path: `/contact/service/${slug}`,
+    path: "/contact",
   });
 }
 

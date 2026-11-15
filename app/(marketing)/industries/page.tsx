@@ -10,7 +10,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Industries We Serve",
   description:
-    "LIMINIQ builds software, websites, and growth systems for SaaS & startups, healthcare, edtech, real estate, e-commerce, fintech, hospitality, and B2B services — across India and globally.",
+    "Custom software, SaaS, and automation systems engineered for startups, healthcare, fintech, real estate, and e-commerce across India and globally.",
   path: "/industries",
 });
 

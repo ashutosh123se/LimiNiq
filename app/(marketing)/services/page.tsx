@@ -12,7 +12,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Engineering & AI Services | LIMINIQ",
   description:
-    "Autonomous AI agents, custom software & SaaS, high-performance web applications, and growth engineering delivered by LIMINIQ for international clients across the US, UK, Europe, and UAE.",
+    "Autonomous AI agents, custom SaaS platforms, high-performance web apps, and growth engineering delivered with fixed milestones and senior velocity.",
   path: "/services",
 });
 

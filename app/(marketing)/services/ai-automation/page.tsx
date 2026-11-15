@@ -148,12 +148,9 @@ export default function AiAutomationPage() {
       "Enterprise AI automation, autonomous agents, and intelligent document processing that cut manual work by 50%+.",
   });
 
-  const faqSchemaData = faqPageSchema(FAQS);
-
   return (
     <div className="ai-page">
       <JsonLd data={serviceSchemaData} />
-      {faqSchemaData && <JsonLd data={faqSchemaData} />}
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", path: "/" },

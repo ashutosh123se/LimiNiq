@@ -57,16 +57,28 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export function ContactPage({ initialServiceSlug }: { initialServiceSlug?: string } = {}) {
-  return (
-    <Suspense fallback={null}>
-      <ContactPageInner initialServiceSlug={initialServiceSlug} />
-    </Suspense>
-  );
+function SearchParamsWatcher({
+  initialServiceSlug,
+  onApply,
+}: {
+  initialServiceSlug?: string;
+  onApply: (slug: string | null, openBrief: boolean) => void;
+}) {
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const querySlug = initialServiceSlug ?? searchParams.get("service");
+    const openBrief = Boolean(
+      (querySlug && isContactServiceSlug(querySlug)) ||
+        searchParams.get("engagement") ||
+        searchParams.get("brief")
+    );
+    onApply(querySlug, openBrief);
+  }, [initialServiceSlug, searchParams, onApply]);
+
+  return null;
 }
 
-function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string }) {
-  const searchParams = useSearchParams();
+export function ContactPage({ initialServiceSlug }: { initialServiceSlug?: string } = {}) {
   const [activeTab, setActiveTab] = useState<"schedule" | "brief">("schedule");
   const [submitState, setSubmitState] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -80,16 +92,16 @@ function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string 
     defaultValues: { service: "", budget: "", honeypot: "" },
   });
 
-  useEffect(() => {
-    const querySlug = initialServiceSlug ?? searchParams.get("service");
+  const handleApplyParams = (querySlug: string | null, openBrief: boolean) => {
     if (querySlug && isContactServiceSlug(querySlug)) {
       setValue("service", querySlug);
-      setActiveTab("brief");
-      return;
     }
-    if (searchParams.get("engagement") || searchParams.get("brief")) {
+    if (openBrief) {
       setActiveTab("brief");
     }
+  };
+
+  useEffect(() => {
     if (typeof window !== "undefined" && window.location.hash === "#audit") {
       setValue("service", AUDIT_SERVICE_SLUG);
       setActiveTab("brief");
@@ -97,7 +109,7 @@ function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string 
     if (typeof window !== "undefined" && window.location.hash === "#schedule") {
       setActiveTab("schedule");
     }
-  }, [initialServiceSlug, searchParams, setValue]);
+  }, [setValue]);
 
   const onSubmit = async (data: FormData) => {
     setSubmitState("loading");
@@ -144,6 +156,9 @@ function ContactPageInner({ initialServiceSlug }: { initialServiceSlug?: string 
 
   return (
     <div className="contact-page">
+      <Suspense fallback={null}>
+        <SearchParamsWatcher initialServiceSlug={initialServiceSlug} onApply={handleApplyParams} />
+      </Suspense>
       {/* Hero */}
       <section className="contact-hero">
         <div className="contact-hero-glow" aria-hidden />

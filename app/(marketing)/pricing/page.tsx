@@ -23,7 +23,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Pricing & Starting Rates | AI & Custom Software",
   description:
-    "Transparent starting rates for AI automation (from $2,500), custom software & SaaS (from $5,000), MVP sprints (from $3,500), and dedicated engineering pods ($2,000/mo). Multi-currency USD/GBP/EUR/INR, milestone-gated billing, and 100% IP ownership.",
+    "Transparent rates for AI automation ($2,500+), custom SaaS ($5,000+), and MVP sprints ($3,500+). Multi-currency billing with 100% code ownership.",
   path: "/pricing",
 });
 

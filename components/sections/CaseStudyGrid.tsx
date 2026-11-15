@@ -191,7 +191,6 @@ function FeaturedStudy({ study }: { study: CaseStudy }) {
                 src={study.imageSrc}
                 alt={`${study.title} - ${study.category} Software Architecture by LIMINIQ`}
                 fill
-                priority
                 sizes="(max-width: 1024px) 100vw, 720px"
                 className="object-cover object-top transition duration-700 ease-out group-hover:scale-[1.04]"
               />

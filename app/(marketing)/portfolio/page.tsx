@@ -8,7 +8,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Case Studies & Engineering Deliveries | AI & SaaS | LIMINIQ",
   description:
-    "Explore case studies in AI automation, multi-tenant SaaS, and web platforms built by LIMINIQ for clients across the US, UK, UAE, and Europe — including LeadFlow AI, PropSearch, and StockSense.",
+    "Explore real case studies in AI automation, multi-tenant SaaS, and cloud platforms shipped by LIMINIQ for clients across the US, UK, Europe, and UAE.",
   path: "/portfolio",
 });
 
