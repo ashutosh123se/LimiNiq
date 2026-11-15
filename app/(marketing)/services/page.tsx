@@ -29,12 +29,12 @@ export default function ServicesPage() {
   return (
     <div className="svc-index">
       <PageHero
-        eyebrow="Capability deck"
+        eyebrow="Core Capabilities"
         title={
           <>
-            Services engineered
+            Software & AI Services
             <br />
-            <span className="text-gradient">to move the needle.</span>
+            <span className="text-gradient">engineered to move the needle.</span>
           </>
         }
         description="From custom software and SaaS to SEO and performance marketing — every discipline is delivered by one senior team, with transparent pricing and no agency bloat."

@@ -16,10 +16,11 @@ export default function PortfolioPage() {
   return (
     <div className="pf-index">
       <PageHero
-        eyebrow="Delivery Archive"
+        eyebrow="Case Studies & Deliveries"
         title={
           <>
-            Work That <span className="text-gradient">Ships</span>
+            Software & AI Systems That{" "}
+            <span className="text-gradient">Ship</span>
           </>
         }
         description="Every project below is a real delivery from our studio — software, web, and growth systems built end to end, by the senior team that shipped them."

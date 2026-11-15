@@ -18,12 +18,12 @@ export default function ToolsPage() {
   return (
     <div className="tools-index">
       <PageHero
-        eyebrow="Free Tools"
+        eyebrow="Free Tools & Utilities"
         title={
           <>
-            Tools built by people who
+            Engineering & SEO Tools
             <br />
-            <span className="text-gradient">ship, not just consult.</span>
+            <span className="text-gradient">built by developers who ship.</span>
           </>
         }
         description="Twelve free utilities for marketing, SEO, and everyday dev work — no signup, no email gate, no watermark."

@@ -29,12 +29,12 @@ export default function IndustriesPage() {
   return (
     <div className="ind-index">
       <PageHero
-        eyebrow="Industries"
+        eyebrow="Industry Solutions"
         title={
           <>
-            Sector expertise,
+            Industry Software & AI Systems,
             <br />
-            <span className="text-gradient">not guesswork.</span>
+            <span className="text-gradient">built with sector expertise.</span>
           </>
         }
         description="We've shipped software, web experiences, and growth campaigns across eight verticals — each with its own buyer behavior, compliance nuance, and growth levers."

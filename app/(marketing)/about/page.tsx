@@ -77,7 +77,7 @@ export default function AboutPage() {
         eyebrow="About LIMINIQ"
         title={
           <>
-            Engineering-First Mindset.
+            Custom Software & AI Studio.
             <br />
             <span className="text-gradient">Senior Delivery Velocity.</span>
           </>

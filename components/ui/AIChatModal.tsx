@@ -54,7 +54,7 @@ export function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
           <div className="flex items-center justify-between p-4 border-b border-white/10 bg-black/40">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#3B5BFF] to-[#7B61FF] flex items-center justify-center overflow-hidden flex-shrink-0 border border-[#7B61FF]/30">
-                <Image src="/images/ai_avatar.png" alt="AI" width={32} height={32} className="w-full h-full object-cover" />
+                <Image src="/images/ai_avatar.png" alt="LimiNiq AI Assistant" width={32} height={32} className="w-full h-full object-cover" />
               </div>
               <div>
                 <h3 className="text-white font-semibold text-sm">LimiNiq AI Assistant</h3>
@@ -86,7 +86,7 @@ export function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
                   {m.role === "user" ? (
                     <User className="w-4 h-4 text-white" />
                   ) : (
-                    <Image src="/images/ai_avatar.png" alt="AI" width={32} height={32} className="w-full h-full object-cover" />
+                    <Image src="/images/ai_avatar.png" alt="LimiNiq AI Assistant" width={32} height={32} className="w-full h-full object-cover" />
                   )}
                 </div>
                 <div
@@ -104,7 +104,7 @@ export function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
             {isLoading && (
               <div className="flex gap-3">
                 <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-[#3B5BFF] to-[#7B61FF] overflow-hidden shadow-md border border-[#7B61FF]/30">
-                  <Image src="/images/ai_avatar.png" alt="AI" width={32} height={32} className="w-full h-full object-cover" />
+                  <Image src="/images/ai_avatar.png" alt="LimiNiq AI Assistant" width={32} height={32} className="w-full h-full object-cover" />
                 </div>
                 <div className="px-4 py-3 rounded-2xl bg-[#111827] text-white/90 border border-white/5 rounded-tl-sm flex gap-1 items-center">
                   <div className="w-1.5 h-1.5 bg-white/50 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
