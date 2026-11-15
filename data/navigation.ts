@@ -126,10 +126,10 @@ export const MEGA_MENU = {
       title: "AI & Autonomous Systems",
       items: [
         { label: "AI Automation & Agents", href: "/services/ai-automation", icon: "Cpu" },
-        { label: "Autonomous Support Triage", href: "/services/ai-automation", icon: "Bot" },
-        { label: "Intelligent Lead Routing", href: "/services/ai-automation", icon: "UserCheck" },
-        { label: "Document & Invoice Processing", href: "/services/ai-automation", icon: "FileSpreadsheet" },
-        { label: "Executive Analytics Digests", href: "/services/ai-automation", icon: "BarChart3" },
+        { label: "Autonomous Support Triage", href: "/services/ai-automation#support-triage", icon: "Bot" },
+        { label: "Intelligent Lead Routing", href: "/services/ai-automation#lead-routing", icon: "UserCheck" },
+        { label: "Document & Invoice Processing", href: "/services/ai-automation#document-processing", icon: "FileSpreadsheet" },
+        { label: "Executive Analytics Digests", href: "/services/ai-automation#executive-analytics", icon: "BarChart3" },
       ],
     },
     {
@@ -137,9 +137,9 @@ export const MEGA_MENU = {
       items: [
         { label: "Custom Software & SaaS", href: "/services/custom-software-saas", icon: "Code2" },
         { label: "SaaS MVP Development", href: "/services/saas-mvp-development", icon: "Rocket" },
-        { label: "Enterprise Web Applications", href: "/services/custom-software-saas", icon: "LayoutDashboard" },
-        { label: "Custom ERP & CRM Solutions", href: "/services/custom-software-saas", icon: "Database" },
-        { label: "Legacy Modernization", href: "/services/custom-software-saas", icon: "RefreshCw" },
+        { label: "Enterprise Web Applications", href: "/services/custom-software-saas#enterprise-web-applications", icon: "LayoutDashboard" },
+        { label: "Custom ERP & CRM Solutions", href: "/services/custom-software-saas#custom-erp-crm-solutions", icon: "Database" },
+        { label: "Legacy Modernization", href: "/services/custom-software-saas#multi-tenant-saas-architecture", icon: "RefreshCw" },
       ],
     },
     {

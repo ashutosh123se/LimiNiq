@@ -116,12 +116,18 @@ export default async function ServicePage({ params }: { params: Params }) {
             </h2>
           </div>
           <div className="svc-detail-checklist">
-            {service.features.map((feature) => (
-              <div key={feature} className="svc-detail-check-item glass-card">
-                <CheckCircle2 size={18} className="svc-detail-check-icon" />
-                <span>{feature}</span>
-              </div>
-            ))}
+            {service.features.map((feature) => {
+              const anchorId = feature
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/(^-|-$)/g, "");
+              return (
+                <div id={anchorId} key={feature} className="svc-detail-check-item glass-card scroll-mt-28">
+                  <CheckCircle2 size={18} className="svc-detail-check-icon" />
+                  <span>{feature}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

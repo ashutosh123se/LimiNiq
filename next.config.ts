@@ -61,6 +61,8 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       // Legacy / friendly aliases for continuity
+      { source: "/blog/headless-commerce-2024", destination: "/blog/headless-commerce-2026", permanent: true },
+      { source: "/blog/category/engineering", destination: "/blog/category/software", permanent: true },
       { source: "/services/ai-automation-cloud", destination: "/services/ai-automation", permanent: true },
       { source: "/service", destination: "/services", permanent: true },
       { source: "/service/:slug*", destination: "/services/:slug*", permanent: true },

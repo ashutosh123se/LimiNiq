@@ -19,11 +19,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let blogTopicSlugs: string[] = [];
   try {
     const unified = await getAllUnifiedPosts();
-    blogPosts = unified.map((post) => ({
+    // Exclude posts redirected to newer canonical guides (e.g. 2024 -> 2026)
+    const activePosts = unified.filter((p) => p.slug !== "headless-commerce-2024");
+    blogPosts = activePosts.map((post) => ({
       slug: post.slug,
       updatedAt: post.updatedAt ?? post.publishedAt,
     }));
-    blogTopicSlugs = getTopics(unified).map((topic) => slugifyHeading(topic));
+    blogTopicSlugs = getTopics(activePosts).map((topic) => slugifyHeading(topic));
   } catch {
     console.warn("Could not fetch blog posts for sitemap");
   }

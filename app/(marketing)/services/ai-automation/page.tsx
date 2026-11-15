@@ -33,6 +33,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 const USE_CASES = [
   {
+    id: "support-triage",
     icon: Bot,
     title: "Autonomous Support & Triage Agents",
     tagline: "24/7 intelligent tier-1 resolution",
@@ -43,6 +44,7 @@ const USE_CASES = [
     tech: ["Claude 3.5", "GPT-4o", "pgvector", "Zendesk/Intercom API"],
   },
   {
+    id: "lead-routing",
     icon: UserCheck,
     title: "Intelligent Lead Scoring & Routing",
     tagline: "Convert high-intent leads in seconds",
@@ -53,6 +55,7 @@ const USE_CASES = [
     tech: ["HubSpot API", "Salesforce", "Python Workflows", "Slack Alerts"],
   },
   {
+    id: "document-processing",
     icon: FileSpreadsheet,
     title: "Invoice & Document Processing (IDP)",
     tagline: "PDFs to structured database records",
@@ -63,6 +66,7 @@ const USE_CASES = [
     tech: ["Vision LLMs", "AWS Textract", "PostgreSQL", "QuickBooks/Xero/ERP"],
   },
   {
+    id: "workflow-automation",
     icon: Workflow,
     title: "Cross-System Workflow Automation",
     tagline: "Kill manual data entry between siloed tools",
@@ -73,6 +77,7 @@ const USE_CASES = [
     tech: ["Event Queues", "Node.js", "Python FastAPIs", "REST/GraphQL"],
   },
   {
+    id: "executive-analytics",
     icon: BarChart3,
     title: "Automated Executive Analytics & KPI Digests",
     tagline: "Actionable intelligence delivered daily",
@@ -254,7 +259,7 @@ export default function AiAutomationPage() {
             {USE_CASES.map((uc) => {
               const Icon = uc.icon;
               return (
-                <div key={uc.title} className="glass-card-premium flex flex-col justify-between p-7 rounded-2xl">
+                <div id={uc.id} key={uc.title} className="glass-card-premium flex flex-col justify-between p-7 rounded-2xl scroll-mt-28">
                   <div>
                     <div className="mb-5 flex items-center justify-between">
                       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-muted text-accent">

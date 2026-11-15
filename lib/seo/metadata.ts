@@ -35,9 +35,7 @@ export function buildPageMetadata({
     alternates: {
       canonical: url,
       languages: {
-        "en-US": url,
-        "en-GB": url,
-        "en-IN": url,
+        en: url,
         "x-default": url,
       },
     },
