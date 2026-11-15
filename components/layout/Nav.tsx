@@ -127,14 +127,20 @@ export function Nav() {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    setOpenKey(key);
+    if (key) {
+      setOpenKey(key);
+    } else {
+      timeoutRef.current = setTimeout(() => {
+        setOpenKey(null);
+      }, 120);
+    }
   };
 
   const handleMouseLeave = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setOpenKey(null);
-    }, 180);
+    }, 260);
   };
 
   const cancelClose = () => {
@@ -262,21 +268,23 @@ export function Nav() {
               {openLink && (
                 <motion.div
                   key={openLink.href}
-                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                  initial={{ opacity: 0, y: 6, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                  transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                  exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                  transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
                   onMouseEnter={cancelClose}
                   onMouseLeave={handleMouseLeave}
                   className={cn(
-                    "absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3",
+                    "absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2.5",
                     openLink.mega
-                      ? "w-[min(900px,calc(100vw-2rem))]"
+                      ? "w-[min(680px,calc(100vw-2rem))]"
                       : openLink.href === "/about"
-                        ? "w-[min(640px,calc(100vw-2rem))]"
-                        : "w-[min(540px,calc(100vw-2rem))]"
+                        ? "w-[min(580px,calc(100vw-2rem))]"
+                        : "w-[min(460px,calc(100vw-2rem))]"
                   )}
                 >
+                  {/* Invisible Hitbox Bridge so mouse never falls through gap */}
+                  <div className="absolute -top-3 inset-x-0 h-4 bg-transparent pointer-events-auto" />
                   {openLink.mega ? (
                     <MegaMenu onNavigate={() => setOpenKey(null)} />
                   ) : openLink.dropdown ? (
